@@ -1,0 +1,34 @@
+<div class="container">
+  <mat-card class="card mat-elevation-z8">
+    <app-spinner></app-spinner>
+    <router-outlet></router-outlet>
+    <mat-card-header>
+      <mat-card-title>Help Desk Hexagonal 3.0</mat-card-title>
+      <mat-card-subtitle class="sub">Sistema de Gerenciamento de Chamados</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image ngSrc="assets/img/dashboard-image.svg" alt="Image dashboard Help Desk" width="744" height="417" priority>
+    <br/>
+    <mat-card-content>
+      <p>
+        Bem-vindo ao nosso sistema Help Desk V3, desenvolvido com arquitetura hexagonal!<br/>
+        Este projeto demonstra a aplicação prática da arquitetura hexagonal (ou ports and adapters) em um sistema de
+        gerenciamento de chamados. Utilizando Angular no frontend e Spring Boot no backend, o sistema exemplifica a
+        separação clara entre a lógica de negócios e as tecnologias externas.<br/><br/>
+        Características principais:
+      </p>
+      <ul>
+        <li>Domínio de negócios isolado e independente de frameworks</li>
+        <li>Adaptadores flexíveis para UI, banco de dados e serviços externos</li>
+        <li>Fácil testabilidade e manutenção</li>
+        <li>Autenticação e autorização com Tokens JWT</li>
+      </ul>
+      <p>
+        Explore o código fonte no GitHub para ver como a arquitetura hexagonal melhora a estrutura e a escalabilidade do
+        projeto.<br/><br/>
+        Fique à vontade para testar o sistema e deixar sua sugestão.
+        <br/><br/>
+        Sincerely: Luiz Generoso
+      </p>
+    </mat-card-content>
+  </mat-card>
+</div>

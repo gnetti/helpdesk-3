@@ -1,0 +1,26 @@
+# Browsers that we support
+
+# Last versions of major browsers
+last 1 Chrome version
+last 1 Firefox version
+last 1 Safari version
+last 1 Edge version
+
+# Mobile browsers
+last 2 iOS major versions
+last 2 Android major versions
+
+# Firefox Extended Support Release (ESR)
+Firefox ESR
+
+# Specific versions
+> 0.5%
+not dead
+
+# Exclude older browsers
+not IE 11
+not op_mini all
+
+# For development
+# Uncomment the following line when developing to target a broader range
+# defaults

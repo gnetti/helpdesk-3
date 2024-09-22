@@ -1,0 +1,40 @@
+<div class="container">
+  <form [formGroup]="loginForm" (ngSubmit)="login()" class="form mat-elevation-z8">
+
+    <h1>Help Desk 3.0</h1>
+
+    <img ngSrc="assets/img/login-image.svg" alt="Help Desk - 3.0" width="793" height="552" priority>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>E-mail</mat-label>
+      <input
+        formControlName="email"
+        required
+        matInput
+        placeholder="Ex. fulano@mail.com">
+      <mat-icon matSuffix>email</mat-icon>
+      <mat-error *ngIf="loginForm.controls['email'].hasError('required')">E-mail é obrigatório</mat-error>
+      <mat-error *ngIf="loginForm.controls['email'].hasError('email')">E-mail inválido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Senha</mat-label>
+      <input
+        formControlName="password"
+        required
+        type="password"
+        matInput
+        placeholder="Ex. 123">
+      <mat-icon matSuffix>password</mat-icon>
+      <mat-error *ngIf="loginForm.controls['password'].hasError('required')">Senha é obrigatória</mat-error>
+      <mat-error *ngIf="loginForm.controls['password'].hasError('minlength')">Senha deve ter no mínimo 3
+        caracteres
+      </mat-error>
+    </mat-form-field>
+
+    <button type="submit" [disabled]="!validFields()" class="full-width mat-elevation-z4" mat-stroked-button
+            color="primary">Login
+    </button>
+  </form>
+
+</div>

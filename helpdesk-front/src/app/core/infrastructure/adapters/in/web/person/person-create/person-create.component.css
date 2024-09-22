@@ -1,0 +1,105 @@
+.container {
+  width: 35rem;
+  margin: auto;
+  padding: 1rem;
+  border-radius: .6rem;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+h1, p {
+  text-align: center;
+}
+
+img {
+  height: 12rem;
+  margin: auto;
+}
+
+.section {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  margin-top: .5rem;
+}
+
+p {
+  margin-top: 4rem;
+  opacity: .5;
+}
+
+mat-icon {
+  opacity: .8;
+}
+
+.error-message {
+  color: #f44336;
+  font-size: 100%;
+  margin-top: -1.25em;
+  margin-bottom: 1em;
+}
+
+.error-message ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.error-message li {
+  margin-bottom: 0.25em;
+}
+
+.mat-form-field {
+  margin-bottom: 0.5em;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.section {
+  margin-bottom: 1em;
+}
+
+button {
+  margin-top: 1em;
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-field .mat-form-field-suffix {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+button[matSuffix] {
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-field .mat-form-field-flex {
+  padding-right: 40px;
+}
+
+.password-field .mat-form-field-infix {
+  width: 100%;
+}

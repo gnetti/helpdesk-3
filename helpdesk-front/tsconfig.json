@@ -1,0 +1,97 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "lib": [
+      "ES2022",
+      "dom"
+    ],
+    "useDefineForClassFields": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "paths": {
+      "@core/*": [
+        "src/app/core/*"
+      ],
+      "@app/*": [
+        "src/app/*"
+      ],
+      "@domain/*": [
+        "src/app/core/domain/*"
+      ],
+      "@model/*": [
+        "src/app/core/domain/models*"
+      ],
+      "@application/*": [
+        "src/app/core/application/*"
+      ],
+      "@infrastructure/*": [
+        "src/app/core/infrastructure/*"
+      ],
+      "@shared/*": [
+        "src/app/shared/*"
+      ],
+      "@modules/*": [
+        "src/app/modules/*"
+      ],
+      "@env/*": [
+        "src/environments/*"
+      ],
+      "@config/*": [
+        "src/app/config/*"
+      ],
+      "@utils/*": [
+        "src/app/shared/utils*"
+      ],
+      "@interfaces/*": [
+        "src/app/interfaces/*"
+      ],
+      "@services/*": [
+        "src/app/services/*"
+      ],
+      "@guards/*": [
+        "src/app/guards/*"
+      ],
+      "@interceptors/*": [
+        "src/app/interceptors/*"
+      ],
+      "@models/*": [
+        "src/app/models/*"
+      ],
+      "@components/*": [
+        "src/app/components/*"
+      ],
+      "@adapters/*": [
+        "src/app/core/infrastructure/adapters/*"
+      ],
+      "@enums/*": [
+        "src/app/core/domain/enums*"
+      ],
+      "@dto/*": [
+        "src/app/core/infrastructure/adapters/in/web/dto*"
+      ],
+      "@validators/*": [
+        "src/app/core/domain/validators*"
+      ]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  }
+}
