@@ -1,9 +1,11 @@
-import {Component, OnInit, Inject} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Router, ActivatedRoute} from '@angular/router';
-import {ToastrService} from 'ngx-toastr';
-import {LOGIN_USE_CASE_PORT, LoginUseCasePort} from "@domain/ports/in/login.use-case.port";
-import {AuthService} from "@application/services/auth.service";
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { LOGIN_USE_CASE_PORT, LoginUseCasePort } from "@domain/ports/in/login.use-case.port";
+import { AuthService } from "@application/services/auth.service";
+import { CryptoService } from "@security//crypto.service";
+
 
 @Component({
   selector: 'app-login',
@@ -21,16 +23,16 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     @Inject(LOGIN_USE_CASE_PORT) private loginUseCase: LoginUseCasePort,
-    private authService: AuthService
-  ) {
-  }
+    private authService: AuthService,
+    private cryptoService: CryptoService
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
     this.setReturnUrl();
   }
 
-  async login() {
+  async login(): Promise<void> {
     this.loginForm.valid ? await this.processLogin() : this.showFormError();
   }
 
@@ -50,9 +52,10 @@ export class LoginComponent implements OnInit {
   }
 
   private async processLogin(): Promise<void> {
-    const {email, password} = this.loginForm.value;
+    const { email, password } = this.loginForm.value;
+    const encryptedPassword = this.cryptoService.encrypt(password);
     try {
-      const result = await this.loginUseCase.execute(email, password);
+      const result = await this.loginUseCase.execute(email, encryptedPassword);
       this.handleLoginResult(result);
     } catch (error) {
       this.showLoginError();
@@ -60,8 +63,12 @@ export class LoginComponent implements OnInit {
   }
 
   private handleLoginResult(result: any): void {
-    result?.token && this.storeToken(result.token);
-    this.authService.getToken() ? this.navigateAfterLogin() : this.showProcessingError();
+    if (result?.token) {
+      this.storeToken(result.token);
+      this.authService.getToken() ? this.navigateAfterLogin() : this.showProcessingError();
+    } else {
+      this.showLoginError();
+    }
   }
 
   private storeToken(token: string): void {

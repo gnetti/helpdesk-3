@@ -83,6 +83,9 @@
       "@dto/*": [
         "src/app/core/infrastructure/adapters/in/web/dto*"
       ],
+      "@security/*": [
+        "src/app/core/infrastructure/adapters/out/security*"
+      ],
       "@validators/*": [
         "src/app/core/domain/validators*"
       ]

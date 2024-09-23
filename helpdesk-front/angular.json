@@ -54,7 +54,10 @@
               "src/styles.css"
             ],
             "scripts": [],
-            "preserveSymlinks": true
+            "preserveSymlinks": true,
+            "allowedCommonJsDependencies": [
+              "crypto-js"
+            ]
           },
           "configurations": {
             "production": {
