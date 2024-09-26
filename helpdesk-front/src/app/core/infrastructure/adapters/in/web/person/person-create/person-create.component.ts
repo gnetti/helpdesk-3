@@ -13,7 +13,7 @@ import {GetAddressByCepUseCase} from "@domain/ports/in/get-address-by-cep.use-ca
 import {CpfValidator} from "@validators//cpf.validator";
 import {PasswordValidator} from "@validators//password.validator";
 import {FormUtils} from "@utils//form.util";
-import {CreatePersonDTO} from "@dto//create-person.dto";
+import { CreatePersonDTO } from "@dto//create-person.dto";
 
 
 @Component({

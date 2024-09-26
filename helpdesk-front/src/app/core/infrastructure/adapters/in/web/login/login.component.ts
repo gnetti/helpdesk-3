@@ -1,31 +1,29 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
+import { Component, OnInit, Inject } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ActivatedRoute } from "@angular/router";
+import { LoginUtils } from "@utils//login-util";
 import { LOGIN_USE_CASE_PORT, LoginUseCasePort } from "@domain/ports/in/login.use-case.port";
-import { AuthService } from "@application/services/auth.service";
 import { CryptoService } from "@security//crypto.service";
-
+import { AuthService } from "@application/services/auth.service";
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: "app-login",
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.css"]
 })
 export class LoginComponent implements OnInit {
-
   loginForm!: FormGroup;
-  returnUrl: string = '/';
+  returnUrl: string = "/";
 
   constructor(
     private formBuilder: FormBuilder,
-    private toast: ToastrService,
-    private router: Router,
     private route: ActivatedRoute,
     @Inject(LOGIN_USE_CASE_PORT) private loginUseCase: LoginUseCasePort,
-    private authService: AuthService,
-    private cryptoService: CryptoService
-  ) {}
+    private cryptoService: CryptoService,
+    private loginUtils: LoginUtils,
+    private authService: AuthService
+  ) {
+  }
 
   ngOnInit(): void {
     this.initForm();
@@ -33,7 +31,15 @@ export class LoginComponent implements OnInit {
   }
 
   async login(): Promise<void> {
-    this.loginForm.valid ? await this.processLogin() : this.showFormError();
+    if (this.loginForm.valid) {
+      try {
+        await this.processLogin();
+      } catch (error) {
+        this.loginUtils.showLoginError();
+      }
+    } else {
+      this.loginUtils.showFormError();
+    }
   }
 
   validFields(): boolean {
@@ -42,13 +48,13 @@ export class LoginComponent implements OnInit {
 
   private initForm(): void {
     this.loginForm = this.formBuilder.group({
-      email: ['admin@mail.com', [Validators.required, Validators.email]],
-      password: ['L@ndQLYN5yvx', [Validators.required, Validators.minLength(5)]]
+      email: ["admin@email.com", [Validators.required, Validators.email]],
+      password: ["L@ndQLYN5yvx", [Validators.required, Validators.minLength(5)]]
     });
   }
 
   private setReturnUrl(): void {
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this.route.snapshot.queryParams["returnUrl"] || "/";
   }
 
   private async processLogin(): Promise<void> {
@@ -56,43 +62,19 @@ export class LoginComponent implements OnInit {
     const encryptedPassword = this.cryptoService.encrypt(password);
     try {
       const result = await this.loginUseCase.execute(email, encryptedPassword);
-      this.handleLoginResult(result);
+      if (result?.token) {
+        this.handleSuccessfulLogin(result.token);
+      } else {
+        this.loginUtils.showLoginError();
+      }
     } catch (error) {
-      this.showLoginError();
+      this.loginUtils.showLoginError();
     }
   }
 
-  private handleLoginResult(result: any): void {
-    if (result?.token) {
-      this.storeToken(result.token);
-      this.authService.getToken() ? this.navigateAfterLogin() : this.showProcessingError();
-    } else {
-      this.showLoginError();
-    }
-  }
-
-  private storeToken(token: string): void {
-    localStorage.setItem('token', token);
-  }
-
-  private async navigateAfterLogin(): Promise<void> {
-    await this.router.navigateByUrl(this.returnUrl);
-    this.showLoginSuccess();
-  }
-
-  private showLoginSuccess(): void {
-    this.toast.success('Login realizado com sucesso');
-  }
-
-  private showProcessingError(): void {
-    this.toast.error('Erro ao processar o login. Por favor, tente novamente.');
-  }
-
-  private showLoginError(): void {
-    this.toast.error('Usuário e/ou senha inválidos');
-  }
-
-  private showFormError(): void {
-    this.toast.error('Por favor, preencha todos os campos corretamente');
+  private handleSuccessfulLogin(token: string): void {
+    this.authService.setToken(token);
+    this.loginUtils.showLoginSuccess();
+    this.loginUtils.navigateTo(this.returnUrl);
   }
 }

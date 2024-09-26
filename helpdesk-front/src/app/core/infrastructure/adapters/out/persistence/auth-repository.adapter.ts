@@ -1,30 +1,52 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {AuthRepositoryPort} from '@domain/ports/out/auth-repository.port';
-import {User} from '@domain/models/user.model';
-import {firstValueFrom} from 'rxjs';
-import {environment} from "@env/environment";
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { AuthRepositoryPort } from "@domain/ports/out/auth-repository.port";
+import { User } from "@domain/models/user.model";
+import { firstValueFrom } from "rxjs";
+import { environment } from "@env/environment";
+import { JwtHelperService } from "@auth0/angular-jwt";
+
 
 @Injectable()
 export class AuthRepositoryAdapter implements AuthRepositoryPort {
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {
+
+  constructor(
+    private http: HttpClient,
+    private jwtHelper: JwtHelperService
+  ) {
   }
 
   async authenticate(email: string, password: string): Promise<{ user: User; token: string }> {
     const response = await firstValueFrom(
-      this.http.post<{ user: User; token: string }>(`${this.apiUrl}/auth/login`, {email, password})
+      this.http.post<any>(`${this.apiUrl}/auth/login`, { email, password }, {
+        observe: "response",
+        headers: new HttpHeaders({ "Content-Type": "application/json" }),
+        withCredentials: true
+      })
     );
-    if (!response || !response.token) {
-      throw new Error('Resposta inválida do servidor: token ausente');
-    }
-    return response;
+
+    const token = response.headers.get("Authorization") || response.body?.token || response.body?.access_token;
+    if (!token) throw new Error("Token ausente na resposta");
+    const cleanToken = token.replace("Bearer ", "");
+    const user = this.extractUserFromToken(cleanToken);
+    return { user, token: cleanToken };
   }
 
   async getCurrentUser(): Promise<User> {
-    return firstValueFrom(
-      this.http.get<User>(`${this.apiUrl}/auth/me`)
-    );
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("Usuário não autenticado");
+    return this.extractUserFromToken(token);
+  }
+
+  private extractUserFromToken(token: string): User {
+    const decodedToken = this.jwtHelper.decodeToken(token);
+    return {
+      id: decodedToken.id,
+      email: decodedToken.sub,
+      profiles: Array.isArray(decodedToken.profiles) ? decodedToken.profiles : [],
+      theme: decodedToken.theme || "indigoPink"
+    };
   }
 }

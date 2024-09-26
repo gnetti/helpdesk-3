@@ -29,6 +29,9 @@ public class PersonEntity {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = true)
+    private String theme;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "person_profiles", joinColumns = @JoinColumn(name = "person_profiles_id"))
     @Enumerated(EnumType.STRING)
@@ -42,6 +45,7 @@ public class PersonEntity {
     private AddressEntity address;
 
     public PersonEntity() {
+        this.theme = "indigoPink";
     }
 
     public PersonEntity(Person person) {
@@ -56,6 +60,7 @@ public class PersonEntity {
             this.address = AddressEntity.fromDomainModel(person.getAddress());
             this.address.setPerson(this);
         }
+        this.theme = person.getTheme() != null ? person.getTheme() : "indigoPink";
     }
 
     public void setAddress(AddressEntity address) {
@@ -77,7 +82,8 @@ public class PersonEntity {
                 .withEmail(email)
                 .withPassword(password)
                 .withCreationDate(creationDate)
-                .withProfiles(new HashSet<>(profiles));
+                .withProfiles(new HashSet<>(profiles))
+                .withTheme(theme);
 
         if (address != null) {
             builder.withAddress(address.toDomainModel());
@@ -97,6 +103,7 @@ public class PersonEntity {
         this.password = person.getPassword();
         this.profiles.clear();
         this.profiles.addAll(person.getProfiles());
+        this.theme = person.getTheme() != null ? person.getTheme() : "indigoPink";
 
         Address personAddress = person.getAddress();
         if (personAddress != null) {
@@ -169,5 +176,13 @@ public class PersonEntity {
 
     public AddressEntity getAddress() {
         return address;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
     }
 }

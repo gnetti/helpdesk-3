@@ -18,6 +18,7 @@ public class Person {
     private final Set<Profile> profiles;
     private final LocalDate creationDate;
     private final Address address;
+    private final String theme;
 
     private Person(Builder builder) {
         validateFields(builder.name, builder.cpf, builder.email, builder.password);
@@ -29,6 +30,7 @@ public class Person {
         this.profiles = new HashSet<>(builder.profiles);
         this.creationDate = builder.creationDate != null ? builder.creationDate : LocalDate.now();
         this.address = builder.address;
+        this.theme = builder.theme != null ? builder.theme : "indigoPink";
     }
 
     private void validateFields(String name, String cpf, String email, String password) {
@@ -96,6 +98,7 @@ public class Person {
                 .withEmail(newData.getEmail())
                 .withPassword(newData.getPassword())
                 .withProfiles(newData.getProfiles())
+                .withTheme(newData.getTheme())
                 .build();
     }
 
@@ -106,6 +109,7 @@ public class Person {
                 .withEmail(updatedPerson.getEmail())
                 .withPassword(updatedPerson.getPassword() != null ? passwordEncoder.encode(updatedPerson.getPassword()) : this.getPassword())
                 .withProfiles(updatedPerson.getProfiles())
+                .withTheme(updatedPerson.getTheme())
                 .build();
     }
 
@@ -159,6 +163,10 @@ public class Person {
         return address;
     }
 
+    public String getTheme() {
+        return theme;
+    }
+
     public Builder toBuilder() {
         return new Builder()
                 .withId(this.id)
@@ -168,7 +176,8 @@ public class Person {
                 .withPassword(this.password)
                 .withProfiles(this.profiles)
                 .withCreationDate(this.creationDate)
-                .withAddress(this.address);
+                .withAddress(this.address)
+                .withTheme(this.theme);
     }
 
     public static class Builder {
@@ -180,6 +189,7 @@ public class Person {
         private Set<Profile> profiles = new HashSet<>();
         private LocalDate creationDate;
         private Address address;
+        private String theme;
 
         public Builder withId(Integer id) {
             this.id = id;
@@ -221,6 +231,11 @@ public class Person {
             return this;
         }
 
+        public Builder withTheme(String theme) {
+            this.theme = theme;
+            return this;
+        }
+
         public Person build() {
             return new Person(this);
         }
@@ -242,12 +257,13 @@ public class Person {
                 Objects.equals(password, person.password) &&
                 Objects.equals(profiles, person.profiles) &&
                 Objects.equals(creationDate, person.creationDate) &&
-                Objects.equals(address, person.address);
+                Objects.equals(address, person.address) &&
+                Objects.equals(theme, person.theme);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, cpf, email, password, profiles, creationDate, address);
+        return Objects.hash(id, name, cpf, email, password, profiles, creationDate, address, theme);
     }
 
     @Override
@@ -260,6 +276,7 @@ public class Person {
                 .append(", profiles=").append(profiles)
                 .append(", creationDate=").append(creationDate)
                 .append(", address=").append(address)
+                .append(", theme='").append(theme).append('\'')
                 .append('}')
                 .toString();
     }

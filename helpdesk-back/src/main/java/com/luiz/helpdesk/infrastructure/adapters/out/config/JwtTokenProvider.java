@@ -4,6 +4,7 @@ import com.luiz.helpdesk.application.ports.out.JwtTokenProviderPort;
 import com.luiz.helpdesk.domain.model.Person;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +38,7 @@ public class JwtTokenProvider implements JwtTokenProviderPort {
                 .claim("sub", person.getEmail())
                 .claim("id", person.getId())
                 .claim("profiles", person.getProfiles().stream().map(Enum::name).collect(Collectors.toList()))
+                .claim("theme", person.getTheme())
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(validity))
                 .signWith(key)
@@ -56,5 +58,9 @@ public class JwtTokenProvider implements JwtTokenProviderPort {
         } catch (Exception e) {
             return false;
         }
+    }
+    public String getThemeFromToken(String token) {
+        Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
+        return claims.get("theme", String.class);
     }
 }

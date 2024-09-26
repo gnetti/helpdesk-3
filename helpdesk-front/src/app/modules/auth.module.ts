@@ -1,15 +1,19 @@
-import {NgModule} from '@angular/core';
-import {CommonModule, NgOptimizedImage} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
-import {ToastrModule} from "ngx-toastr";
-import {LoginComponent} from "@adapters/in/web/login/login.component";
+import { NgModule } from "@angular/core";
+import { CommonModule, NgOptimizedImage } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { ToastrModule } from "ngx-toastr";
+import { LoginComponent } from "@adapters/in/web/login/login.component";
+import { RouterModule } from "@angular/router";
 
 @NgModule({
-  declarations: [LoginComponent],
+  declarations: [
+    LoginComponent
+
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -18,14 +22,17 @@ import {LoginComponent} from "@adapters/in/web/login/login.component";
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    RouterModule,
     ToastrModule.forRoot({
       timeOut: 3000,
-      positionClass: 'toast-top-right',
-      preventDuplicates: true,
+      positionClass: "toast-top-right",
+      preventDuplicates: true
     }),
-    NgOptimizedImage,
+    NgOptimizedImage
   ],
-  exports: [LoginComponent]
+  exports: [
+    LoginComponent
+  ]
 })
 export class AuthModule {
 }

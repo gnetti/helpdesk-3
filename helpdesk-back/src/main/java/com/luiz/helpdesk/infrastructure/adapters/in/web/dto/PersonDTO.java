@@ -40,11 +40,13 @@ public class PersonDTO {
 
     private AddressDTO address;
 
+    private String theme;
+
     public PersonDTO() {
 
     }
 
-    public PersonDTO(Integer id, String name, String cpf, String email, String password, Set<Integer> profiles, LocalDate creationDate) {
+    public PersonDTO(Integer id, String name, String cpf, String email, String password, Set<Integer> profiles, LocalDate creationDate, String theme) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
@@ -52,16 +54,24 @@ public class PersonDTO {
         this.password = password;
         this.profiles = profiles != null ? profiles : new HashSet<>();
         this.creationDate = creationDate != null ? creationDate : LocalDate.now();
+        this.theme = theme != null ? theme : "indigoPink";
         if (this.profiles.isEmpty()) {
             this.profiles.add(Profile.CLIENT.getCode());
         }
     }
 
-
     public Person toDomainModel() {
         Set<Profile> profileSet = profiles.stream().map(this::getProfileFromCode).collect(Collectors.toSet());
 
-        Person.Builder builder = Person.builder().withId(id).withName(name).withCpf(cpf).withEmail(email).withPassword(password).withCreationDate(creationDate).withProfiles(profileSet);
+        Person.Builder builder = Person.builder()
+                .withId(id)
+                .withName(name)
+                .withCpf(cpf)
+                .withEmail(email)
+                .withPassword(password)
+                .withCreationDate(creationDate)
+                .withProfiles(profileSet)
+                .withTheme(theme);
 
         if (address != null) {
             builder.withAddress(address.toDomainModel());
@@ -69,7 +79,6 @@ public class PersonDTO {
 
         return builder.build();
     }
-
 
     private Profile getProfileFromCode(Integer code) {
         for (Profile profile : Profile.values()) {
@@ -81,7 +90,16 @@ public class PersonDTO {
     }
 
     public static PersonDTO fromDomainModel(Person person) {
-        PersonDTO dto = new PersonDTO(person.getId(), person.getName(), person.getCpf(), person.getEmail(), person.getPassword(), person.getProfiles().stream().map(Profile::getCode).collect(Collectors.toSet()), person.getCreationDate());
+        PersonDTO dto = new PersonDTO(
+                person.getId(),
+                person.getName(),
+                person.getCpf(),
+                person.getEmail(),
+                person.getPassword(),
+                person.getProfiles().stream().map(Profile::getCode).collect(Collectors.toSet()),
+                person.getCreationDate(),
+                person.getTheme()
+        );
         if (person.getAddress() != null) {
             dto.setAddress(AddressDTO.fromDomainModel(person.getAddress()));
         }
@@ -152,21 +170,47 @@ public class PersonDTO {
         this.address = address;
     }
 
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PersonDTO personDTO = (PersonDTO) o;
-        return Objects.equals(id, personDTO.id) && Objects.equals(name, personDTO.name) && Objects.equals(cpf, personDTO.cpf) && Objects.equals(email, personDTO.email) && Objects.equals(password, personDTO.password) && Objects.equals(profiles, personDTO.profiles) && Objects.equals(creationDate, personDTO.creationDate) && Objects.equals(address, personDTO.address);
+        return Objects.equals(id, personDTO.id) &&
+                Objects.equals(name, personDTO.name) &&
+                Objects.equals(cpf, personDTO.cpf) &&
+                Objects.equals(email, personDTO.email) &&
+                Objects.equals(password, personDTO.password) &&
+                Objects.equals(profiles, personDTO.profiles) &&
+                Objects.equals(creationDate, personDTO.creationDate) &&
+                Objects.equals(address, personDTO.address) &&
+                Objects.equals(theme, personDTO.theme);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, cpf, email, password, profiles, creationDate, address);
+        return Objects.hash(id, name, cpf, email, password, profiles, creationDate, address, theme);
     }
 
     @Override
     public String toString() {
-        return "PersonDTO{" + "id=" + id + ", name='" + name + '\'' + ", cpf='" + cpf + '\'' + ", email='" + email + '\'' + ", profiles=" + profiles + ", creationDate=" + creationDate + ", address=" + address + '}';
+        return "PersonDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", profiles=" + profiles +
+                ", creationDate=" + creationDate +
+                ", address=" + address +
+                ", theme='" + theme + '\'' +
+                '}';
     }
 }

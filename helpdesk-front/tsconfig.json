@@ -81,7 +81,7 @@
         "src/app/core/domain/enums*"
       ],
       "@dto/*": [
-        "src/app/core/infrastructure/adapters/in/web/dto*"
+        "src/app/core/infrastructure/config/dtos*"
       ],
       "@security/*": [
         "src/app/core/infrastructure/adapters/out/security*"

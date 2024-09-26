@@ -5,6 +5,8 @@ import com.luiz.helpdesk.application.ports.out.DecryptionPort;
 import com.luiz.helpdesk.domain.model.Person;
 import com.luiz.helpdesk.infrastructure.adapters.in.web.dto.AuthenticationDTO;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,15 +26,19 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationDTO> login(@Valid @RequestBody AuthenticationDTO request) {
+    public ResponseEntity<Void> login(@Valid @RequestBody AuthenticationDTO request) {
         try {
             String decryptedPassword = decryptionPort.decrypt(request.getPassword());
             Person authenticatedPerson = authenticationService.authenticate(request.getEmail(), decryptedPassword);
             String token = authenticationService.generateToken(authenticatedPerson);
-            AuthenticationDTO response = AuthenticationDTO.fromDomainModel(token, authenticatedPerson);
-            return ResponseEntity.ok(response);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+
+            return ResponseEntity.ok().headers(headers).build();
         } catch (Exception e) {
-            return ResponseEntity.status(401).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
+
 }

@@ -148,7 +148,6 @@ public class PaginationDTO<T> {
         other.defaultSize = this.defaultSize;
     }
 
-    // Getters
 
     public int getPageNumber() {
         return pageNumber;

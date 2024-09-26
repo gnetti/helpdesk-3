@@ -1,23 +1,22 @@
-import {Injectable, Inject} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {LoginUseCasePort, LOGIN_USE_CASE_PORT} from '@domain/ports/in/login.use-case.port';
-import {AuthenticationPort} from '@domain/ports/in/authentication.port';
-import {JwtHelperService} from '@auth0/angular-jwt';
-import {TOKEN_STORAGE_PORT, TokenStoragePort} from '@core/domain/ports/out/token-storage.port';
-import {User} from "@model//user.model";
-
+import { Injectable, Inject } from "@angular/core";
+import { BehaviorSubject, Observable } from "rxjs";
+import { TOKEN_STORAGE_PORT, TokenStoragePort } from "@core/domain/ports/out/token-storage.port";
+import { JWT_DECODER_PORT, JwtDecoderPort } from "@core/domain/ports/out/jwt-decoder.port";
+import { User } from "@core/domain/models/user.model";
+import { THEME_USE_CASE_PORT, ThemeUseCasePort } from "@domain/ports/in/theme-use-case.port";
+import { Theme } from "@enums//theme.enum";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
-export class AuthService implements AuthenticationPort {
+export class AuthService {
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser: Observable<User | null>;
 
   constructor(
-    @Inject(LOGIN_USE_CASE_PORT) private loginUseCase: LoginUseCasePort,
     @Inject(TOKEN_STORAGE_PORT) private tokenStorage: TokenStoragePort,
-    private jwtHelper: JwtHelperService
+    @Inject(JWT_DECODER_PORT) private jwtDecoder: JwtDecoderPort,
+    @Inject(THEME_USE_CASE_PORT) private themeService: ThemeUseCasePort
   ) {
     this.currentUserSubject = new BehaviorSubject<User | null>(this.getUserFromToken());
     this.currentUser = this.currentUserSubject.asObservable();
@@ -27,36 +26,29 @@ export class AuthService implements AuthenticationPort {
     return this.currentUserSubject.value;
   }
 
-  async login(email: string, password: string): Promise<User> {
-    const result = await this.loginUseCase.execute(email, password);
-    if (!result?.token) {
-      throw new Error('Resposta de login inválida');
-    }
-
-    this.tokenStorage.setToken(result.token);
+  setToken(token: string): void {
+    this.tokenStorage.setToken(token);
     const user = this.getUserFromToken();
-
-    if (!user) {
-      throw new Error('Falha ao decodificar token de usuário');
-    }
-
     this.currentUserSubject.next(user);
-    return user;
-  }
-
-  logout(): void {
-    this.tokenStorage.removeToken();
-    localStorage.clear();
-    this.currentUserSubject.next(null);
-  }
-
-  isAuthenticated(): boolean {
-    const token = this.tokenStorage.getToken();
-    return Boolean(token && !this.jwtHelper.isTokenExpired(token));
+    if (user) {
+      const decodedToken = this.jwtDecoder.decodeToken(token);
+      this.themeService.setThemeFromToken(decodedToken);
+    }
   }
 
   getToken(): string | null {
     return this.tokenStorage.getToken();
+  }
+
+  logout(): void {
+    this.tokenStorage.removeToken();
+    this.currentUserSubject.next(null);
+    this.themeService.clearTheme();
+  }
+
+  isAuthenticated(): boolean {
+    const token = this.getToken();
+    return !!token && !this.jwtDecoder.isTokenExpired(token);
   }
 
   hasRole(role: string): boolean {
@@ -64,16 +56,17 @@ export class AuthService implements AuthenticationPort {
   }
 
   private getUserFromToken(): User | null {
-    const token = this.tokenStorage.getToken();
-    return token ? this.decodeToken(token) : null;
-  }
+    const token = this.getToken();
+    if (!token) return null;
 
-  private decodeToken(token: string): User | null {
-    try {
-      const {id, sub: email, profiles} = this.jwtHelper.decodeToken(token);
-      return {id, email, profiles};
-    } catch {
-      return null;
-    }
+    const decodedToken = this.jwtDecoder.decodeToken(token);
+    if (!decodedToken) return null;
+
+    return {
+      id: decodedToken.id,
+      email: decodedToken.sub,
+      profiles: Array.isArray(decodedToken.profiles) ? decodedToken.profiles : [],
+      theme: decodedToken.theme as Theme
+    };
   }
 }

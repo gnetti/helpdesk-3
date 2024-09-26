@@ -12,12 +12,13 @@ public class PersonFactoryImpl implements PersonFactory {
 
     @Override
     public Person createPerson(
-                String name,
-                String cpf,
-                String email,
-                String password,
-                Set<Profile> profiles,
-                LocalDate creationDate) {
+            String name,
+            String cpf,
+            String email,
+            String password,
+            Set<Profile> profiles,
+            LocalDate creationDate,
+            String theme) {
         return Person.builder()
                 .withName(name)
                 .withCpf(cpf)
@@ -25,6 +26,7 @@ public class PersonFactoryImpl implements PersonFactory {
                 .withPassword(password)
                 .withProfiles(profiles)
                 .withCreationDate(creationDate)
+                .withTheme(theme != null ? theme : "indigoPink")
                 .build();
     }
 

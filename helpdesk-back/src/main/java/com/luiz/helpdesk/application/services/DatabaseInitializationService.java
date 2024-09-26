@@ -40,14 +40,16 @@ public class DatabaseInitializationService implements InitializeDatabaseUseCaseP
     @Transactional
     public void initializeDatabase() {
         createAdmin();
-        createRandomPeople(100);
+        createRandomPeople();
     }
 
     private void createAdmin() {
         String encodedPassword = passwordEncoder.encode("L@ndQLYN5yvx");
         Set<Profile> profiles = new HashSet<>(Arrays.asList(Profile.ADMIN, Profile.CLIENT));
         LocalDate creationDate = LocalDate.now();
-        if (personRepository.findByEmail("admin@mail.com").isEmpty()) {
+        String adminTheme = "pinkBlueGrey";
+
+        if (personRepository.findByEmail("admin@email.com").isEmpty()) {
             Address address = addressFactory.createAddress(
                     "Admin Street",
                     "Apt 123",
@@ -59,8 +61,8 @@ public class DatabaseInitializationService implements InitializeDatabaseUseCaseP
             );
 
             Person admin = personFactory
-                    .createPerson("admin", "12345678900", "admin@mail.com",
-                            encodedPassword, profiles, creationDate)
+                    .createPerson("admin", "12345678900", "admin@email.com",
+                            encodedPassword, profiles, creationDate, adminTheme)
                     .withAddress(address);
             personRepository.save(admin);
             usedEmails.add("admin@mail.com");
@@ -68,11 +70,11 @@ public class DatabaseInitializationService implements InitializeDatabaseUseCaseP
         }
     }
 
-    private void createRandomPeople(int count) {
+    private void createRandomPeople() {
         String encodedPassword = passwordEncoder.encode("password");
         LocalDate creationDate = LocalDate.now();
 
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < 100; i++) {
             Person person = createRandomPerson(encodedPassword, creationDate);
             personRepository.save(person);
         }
@@ -84,9 +86,10 @@ public class DatabaseInitializationService implements InitializeDatabaseUseCaseP
         String name = generateRandomName();
         String email = generateUniqueEmail(name);
         String cpf = generateUniqueCPF();
+        String defaultTheme = "indigoPink";
 
         return personFactory.createPerson(name, cpf, email, encodedPassword,
-                        clientProfile, creationDate)
+                        clientProfile, creationDate, defaultTheme)
                 .withAddress(address);
     }
 

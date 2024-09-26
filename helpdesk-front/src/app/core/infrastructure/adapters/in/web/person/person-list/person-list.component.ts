@@ -6,7 +6,7 @@ import {ToastrService} from 'ngx-toastr';
 import {CoolDialogService} from '@angular-cool/dialogs';
 import {PERSON_USE_CASE_PORT, PersonUseCasePort} from '@core/domain/ports/in/person-use-case.port';
 import {PaginatedPersonResponse, Person} from '@core/domain/models/person.model';
-import {PersonHateoasResponse} from '@core/infrastructure/adapters/in/web/dto/hateoas-response.dto';
+import {PersonHateoasResponse} from '@infrastructure/config/dtos/hateoas-response.dto';
 import {catchError, finalize, switchMap} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {FormUtils} from "@utils//form.util";

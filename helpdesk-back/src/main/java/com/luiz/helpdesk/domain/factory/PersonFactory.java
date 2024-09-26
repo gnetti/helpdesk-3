@@ -7,5 +7,11 @@ import java.time.LocalDate;
 import java.util.Set;
 
 public interface PersonFactory {
-    Person createPerson(String name, String cpf, String email, String password, Set<Profile> profiles, LocalDate creationDate);
+    Person createPerson(String name,
+                        String cpf,
+                        String email,
+                        String password,
+                        Set<Profile> profiles,
+                        LocalDate creationDate,
+                        String theme);
 }

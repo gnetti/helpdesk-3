@@ -7,4 +7,3 @@ export interface LoginUseCasePort {
 
 export const LOGIN_USE_CASE_PORT = new InjectionToken<LoginUseCasePort>('LoginUseCasePort');
 
-

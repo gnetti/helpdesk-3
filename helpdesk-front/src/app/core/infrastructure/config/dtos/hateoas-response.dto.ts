@@ -1,4 +1,4 @@
-import {Person} from '@core/domain/models/person.model';
+import {Person} from '@model//person.model';
 
 export interface HateoasResponse<T> {
   _embedded: {

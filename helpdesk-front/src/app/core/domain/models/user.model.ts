@@ -1,5 +1,6 @@
 export interface User {
-    id: number;
-    email: string;
-    profiles: string[];
+  id: number;
+  email: string;
+  profiles: string[];
+  theme: string;
 }
