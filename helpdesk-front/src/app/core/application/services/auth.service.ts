@@ -1,10 +1,10 @@
-import { Injectable, Inject } from "@angular/core";
-import { BehaviorSubject, Observable } from "rxjs";
-import { TOKEN_STORAGE_PORT, TokenStoragePort } from "@core/domain/ports/out/token-storage.port";
-import { JWT_DECODER_PORT, JwtDecoderPort } from "@core/domain/ports/out/jwt-decoder.port";
-import { User } from "@core/domain/models/user.model";
-import { THEME_USE_CASE_PORT, ThemeUseCasePort } from "@domain/ports/in/theme-use-case.port";
-import { Theme } from "@enums//theme.enum";
+import {Injectable, Inject} from "@angular/core";
+import {BehaviorSubject, Observable} from "rxjs";
+import {TOKEN_STORAGE_PORT, TokenStoragePort} from "@core/domain/ports/out/token-storage.port";
+import {JWT_DECODER_PORT, JwtDecoderPort} from "@core/domain/ports/out/jwt-decoder.port";
+import {User} from "@core/domain/models/user.model";
+import {THEME_USE_CASE_PORT, ThemeUseCasePort} from "@domain/ports/in/theme-use-case.port";
+import {Theme} from "@enums//theme.enum";
 
 @Injectable({
   providedIn: "root"
@@ -43,7 +43,7 @@ export class AuthService {
   logout(): void {
     this.tokenStorage.removeToken();
     this.currentUserSubject.next(null);
-    this.themeService.clearTheme();
+    this.themeService.resetTheme();
   }
 
   isAuthenticated(): boolean {
