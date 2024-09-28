@@ -7,16 +7,30 @@ import java.util.Collection;
 
 public class CustomUserDetails extends User {
     private final String theme;
+    private final Integer id;
+    private final String name;
 
-    public CustomUserDetails(String username,
+    public CustomUserDetails(Integer id,
+                             String username,
                              String password,
                              Collection<? extends GrantedAuthority> authorities,
-                             String theme) {
+                             String theme,
+                             String name) {
         super(username, password, authorities);
+        this.id = id;
         this.theme = theme;
+        this.name = name;
     }
 
     public String getTheme() {
         return theme;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 }

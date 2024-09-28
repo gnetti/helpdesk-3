@@ -3,5 +3,6 @@ export const environment = {
   apiUrl: "http://localhost:8080/api",
   apiCepUrl: "https://viacep.com.br/ws",
   secretKey: "S3PR3Byo7reFKYGyqp1zhPjtmH60fUzG",
-  secretIv: "zKZ8TL1X8RIT1wf9XgAsJh"
+  secretIv: "zKZ8TL1X8RIT1wf9XgAsJh",
+  defaultTheme:"INDIGO_PINK"
 };

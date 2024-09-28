@@ -6,7 +6,7 @@ import com.luiz.helpdesk.domain.model.Pagination;
 import com.luiz.helpdesk.domain.model.Person;
 import com.luiz.helpdesk.infrastructure.adapters.out.persistence.entity.PersonEntity;
 import com.luiz.helpdesk.infrastructure.adapters.out.persistence.springdata.JpaPersonRepository;
-import com.luiz.helpdesk.infrastructure.adapters.out.persistence.utils.PaginationUtils;
+import com.luiz.helpdesk.infrastructure.adapters.out.persistence.utils.PaginationUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ public class PersonPersistenceOutputAdapter implements PersonPersistenceOutputPo
     @Override
     @Transactional
     public Person save(Person person) {
-        PersonEntity personEntity = new PersonEntity(person);
+        PersonEntity personEntity = PersonEntity.fromDomainModel(person);
         PersonEntity savedEntity = jpaPersonRepository.save(personEntity);
         return savedEntity.toDomainModel();
     }
@@ -37,6 +37,7 @@ public class PersonPersistenceOutputAdapter implements PersonPersistenceOutputPo
         if (person.getId() == null) {
             throw new IllegalArgumentException("Person ID cannot be null for update operation");
         }
+
         return jpaPersonRepository.findById(person.getId())
                 .map(personEntity -> {
                     personEntity.updateFromDomainModel(person);
@@ -90,6 +91,6 @@ public class PersonPersistenceOutputAdapter implements PersonPersistenceOutputPo
     public Pagination<Person> getAllPersons(Pagination<?> pagination) {
         PageRequest pageRequest = PageRequest.of(pagination.pageNumber(), pagination.pageSize());
         Page<PersonEntity> page = jpaPersonRepository.getAllPersons(pageRequest);
-        return PaginationUtils.mapPageToPagination(page, PersonEntity::toDomainModel);
+        return PaginationUtil.mapPageToPagination(page, PersonEntity::toDomainModel);
     }
 }

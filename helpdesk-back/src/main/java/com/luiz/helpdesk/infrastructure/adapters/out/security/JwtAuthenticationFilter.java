@@ -67,12 +67,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private UserDetails createUserDetails(Person person) {
         return new CustomUserDetails(
+                person.getId(),
                 person.getEmail(),
                 person.getPassword(),
                 person.getProfiles().stream()
                         .map(profile -> new SimpleGrantedAuthority(profile.getDescription()))
                         .collect(Collectors.toList()),
-                person.getTheme()
+                person.getTheme().getValue(),
+                person.getName()
         );
     }
 

@@ -6,9 +6,9 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 import java.util.function.Function;
 
-public final class PaginationUtils {
+public final class PaginationUtil {
 
-    private PaginationUtils() {
+    private PaginationUtil() {
     }
 
     public static <T, R> Pagination<R> mapToPagination(

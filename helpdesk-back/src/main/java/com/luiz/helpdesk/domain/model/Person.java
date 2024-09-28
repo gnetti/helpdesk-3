@@ -1,14 +1,19 @@
 package com.luiz.helpdesk.domain.model;
 
 import com.luiz.helpdesk.domain.enums.Profile;
+import com.luiz.helpdesk.domain.enums.Theme;
 import com.luiz.helpdesk.infrastructure.adapters.in.web.dto.AddressDTO;
 import com.luiz.helpdesk.infrastructure.adapters.in.web.dto.PersonDTO;
+import com.luiz.helpdesk.infrastructure.adapters.out.config.CustomUserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Person {
+
+    public static final Theme DEFAULT_THEME = Theme.INDIGO_PINK;
 
     private final Integer id;
     private final String name;
@@ -18,7 +23,7 @@ public class Person {
     private final Set<Profile> profiles;
     private final LocalDate creationDate;
     private final Address address;
-    private final String theme;
+    private final Theme theme;
 
     private Person(Builder builder) {
         validateFields(builder.name, builder.cpf, builder.email, builder.password);
@@ -30,7 +35,7 @@ public class Person {
         this.profiles = new HashSet<>(builder.profiles);
         this.creationDate = builder.creationDate != null ? builder.creationDate : LocalDate.now();
         this.address = builder.address;
-        this.theme = builder.theme != null ? builder.theme : "indigoPink";
+        this.theme = builder.theme != null ? builder.theme : DEFAULT_THEME;
     }
 
     private void validateFields(String name, String cpf, String email, String password) {
@@ -131,6 +136,17 @@ public class Person {
         return toBuilder().withAddress(updatedAddress).build();
     }
 
+    public static Person fromCustomUserDetails(CustomUserDetails userDetails) {
+        return builder()
+                .withId(userDetails.getId())
+                .withName(userDetails.getName())
+                .withEmail(userDetails.getUsername())
+                .withProfiles(userDetails.getAuthorities().stream()
+                        .map(authority -> Profile.valueOf(authority.getAuthority()))
+                        .collect(Collectors.toSet()))
+                .build();
+    }
+
     public Integer getId() {
         return id;
     }
@@ -163,8 +179,12 @@ public class Person {
         return address;
     }
 
-    public String getTheme() {
+    public Theme getTheme() {
         return theme;
+    }
+
+    public String getThemeValue() {
+        return theme.getValue();
     }
 
     public Builder toBuilder() {
@@ -189,7 +209,7 @@ public class Person {
         private Set<Profile> profiles = new HashSet<>();
         private LocalDate creationDate;
         private Address address;
-        private String theme;
+        private Theme theme;
 
         public Builder withId(Integer id) {
             this.id = id;
@@ -231,8 +251,13 @@ public class Person {
             return this;
         }
 
-        public Builder withTheme(String theme) {
+        public Builder withTheme(Theme theme) {
             this.theme = theme;
+            return this;
+        }
+
+        public Builder withTheme(String themeValue) {
+            this.theme = themeValue != null ? Theme.fromString(themeValue) : null;
             return this;
         }
 
@@ -258,7 +283,7 @@ public class Person {
                 Objects.equals(profiles, person.profiles) &&
                 Objects.equals(creationDate, person.creationDate) &&
                 Objects.equals(address, person.address) &&
-                Objects.equals(theme, person.theme);
+                theme == person.theme;
     }
 
     @Override
@@ -276,7 +301,7 @@ public class Person {
                 .append(", profiles=").append(profiles)
                 .append(", creationDate=").append(creationDate)
                 .append(", address=").append(address)
-                .append(", theme='").append(theme).append('\'')
+                .append(", theme=").append(theme)
                 .append('}')
                 .toString();
     }

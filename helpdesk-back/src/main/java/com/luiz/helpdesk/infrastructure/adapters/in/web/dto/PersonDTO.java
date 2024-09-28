@@ -2,6 +2,7 @@ package com.luiz.helpdesk.infrastructure.adapters.in.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.luiz.helpdesk.domain.enums.Profile;
+import com.luiz.helpdesk.domain.enums.Theme;
 import com.luiz.helpdesk.domain.model.Person;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -43,7 +44,6 @@ public class PersonDTO {
     private String theme;
 
     public PersonDTO() {
-
     }
 
     public PersonDTO(Integer id, String name, String cpf, String email, String password, Set<Integer> profiles, LocalDate creationDate, String theme) {
@@ -53,8 +53,8 @@ public class PersonDTO {
         this.email = email;
         this.password = password;
         this.profiles = profiles != null ? profiles : new HashSet<>();
-        this.creationDate = creationDate != null ? creationDate : LocalDate.now();
-        this.theme = theme != null ? theme : "indigoPink";
+        this.creationDate = creationDate;
+        this.theme = theme;
         if (this.profiles.isEmpty()) {
             this.profiles.add(Profile.CLIENT.getCode());
         }
@@ -70,8 +70,11 @@ public class PersonDTO {
                 .withEmail(email)
                 .withPassword(password)
                 .withCreationDate(creationDate)
-                .withProfiles(profileSet)
-                .withTheme(theme);
+                .withProfiles(profileSet);
+
+        if (theme != null) {
+            builder.withTheme(Theme.fromString(theme));
+        }
 
         if (address != null) {
             builder.withAddress(address.toDomainModel());
@@ -98,7 +101,7 @@ public class PersonDTO {
                 person.getPassword(),
                 person.getProfiles().stream().map(Profile::getCode).collect(Collectors.toSet()),
                 person.getCreationDate(),
-                person.getTheme()
+                person.getTheme().getValue()
         );
         if (person.getAddress() != null) {
             dto.setAddress(AddressDTO.fromDomainModel(person.getAddress()));
@@ -206,7 +209,7 @@ public class PersonDTO {
                 ", name='" + name + '\'' +
                 ", cpf='" + cpf + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
+                ", password='[PROTECTED]'" +
                 ", profiles=" + profiles +
                 ", creationDate=" + creationDate +
                 ", address=" + address +

@@ -2,11 +2,13 @@ package com.luiz.helpdesk.infrastructure.adapters.in.web;
 
 import com.luiz.helpdesk.application.ports.in.PaginationUseCasePort;
 import com.luiz.helpdesk.application.ports.in.PersonManageUseCasePort;
+import com.luiz.helpdesk.application.ports.in.VerifyLoggedUserUseCase;
 import com.luiz.helpdesk.domain.exception.person.PersonNotFoundException;
 import com.luiz.helpdesk.domain.model.Pagination;
 import com.luiz.helpdesk.domain.model.Person;
 import com.luiz.helpdesk.infrastructure.adapters.in.web.dto.PaginationDTO;
 import com.luiz.helpdesk.infrastructure.adapters.in.web.dto.PersonDTO;
+import com.luiz.helpdesk.infrastructure.adapters.out.config.CustomUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +23,14 @@ public class PersonController {
 
     private final PersonManageUseCasePort personUseCase;
     private final PaginationUseCasePort paginationUseCase;
+    private final VerifyLoggedUserUseCase verifyLoggedUserUseCase;
 
-    public PersonController(PersonManageUseCasePort personUseCase, PaginationUseCasePort paginationUseCase) {
+    public PersonController(PersonManageUseCasePort personUseCase,
+                            PaginationUseCasePort paginationUseCase,
+                            VerifyLoggedUserUseCase verifyLoggedUserUseCase) {
         this.personUseCase = personUseCase;
         this.paginationUseCase = paginationUseCase;
+        this.verifyLoggedUserUseCase = verifyLoggedUserUseCase;
     }
 
     @PostMapping
@@ -104,5 +110,20 @@ public class PersonController {
     @Operation(summary = "Check if a person exists")
     public ResponseEntity<Boolean> existsPersonById(@PathVariable Integer id) {
         return ResponseEntity.ok(personUseCase.existsPersonById(id));
+    }
+
+    @GetMapping("/current-user")
+    @Operation(summary = "Get the currently authenticated user")
+    public ResponseEntity<PersonDTO> getCurrentUser() {
+        CustomUserDetails userDetails = verifyLoggedUserUseCase.getAuthenticatedUser();
+        Person person = personUseCase.findPersonByEmail(userDetails.getUsername());
+        return ResponseEntity.ok(PersonDTO.fromDomainModel(person));
+    }
+
+    @PostMapping("/refresh-token")
+    @Operation(summary = "Refresh the authentication token")
+    public ResponseEntity<String> refreshToken(@RequestHeader("Authorization") String token) {
+        String newToken = verifyLoggedUserUseCase.refreshToken(token.replace("Bearer ", ""));
+        return ResponseEntity.ok(newToken);
     }
 }

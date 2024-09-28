@@ -4,6 +4,7 @@ import com.luiz.helpdesk.application.ports.in.InitializeDatabaseUseCasePort;
 import com.luiz.helpdesk.application.ports.out.PasswordEncoderPort;
 import com.luiz.helpdesk.application.ports.out.PersonPersistenceOutputPort;
 import com.luiz.helpdesk.domain.enums.Profile;
+import com.luiz.helpdesk.domain.enums.Theme;
 import com.luiz.helpdesk.domain.factory.AddressFactory;
 import com.luiz.helpdesk.domain.factory.PersonFactory;
 import com.luiz.helpdesk.domain.model.Address;
@@ -47,7 +48,7 @@ public class DatabaseInitializationService implements InitializeDatabaseUseCaseP
         String encodedPassword = passwordEncoder.encode("L@ndQLYN5yvx");
         Set<Profile> profiles = new HashSet<>(Arrays.asList(Profile.ADMIN, Profile.CLIENT));
         LocalDate creationDate = LocalDate.now();
-        String adminTheme = "pinkBlueGrey";
+        Theme adminTheme = Theme.PINK_BLUE_GREY;
 
         if (personRepository.findByEmail("admin@email.com").isEmpty()) {
             Address address = addressFactory.createAddress(
@@ -62,7 +63,7 @@ public class DatabaseInitializationService implements InitializeDatabaseUseCaseP
 
             Person admin = personFactory
                     .createPerson("admin", "12345678900", "admin@email.com",
-                            encodedPassword, profiles, creationDate, adminTheme)
+                            encodedPassword, profiles, creationDate, String.valueOf(adminTheme))
                     .withAddress(address);
             personRepository.save(admin);
             usedEmails.add("admin@mail.com");
@@ -86,11 +87,16 @@ public class DatabaseInitializationService implements InitializeDatabaseUseCaseP
         String name = generateRandomName();
         String email = generateUniqueEmail(name);
         String cpf = generateUniqueCPF();
-        String defaultTheme = "indigoPink";
+        Theme randomTheme = getRandomTheme();
 
         return personFactory.createPerson(name, cpf, email, encodedPassword,
-                        clientProfile, creationDate, defaultTheme)
+                        clientProfile, creationDate, String.valueOf(randomTheme))
                 .withAddress(address);
+    }
+
+    private Theme getRandomTheme() {
+        Theme[] themes = Theme.values();
+        return themes[new Random().nextInt(themes.length)];
     }
 
     private String generateUniqueCPF() {
