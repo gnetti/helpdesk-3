@@ -1,5 +1,7 @@
 package com.luiz.helpdesk.application.ports.in;
 
+import com.luiz.helpdesk.domain.exception.auth.UnauthorizedException;
+import com.luiz.helpdesk.domain.exception.person.InvalidPasswordException;
 import com.luiz.helpdesk.domain.exception.person.PersonNotFoundException;
 import com.luiz.helpdesk.domain.model.Pagination;
 import com.luiz.helpdesk.domain.model.Person;
@@ -27,7 +29,9 @@ public interface PersonManageUseCasePort {
 
     boolean existsPersonByEmailAndIdNot(String email, Integer id);
 
-    Person updateCurrentUser(String email, Person updatedPerson, String encryptedCurrentPassword, String newPassword) throws Exception;
+    Person updateCurrentUser(Integer id, Person updatedPerson, String currentPassword, String newPassword);
+
+    Person getCurrentUser();
 
     Optional<Person> findPersonByEmailAndIdNot(String email, Integer id);
 

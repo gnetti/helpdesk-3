@@ -3,7 +3,6 @@ package com.luiz.helpdesk.domain.validator;
 import com.luiz.helpdesk.application.ports.out.PersonPersistenceOutputPort;
 import com.luiz.helpdesk.domain.exception.person.InvalidPasswordException;
 import com.luiz.helpdesk.domain.exception.person.InvalidPersonDataException;
-import com.luiz.helpdesk.domain.exception.person.PersonAlreadyExistsException;
 import com.luiz.helpdesk.domain.exception.person.PersonNotFoundException;
 import com.luiz.helpdesk.domain.model.Address;
 import com.luiz.helpdesk.domain.model.Person;

@@ -1,14 +1,16 @@
 package com.luiz.helpdesk.application.services;
 
 import com.luiz.helpdesk.application.ports.in.PersonManageUseCasePort;
-import com.luiz.helpdesk.application.ports.out.DecryptionPort;
+import com.luiz.helpdesk.application.ports.in.VerifyLoggedUserUseCase;
 import com.luiz.helpdesk.application.ports.out.PasswordEncoderPort;
 import com.luiz.helpdesk.application.ports.out.PersonPersistenceOutputPort;
+import com.luiz.helpdesk.domain.exception.auth.UnauthorizedException;
 import com.luiz.helpdesk.domain.exception.person.InvalidPasswordException;
 import com.luiz.helpdesk.domain.exception.person.PersonNotFoundException;
 import com.luiz.helpdesk.domain.model.Pagination;
 import com.luiz.helpdesk.domain.model.Person;
 import com.luiz.helpdesk.domain.validator.PersonValidator;
+import com.luiz.helpdesk.infrastructure.adapters.out.config.CustomUserDetails;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,14 +22,14 @@ public class PersonManageService implements PersonManageUseCasePort {
 
     private final PersonPersistenceOutputPort personRepository;
     private final PasswordEncoderPort passwordEncoder;
-    private final DecryptionPort decryptionService;
+    private final VerifyLoggedUserUseCase verifyLoggedUserUseCase;
 
     public PersonManageService(PersonPersistenceOutputPort personRepository,
                                @Lazy PasswordEncoderPort passwordEncoder,
-                               @Lazy DecryptionPort decryptionService) {
+                               VerifyLoggedUserUseCase verifyLoggedUserUseCase) {
         this.personRepository = personRepository;
         this.passwordEncoder = passwordEncoder;
-        this.decryptionService = decryptionService;
+        this.verifyLoggedUserUseCase = verifyLoggedUserUseCase;
     }
 
     @Override
@@ -88,12 +90,23 @@ public class PersonManageService implements PersonManageUseCasePort {
 
     @Override
     @Transactional
-    public Person updateCurrentUser(String email, Person updatedPerson, String currentPassword, String newPassword) throws Exception {
-        Person existingPerson = findPersonByEmail(email);
+    public Person updateCurrentUser(Integer id, Person updatedPerson, String currentPassword, String newPassword) {
+        CustomUserDetails userDetails = verifyLoggedUserUseCase.getAuthenticatedUser();
+        validateCurrentUserOperation(userDetails.getId(), id);
+        Person existingPerson = getPersonById(id)
+                .orElseThrow(() -> new PersonNotFoundException("Person not found with id: " + id));
         PersonValidator.validateForCurrentUserUpdate(updatedPerson, currentPassword, newPassword, personRepository, existingPerson);
-        verifyCurrentPassword(email, currentPassword);
+        verifyCurrentPassword(existingPerson.getEmail(), currentPassword);
         Person personToUpdate = updatePersonFields(existingPerson, updatedPerson, newPassword);
         return personRepository.update(personToUpdate);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Person getCurrentUser() {
+        CustomUserDetails userDetails = verifyLoggedUserUseCase.getAuthenticatedUser();
+        return personRepository.findById(userDetails.getId())
+                .orElseThrow(() -> new PersonNotFoundException("Person not found with id: " + userDetails.getId()));
     }
 
     @Override
@@ -130,7 +143,13 @@ public class PersonManageService implements PersonManageUseCasePort {
         return personRepository.existsByEmailAndIdNot(email, id);
     }
 
-    private void verifyCurrentPassword(String email, String currentPassword) throws Exception {
+    private void validateCurrentUserOperation(Integer authenticatedUserId, Integer requestedUserId) {
+        if (!authenticatedUserId.equals(requestedUserId)) {
+            throw new UnauthorizedException("You are not authorized to perform this operation");
+        }
+    }
+
+    private void verifyCurrentPassword(String email, String currentPassword) {
         if (!verifyPassword(email, currentPassword)) {
             throw new InvalidPasswordException("Current password is incorrect");
         }
