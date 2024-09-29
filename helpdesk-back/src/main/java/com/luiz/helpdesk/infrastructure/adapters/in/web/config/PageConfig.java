@@ -1,4 +1,4 @@
-package com.luiz.helpdesk.infrastructure.adapters.out.config;
+package com.luiz.helpdesk.infrastructure.adapters.in.web.config;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
