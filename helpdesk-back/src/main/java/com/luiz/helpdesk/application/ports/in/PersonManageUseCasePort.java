@@ -23,4 +23,15 @@ public interface PersonManageUseCasePort {
 
     boolean existsPersonById(Integer id);
 
+    boolean existsPersonByCpfAndIdNot(String cpf, Integer id);
+
+    boolean existsPersonByEmailAndIdNot(String email, Integer id);
+
+    Person updateCurrentUser(String email, Person updatedPerson, String encryptedCurrentPassword, String newPassword) throws Exception;
+
+    Optional<Person> findPersonByEmailAndIdNot(String email, Integer id);
+
+    boolean verifyPassword(String email, String password);
+
+    Person encodePassword(Person person);
 }

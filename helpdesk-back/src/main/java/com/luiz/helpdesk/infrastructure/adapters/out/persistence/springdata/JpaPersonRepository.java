@@ -26,6 +26,8 @@ public interface JpaPersonRepository extends JpaRepository<PersonEntity, Integer
     @Query("SELECT p FROM PersonEntity p")
     Page<PersonEntity> getAllPersons(Pageable pageable);
 
+    Optional<PersonEntity> findByEmailAndIdNot(String email, Integer id);
 
     long count();
+
 }

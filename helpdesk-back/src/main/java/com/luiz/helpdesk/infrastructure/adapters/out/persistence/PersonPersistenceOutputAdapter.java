@@ -34,17 +34,11 @@ public class PersonPersistenceOutputAdapter implements PersonPersistenceOutputPo
     @Override
     @Transactional
     public Person update(Person person) {
-        if (person.getId() == null) {
-            throw new IllegalArgumentException("Person ID cannot be null for update operation");
-        }
-
-        return jpaPersonRepository.findById(person.getId())
-                .map(personEntity -> {
-                    personEntity.updateFromDomainModel(person);
-                    PersonEntity updatedEntity = jpaPersonRepository.save(personEntity);
-                    return updatedEntity.toDomainModel();
-                })
+        PersonEntity existingEntity = jpaPersonRepository.findById(person.getId())
                 .orElseThrow(() -> new PersonNotFoundException("Person not found with id: " + person.getId()));
+        existingEntity.updateFromDomainModel(person);
+        PersonEntity updatedEntity = jpaPersonRepository.save(existingEntity);
+        return updatedEntity.toDomainModel();
     }
 
     @Override
@@ -55,11 +49,12 @@ public class PersonPersistenceOutputAdapter implements PersonPersistenceOutputPo
     @Override
     @Transactional
     public boolean deleteById(Integer id) {
-        if (jpaPersonRepository.existsById(id)) {
-            jpaPersonRepository.deleteById(id);
-            return true;
-        }
-        return false;
+        return jpaPersonRepository.findById(id)
+                .map(entity -> {
+                    jpaPersonRepository.delete(entity);
+                    return true;
+                })
+                .orElse(false);
     }
 
     @Override
@@ -90,7 +85,37 @@ public class PersonPersistenceOutputAdapter implements PersonPersistenceOutputPo
     @Override
     public Pagination<Person> getAllPersons(Pagination<?> pagination) {
         PageRequest pageRequest = PageRequest.of(pagination.pageNumber(), pagination.pageSize());
-        Page<PersonEntity> page = jpaPersonRepository.getAllPersons(pageRequest);
+        Page<PersonEntity> page = jpaPersonRepository.findAll(pageRequest);
         return PaginationUtil.mapPageToPagination(page, PersonEntity::toDomainModel);
+    }
+
+    @Override
+    public Optional<Person> findByEmailAndIdNot(String email, Integer id) {
+        return jpaPersonRepository.findByEmailAndIdNot(email, id).map(PersonEntity::toDomainModel);
+    }
+
+    @Override
+    @Transactional
+    public Person updateCurrentUser(String email, Person updatedPerson, String currentPassword, String newPassword) {
+        PersonEntity existingEntity = jpaPersonRepository.findByEmail(email)
+                .orElseThrow(() -> new PersonNotFoundException("Person not found with email: " + email));
+        existingEntity.updateFromDomainModel(updatedPerson);
+        if (newPassword != null && !newPassword.isEmpty()) {
+            existingEntity.setPassword(newPassword);
+        }
+        PersonEntity updatedEntity = jpaPersonRepository.save(existingEntity);
+        return updatedEntity.toDomainModel();
+    }
+
+    @Override
+    public boolean verifyPassword(String email, String password) {
+        return jpaPersonRepository.findByEmail(email)
+                .map(entity -> entity.getPassword().equals(password))
+                .orElse(false);
+    }
+
+    @Override
+    public Person encodePassword(Person person) {
+        return person;
     }
 }

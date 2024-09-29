@@ -25,5 +25,12 @@ public interface PersonPersistenceOutputPort {
     boolean existsByEmailAndIdNot(String email, Integer id);
 
     Pagination<Person> getAllPersons(Pagination<?> pagination);
-    
+
+    Person updateCurrentUser(String email, Person updatedPerson, String encryptedCurrentPassword, String newPassword) throws Exception;
+
+    Optional<Person> findByEmailAndIdNot(String email, Integer id);
+
+    boolean verifyPassword(String email, String password);
+
+    Person encodePassword(Person person);
 }

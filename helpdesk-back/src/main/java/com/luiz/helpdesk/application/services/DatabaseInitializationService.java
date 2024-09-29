@@ -9,6 +9,8 @@ import com.luiz.helpdesk.domain.factory.AddressFactory;
 import com.luiz.helpdesk.domain.factory.PersonFactory;
 import com.luiz.helpdesk.domain.model.Address;
 import com.luiz.helpdesk.domain.model.Person;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,7 @@ import java.util.*;
 @Service
 public class DatabaseInitializationService implements InitializeDatabaseUseCasePort {
 
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseInitializationService.class);
     private final PersonPersistenceOutputPort personRepository;
     private final PasswordEncoderPort passwordEncoder;
     private final PersonFactory personFactory;
@@ -45,12 +48,26 @@ public class DatabaseInitializationService implements InitializeDatabaseUseCaseP
     }
 
     private void createAdmin() {
-        String encodedPassword = passwordEncoder.encode("L@ndQLYN5yvx");
+        logger.info("Starting admin user creation process");
+
+        String rawPassword = "L@ndQLYN5yvx";
+        logger.debug("Raw admin password: {}", rawPassword);
+
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+        logger.debug("Encoded admin password: {}", encodedPassword);
+
         Set<Profile> profiles = new HashSet<>(Arrays.asList(Profile.ADMIN, Profile.CLIENT));
+        logger.debug("Admin profiles: {}", profiles);
+
         LocalDate creationDate = LocalDate.now();
+        logger.debug("Admin creation date: {}", creationDate);
+
         Theme adminTheme = Theme.PINK_BLUE_GREY;
+        logger.debug("Admin theme: {}", adminTheme);
 
         if (personRepository.findByEmail("admin@email.com").isEmpty()) {
+            logger.info("Admin user does not exist. Creating new admin user.");
+
             Address address = addressFactory.createAddress(
                     "Admin Street",
                     "Apt 123",
@@ -60,15 +77,25 @@ public class DatabaseInitializationService implements InitializeDatabaseUseCaseP
                     "12345-678",
                     "100"
             );
+            logger.debug("Created admin address: {}", address);
 
             Person admin = personFactory
                     .createPerson("admin", "12345678900", "admin@email.com",
                             encodedPassword, profiles, creationDate, String.valueOf(adminTheme))
                     .withAddress(address);
+            logger.debug("Created admin person: {}", admin);
+
             personRepository.save(admin);
+            logger.info("Admin user saved to database");
+
             usedEmails.add("admin@mail.com");
             usedCPFs.add("12345678900");
+            logger.debug("Added admin email and CPF to used lists");
+        } else {
+            logger.info("Admin user already exists. Skipping creation.");
         }
+
+        logger.info("Admin user creation process completed");
     }
 
     private void createRandomPeople() {

@@ -44,8 +44,9 @@ public class PersonEntity {
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private AddressEntity address;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String theme;
+    private Theme theme;
 
     public PersonEntity() {
     }
@@ -59,7 +60,7 @@ public class PersonEntity {
             this.password = person.getPassword();
             this.profiles = new HashSet<>(person.getProfiles());
             this.creationDate = person.getCreationDate();
-            this.theme = person.getTheme().getValue();
+            this.theme = person.getTheme();
             updateAddress(person);
             return null;
         });
@@ -92,7 +93,7 @@ public class PersonEntity {
                         .withProfiles(new HashSet<>(this.profiles))
                         .withCreationDate(this.creationDate)
                         .withAddress(this.address != null ? this.address.toDomainModel() : null)
-                        .withTheme(Theme.fromString(this.theme))
+                        .withTheme(this.theme)
                         .build()
         );
     }
@@ -103,6 +104,43 @@ public class PersonEntity {
             entity.updateFromDomainModel(person);
             return entity;
         });
+    }
+
+    public PersonEntity updateFromDomainModelGetMe(Person person) {
+        this.id = person.getId();
+        this.name = person.getName();
+        this.cpf = person.getCpf();
+        this.email = person.getEmail();
+        this.profiles.clear();
+        this.profiles.addAll(person.getProfiles());
+        this.theme = person.getTheme() != null ? person.getTheme() : this.theme;
+        this.creationDate = person.getCreationDate() != null ? person.getCreationDate() : LocalDate.now();
+        return this;
+    }
+
+    public PersonEntity updateFromDomainModelPutMe(Person person) {
+        this.name = person.getName();
+        this.cpf = person.getCpf();
+        this.email = person.getEmail();
+        if (person.getPassword() != null && !person.getPassword().isEmpty()) {
+            this.password = person.getPassword();
+        }
+        this.profiles.clear();
+        this.profiles.addAll(person.getProfiles());
+        this.theme = person.getTheme() != null ? person.getTheme() : this.theme;
+        return this;
+    }
+
+    public Person toDomainModelGetMe() {
+        return Person.builder()
+                .withId(id)
+                .withName(name)
+                .withCpf(cpf)
+                .withEmail(email)
+                .withCreationDate(creationDate)
+                .withProfiles(new HashSet<>(profiles))
+                .withTheme(theme)
+                .build();
     }
 
     public static void incrementRecursionDepth() {
@@ -184,15 +222,11 @@ public class PersonEntity {
         }
     }
 
-    public String getTheme() {
+    public Theme getTheme() {
         return theme;
     }
 
-    public void setTheme(String theme) {
-        this.theme = theme;
-    }
-
     public void setTheme(Theme theme) {
-        this.theme = theme.getValue();
+        this.theme = theme;
     }
 }

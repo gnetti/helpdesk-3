@@ -5,15 +5,13 @@ import com.luiz.helpdesk.domain.enums.Theme;
 import com.luiz.helpdesk.infrastructure.adapters.in.web.dto.AddressDTO;
 import com.luiz.helpdesk.infrastructure.adapters.in.web.dto.PersonDTO;
 import com.luiz.helpdesk.infrastructure.adapters.out.config.CustomUserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import jakarta.persistence.criteria.CriteriaBuilder;
 
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Person {
-
-    public static final Theme DEFAULT_THEME = Theme.INDIGO_PINK;
 
     private final Integer id;
     private final String name;
@@ -35,7 +33,7 @@ public class Person {
         this.profiles = new HashSet<>(builder.profiles);
         this.creationDate = builder.creationDate != null ? builder.creationDate : LocalDate.now();
         this.address = builder.address;
-        this.theme = builder.theme != null ? builder.theme : DEFAULT_THEME;
+        this.theme = builder.theme != null ? builder.theme : Theme.INDIGO_PINK;
     }
 
     private void validateFields(String name, String cpf, String email, String password) {
@@ -70,16 +68,12 @@ public class Person {
         return errorMessage.toString();
     }
 
-    public Person withEncodedPassword(BCryptPasswordEncoder encoder) {
-        return this.withPassword(encoder.encode(this.password));
-    }
-
     public Person updateAddress(Address newAddress) {
         return this.updateWithAddress(newAddress);
     }
 
-    public Person updateFieldsAndAddress(Person updatedPerson, BCryptPasswordEncoder passwordEncoder) {
-        Person updatedFields = this.updateFields(updatedPerson, passwordEncoder);
+    public Person updateFieldsAndAddress(Person updatedPerson) {
+        Person updatedFields = this.updateFields(updatedPerson);
         return updatedFields.updateWithAddress(updatedPerson.getAddress());
     }
 
@@ -107,17 +101,6 @@ public class Person {
                 .build();
     }
 
-    public Person updateFields(Person updatedPerson, BCryptPasswordEncoder passwordEncoder) {
-        return toBuilder()
-                .withName(updatedPerson.getName())
-                .withCpf(updatedPerson.getCpf())
-                .withEmail(updatedPerson.getEmail())
-                .withPassword(updatedPerson.getPassword() != null ? passwordEncoder.encode(updatedPerson.getPassword()) : this.getPassword())
-                .withProfiles(updatedPerson.getProfiles())
-                .withTheme(updatedPerson.getTheme())
-                .build();
-    }
-
     public Person addProfile(Profile profile) {
         Set<Profile> newProfiles = new HashSet<>(this.profiles);
         newProfiles.add(profile);
@@ -138,12 +121,25 @@ public class Person {
 
     public static Person fromCustomUserDetails(CustomUserDetails userDetails) {
         return builder()
-                .withId(userDetails.getId())
-                .withName(userDetails.getName())
                 .withEmail(userDetails.getUsername())
                 .withProfiles(userDetails.getAuthorities().stream()
                         .map(authority -> Profile.valueOf(authority.getAuthority()))
                         .collect(Collectors.toSet()))
+                .build();
+    }
+
+    public Person updateCurrentUser(Theme newTheme, String newPassword) {
+        Builder builder = this.toBuilder().withTheme(newTheme);
+        if (newPassword != null && !newPassword.isEmpty()) {
+            builder.withPassword(newPassword);
+        }
+        return builder.build();
+    }
+
+    public Person stripSensitiveInfo() {
+        return this.toBuilder()
+                .withEmail(null)
+                .withProfiles(null)
                 .build();
     }
 
