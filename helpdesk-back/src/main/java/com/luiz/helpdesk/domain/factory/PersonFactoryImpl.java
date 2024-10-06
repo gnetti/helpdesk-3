@@ -6,7 +6,6 @@ import com.luiz.helpdesk.domain.model.Person;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 @Component
 public class PersonFactoryImpl implements PersonFactory {
@@ -17,17 +16,17 @@ public class PersonFactoryImpl implements PersonFactory {
             String cpf,
             String email,
             String password,
-            Set<Profile> profiles,
+            Integer profile,
             LocalDate creationDate,
-            String theme) {
+            Integer theme) {
         return Person.builder()
                 .withName(name)
                 .withCpf(cpf)
                 .withEmail(email)
                 .withPassword(password)
-                .withProfiles(profiles)
+                .withProfile(profile != null ? profile : Profile.CLIENT.getCode())
                 .withCreationDate(creationDate)
-                .withTheme(theme != null ? Theme.valueOf(theme) : Theme.INDIGO_PINK)
+                .withTheme(theme != null ? theme : Theme.INDIGO_PINK.getCode())
                 .build();
     }
 

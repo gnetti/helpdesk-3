@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { JwtHelperService } from "@auth0/angular-jwt";
-import { JwtDecoderPort } from "@core/domain/ports/out/jwt-decoder.port";
+import { JwtDecoderPort } from "@domain/ports/out/jwt-decoder.port";
 
 @Injectable({
   providedIn: "root"

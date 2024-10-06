@@ -12,7 +12,6 @@ import javax.crypto.SecretKey;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenProvider implements JwtTokenProviderPort {
@@ -37,7 +36,7 @@ public class JwtTokenProvider implements JwtTokenProviderPort {
                 .builder()
                 .claim("sub", person.getEmail())
                 .claim("id", person.getId())
-                .claim("profiles", person.getProfiles().stream().map(Enum::name).collect(Collectors.toList()))
+                .claim("profile", person.getProfile())
                 .claim("theme", person.getTheme())
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(validity))
@@ -59,8 +58,11 @@ public class JwtTokenProvider implements JwtTokenProviderPort {
             return false;
         }
     }
+
+    @Override
     public String getThemeFromToken(String token) {
         Claims claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
-        return claims.get("theme", String.class);
+        Integer themeCode = claims.get("theme", Integer.class);
+        return themeCode != null ? themeCode.toString() : null;
     }
 }

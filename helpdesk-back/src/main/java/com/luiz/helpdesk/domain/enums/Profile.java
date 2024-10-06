@@ -14,8 +14,7 @@ public enum Profile {
 
     static {
         CODE_MAP = Arrays.stream(Profile.values()).collect(Collectors.toMap(Profile::getCode, profile -> profile));
-        DESCRIPTION_MAP =
-                Arrays.stream(Profile.values()).collect(Collectors.toMap(Profile::getDescription, profile -> profile));
+        DESCRIPTION_MAP = Arrays.stream(Profile.values()).collect(Collectors.toMap(Profile::getDescription, profile -> profile));
     }
 
     private final Integer code;

@@ -1,10 +1,11 @@
-import {Injectable, Inject} from "@angular/core";
-import {BehaviorSubject, Observable} from "rxjs";
-import {TOKEN_STORAGE_PORT, TokenStoragePort} from "@core/domain/ports/out/token-storage.port";
-import {JWT_DECODER_PORT, JwtDecoderPort} from "@core/domain/ports/out/jwt-decoder.port";
-import {User} from "@core/domain/models/user.model";
-import {THEME_USE_CASE_PORT, ThemeUseCasePort} from "@domain/ports/in/theme-use-case.port";
-import {Theme} from "@enums//theme.enum";
+import { Injectable, Inject } from "@angular/core";
+import { BehaviorSubject, Observable } from "rxjs";
+import { TOKEN_STORAGE_PORT, TokenStoragePort } from "@core/domain/ports/out/token-storage.port";
+import { JWT_DECODER_PORT, JwtDecoderPort } from "@core/domain/ports/out/jwt-decoder.port";
+import { User } from "@core/domain/models/user.model";
+import { THEME_USE_CASE_PORT, ThemeUseCasePort } from "@domain/ports/in/theme-use-case.port";
+import { ThemeUtils } from "@shared/utils/theme.utils";
+import {Profile} from "@enums//profile.enum";
 
 @Injectable({
   providedIn: "root"
@@ -51,8 +52,12 @@ export class AuthService {
     return !!token && !this.jwtDecoder.isTokenExpired(token);
   }
 
-  hasRole(role: string): boolean {
-    return this.currentUserValue?.profiles.includes(role) ?? false;
+  hasRole(role: Profile): boolean {
+    return this.currentUserValue?.profile === role;
+  }
+
+  getProfileName(): string {
+    return this.currentUserValue ? Profile[this.currentUserValue.profile] : '';
   }
 
   private getUserFromToken(): User | null {
@@ -65,8 +70,12 @@ export class AuthService {
     return {
       id: decodedToken.id,
       email: decodedToken.sub,
-      profiles: Array.isArray(decodedToken.profiles) ? decodedToken.profiles : [],
-      theme: decodedToken.theme as Theme
+      profile: this.getProfileFromToken(decodedToken.profile),
+      theme: ThemeUtils.getThemeEnum(decodedToken.theme)
     };
+  }
+
+  private getProfileFromToken(profileValue: string): Profile {
+    return Profile[profileValue as keyof typeof Profile] || Profile.USER;
   }
 }

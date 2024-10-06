@@ -34,9 +34,8 @@ public class PersonEntity {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "person_profiles", joinColumns = @JoinColumn(name = "person_id"))
-    @Enumerated(EnumType.STRING)
     @Column(name = "profile")
-    private Set<Profile> profiles = new HashSet<>();
+    private Set<Integer> profiles = new HashSet<>();
 
     @Column(nullable = false)
     private LocalDate creationDate;
@@ -44,9 +43,10 @@ public class PersonEntity {
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private AddressEntity address;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Theme theme;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "person_themes", joinColumns = @JoinColumn(name = "person_id"))
+    @Column(name = "theme")
+    private Set<Integer> themes = new HashSet<>();
 
     public PersonEntity() {
     }
@@ -58,9 +58,11 @@ public class PersonEntity {
             this.cpf = person.getCpf();
             this.email = person.getEmail();
             this.password = person.getPassword();
-            this.profiles = new HashSet<>(person.getProfiles());
+            this.profiles.clear();
+            this.profiles.add(person.getProfile());
             this.creationDate = person.getCreationDate();
-            this.theme = person.getTheme();
+            this.themes.clear();
+            this.themes.add(person.getTheme());
             updateAddress(person);
             return null;
         });
@@ -90,10 +92,10 @@ public class PersonEntity {
                         .withCpf(this.cpf)
                         .withEmail(this.email)
                         .withPassword(this.password)
-                        .withProfiles(new HashSet<>(this.profiles))
+                        .withProfile(this.profiles.isEmpty() ? null : this.profiles.iterator().next())
                         .withCreationDate(this.creationDate)
                         .withAddress(this.address != null ? this.address.toDomainModel() : null)
-                        .withTheme(this.theme)
+                        .withTheme(this.themes.isEmpty() ? null : this.themes.iterator().next())
                         .build()
         );
     }
@@ -112,8 +114,9 @@ public class PersonEntity {
         this.cpf = person.getCpf();
         this.email = person.getEmail();
         this.profiles.clear();
-        this.profiles.addAll(person.getProfiles());
-        this.theme = person.getTheme() != null ? person.getTheme() : this.theme;
+        this.profiles.add(person.getProfile());
+        this.themes.clear();
+        this.themes.add(person.getTheme());
         this.creationDate = person.getCreationDate() != null ? person.getCreationDate() : LocalDate.now();
         return this;
     }
@@ -126,8 +129,9 @@ public class PersonEntity {
             this.password = person.getPassword();
         }
         this.profiles.clear();
-        this.profiles.addAll(person.getProfiles());
-        this.theme = person.getTheme() != null ? person.getTheme() : this.theme;
+        this.profiles.add(person.getProfile());
+        this.themes.clear();
+        this.themes.add(person.getTheme());
         return this;
     }
 
@@ -138,8 +142,8 @@ public class PersonEntity {
                 .withCpf(cpf)
                 .withEmail(email)
                 .withCreationDate(creationDate)
-                .withProfiles(new HashSet<>(profiles))
-                .withTheme(theme)
+                .withProfile(profiles.isEmpty() ? null : profiles.iterator().next())
+                .withTheme(themes.isEmpty() ? null : themes.iterator().next())
                 .build();
     }
 
@@ -195,12 +199,15 @@ public class PersonEntity {
         this.password = password;
     }
 
-    public Set<Profile> getProfiles() {
-        return profiles;
+    public Integer getProfile() {
+        return profiles.isEmpty() ? null : profiles.iterator().next();
     }
 
-    public void setProfiles(Set<Profile> profiles) {
-        this.profiles = profiles;
+    public void setProfile(Integer profile) {
+        this.profiles.clear();
+        if (profile != null) {
+            this.profiles.add(profile);
+        }
     }
 
     public LocalDate getCreationDate() {
@@ -222,11 +229,14 @@ public class PersonEntity {
         }
     }
 
-    public Theme getTheme() {
-        return theme;
+    public Integer getTheme() {
+        return themes.isEmpty() ? null : themes.iterator().next();
     }
 
-    public void setTheme(Theme theme) {
-        this.theme = theme;
+    public void setTheme(Integer theme) {
+        this.themes.clear();
+        if (theme != null) {
+            this.themes.add(theme);
+        }
     }
 }

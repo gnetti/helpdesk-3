@@ -9,7 +9,7 @@ import { JWT_DECODER_PORT, JwtDecoderPort } from '@domain/ports/out/jwt-decoder.
 @Injectable({
   providedIn: 'root'
 })
-export class LoginUseCase implements LoginUseCasePort {
+export class LoginUserCaseAdapter implements LoginUseCasePort {
   constructor(
     @Inject(AUTH_REPOSITORY_PORT) private authRepository: AuthRepositoryPort,
     private authService: AuthService,

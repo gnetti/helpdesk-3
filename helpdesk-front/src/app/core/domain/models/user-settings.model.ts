@@ -1,9 +1,9 @@
-import {Profile} from "@enums//profile.enum";
 import {Theme} from "@enums//theme.enum";
 
-export interface User {
+export interface UserSettings {
   id: number;
+  name: string;
   email: string;
-  profile: Profile;
+  profiles: number[];
   theme: Theme;
 }

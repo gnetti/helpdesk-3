@@ -5,18 +5,17 @@ import { User } from "@domain/models/user.model";
 import { firstValueFrom } from "rxjs";
 import { environment } from "@env/environment";
 import { JwtHelperService } from "@auth0/angular-jwt";
-
+import { ThemeUtils } from "@shared/utils/theme.utils";
+import {Profile} from "@enums//profile.enum";
 
 @Injectable()
 export class AuthRepositoryAdapter implements AuthRepositoryPort {
   private apiUrl = environment.apiUrl;
 
-
   constructor(
     private http: HttpClient,
     private jwtHelper: JwtHelperService
-  ) {
-  }
+  ) {}
 
   async authenticate(email: string, password: string): Promise<{ user: User; token: string }> {
     const response = await firstValueFrom(
@@ -45,8 +44,12 @@ export class AuthRepositoryAdapter implements AuthRepositoryPort {
     return {
       id: decodedToken.id,
       email: decodedToken.sub,
-      profiles: Array.isArray(decodedToken.profiles) ? decodedToken.profiles : [],
-      theme: decodedToken.theme || "indigoPink"
+      profile: this.getProfileFromToken(decodedToken.profile),
+      theme: ThemeUtils.getThemeEnum(decodedToken.theme)
     };
+  }
+
+  private getProfileFromToken(profileValue: string): Profile {
+    return Profile[profileValue as keyof typeof Profile] || Profile.USER;
   }
 }

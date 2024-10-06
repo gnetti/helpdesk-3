@@ -22,25 +22,21 @@ export class ThemeService implements ThemeUseCasePort {
     const themeFileName = ThemeConfig.getThemeFileName(theme);
     if (themeFileName) {
       this.themeLinkElement.href = `/themes/${themeFileName}`;
-      this.themeStorage.setTheme(theme);
+      this.themeStorage.setTheme(theme.toString());
     } else {
-      console.warn(`Theme file not found for theme: ${theme}`);
+      console.warn(`Theme file not found for theme: ${ThemeUtils.getThemeName(theme)}`);
     }
   }
 
   getCurrentTheme(): Theme {
-    return this.themeStorage.getTheme() as Theme || this.getDefaultTheme();
+    const savedTheme = this.themeStorage.getTheme();
+    return savedTheme !== null ? ThemeUtils.getThemeEnum(Number(savedTheme)) : this.getDefaultTheme();
   }
 
   setThemeFromToken(decodedToken: any): void {
-    if (decodedToken?.theme) {
+    if (decodedToken?.theme !== undefined) {
       const themeEnum = ThemeUtils.getThemeEnum(decodedToken.theme);
-      if (themeEnum) {
-        this.setTheme(themeEnum);
-      } else {
-        console.warn(`Invalid theme in token: ${decodedToken.theme}`);
-        this.setTheme(this.getDefaultTheme());
-      }
+      this.setTheme(themeEnum);
     } else {
       this.setTheme(this.getDefaultTheme());
     }
@@ -55,9 +51,10 @@ export class ThemeService implements ThemeUseCasePort {
   }
 
   private loadSavedTheme(): void {
-    const savedTheme = this.themeStorage.getTheme() as Theme;
-    if (savedTheme && Object.values(Theme).includes(savedTheme)) {
-      this.setTheme(savedTheme);
+    const savedTheme = this.themeStorage.getTheme();
+    if (savedTheme !== null) {
+      const themeEnum = ThemeUtils.getThemeEnum(Number(savedTheme));
+      this.setTheme(themeEnum);
     } else {
       this.setTheme(this.getDefaultTheme());
     }

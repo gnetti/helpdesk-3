@@ -21,7 +21,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Collections;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -70,10 +70,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 person.getId(),
                 person.getEmail(),
                 person.getPassword(),
-                person.getProfiles().stream()
-                        .map(profile -> new SimpleGrantedAuthority(profile.getDescription()))
-                        .collect(Collectors.toList()),
-                person.getTheme().getValue(),
+                Collections.singletonList(new SimpleGrantedAuthority(person.getProfile().toString())),
+                person.getTheme().toString(),
                 person.getName()
         );
     }

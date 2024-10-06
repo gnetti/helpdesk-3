@@ -1,16 +1,19 @@
 package com.luiz.helpdesk.application.services;
 
-import com.luiz.helpdesk.application.ports.in.AuthenticationServicePort;
+import com.luiz.helpdesk.application.ports.in.AuthenticationUseCasePort;
 import com.luiz.helpdesk.application.ports.in.PersonManageUseCasePort;
 import com.luiz.helpdesk.application.ports.out.JwtTokenProviderPort;
 import com.luiz.helpdesk.domain.exception.person.PersonNotFoundException;
 import com.luiz.helpdesk.domain.model.Person;
+import com.luiz.helpdesk.domain.validator.AuthenticationValidator;
+import com.luiz.helpdesk.infrastructure.adapters.out.config.CustomUserDetails;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthenticationService implements AuthenticationServicePort {
+public class AuthenticationService implements AuthenticationUseCasePort {
 
     private final PersonManageUseCasePort personUseCase;
     private final PasswordEncoder passwordEncoder;
@@ -26,20 +29,36 @@ public class AuthenticationService implements AuthenticationServicePort {
 
     @Override
     public Person authenticate(String email, String password) {
-        try {
-            Person person = personUseCase.findPersonByEmail(email);
-            if (passwordEncoder.matches(password, person.getPassword())) {
-                return person;
-            } else {
-                throw new BadCredentialsException("Invalid email or password");
-            }
-        } catch (PersonNotFoundException e) {
-            throw new BadCredentialsException("Invalid email or password");
-        }
+        AuthenticationValidator.validateEmailNotBlank(email);
+        AuthenticationValidator.validatePasswordNotBlank(password);
+        Person person = findPersonByEmail(email);
+        AuthenticationValidator.validateCredentials(password, person.getPassword(), passwordEncoder);
+        return person;
     }
 
     @Override
     public String generateToken(Person person) {
         return jwtTokenProvider.createToken(person);
+    }
+
+    @Override
+    public CustomUserDetails getAuthenticatedUser() {
+        return AuthenticationValidator.validateAndGetUserDetails(SecurityContextHolder.getContext().getAuthentication());
+    }
+
+    @Override
+    public String refreshToken(String oldToken) {
+        AuthenticationValidator.validateToken(jwtTokenProvider.validateToken(oldToken));
+        String email = jwtTokenProvider.getEmailFromToken(oldToken);
+        Person person = findPersonByEmail(email);
+        return jwtTokenProvider.createToken(person);
+    }
+
+    private Person findPersonByEmail(String email) {
+        try {
+            return personUseCase.findPersonByEmail(email);
+        } catch (PersonNotFoundException e) {
+            throw new BadCredentialsException("Invalid email or password");
+        }
     }
 }

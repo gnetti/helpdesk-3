@@ -1,7 +1,7 @@
-import { Theme } from "@enums//theme.enum";
+import {Theme, ThemeNames} from "@enums//theme.enum";
 
 export class ThemeConfig {
-  private static readonly themeFiles: Record<Theme, string> = {
+  private static readonly themeFiles: Record<number, string> = {
     [Theme.AZURE_BLUE]: "azure_blue.css",
     [Theme.CYAN_ORANGE]: "cyan_orange.css",
     [Theme.DEEP_PURPLE_AMBER]: "deep_purple_amber.css",
@@ -14,5 +14,9 @@ export class ThemeConfig {
 
   static getThemeFileName(theme: Theme): string | undefined {
     return ThemeConfig.themeFiles[theme];
+  }
+
+  static getThemeName(theme: Theme): string {
+    return ThemeNames[theme];
   }
 }

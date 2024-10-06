@@ -1,53 +1,56 @@
 package com.luiz.helpdesk.domain.enums;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public enum Theme {
-    AZURE_BLUE("azureBlue"),
-    CYAN_ORANGE("cyanOrange"),
-    DEEP_PURPLE_AMBER("deepPurpleAmber"),
-    INDIGO_PINK("indigoPink"),
-    MAGENTA_VIOLET("magentaViolet"),
-    PINK_BLUE_GREY("pinkBlueGrey"),
-    PURPLE_GREEN("purpleGreen"),
-    ROSE_RED("roseRed");
+    AZURE_BLUE(0, "azureBlue"),
+    CYAN_ORANGE(1, "cyanOrange"),
+    DEEP_PURPLE_AMBER(2, "deepPurpleAmber"),
+    INDIGO_PINK(3, "indigoPink"),
+    MAGENTA_VIOLET(4, "magentaViolet"),
+    PINK_BLUE_GREY(5, "pinkBlueGrey"),
+    PURPLE_GREEN(6, "purpleGreen"),
+    ROSE_RED(7, "roseRed");
 
-    private final String value;
-    private static final Map<String, Theme> LOOKUP_MAP;
+    private static final Map<Integer, Theme> CODE_MAP;
+    private static final Map<String, Theme> DESCRIPTION_MAP;
 
     static {
-        LOOKUP_MAP = Stream.of(values())
-                .flatMap(theme -> Stream.of(
-                        Map.entry(theme.value.toLowerCase(), theme),
-                        Map.entry(theme.name().toLowerCase(), theme)
-                ))
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (existing, replacement) -> existing
-                ));
+        CODE_MAP = Arrays.stream(Theme.values()).collect(Collectors.toMap(Theme::getCode, theme -> theme));
+        DESCRIPTION_MAP = Arrays.stream(Theme.values()).collect(Collectors.toMap(Theme::getDescription, theme -> theme));
     }
 
-    Theme(String value) {
-        this.value = value;
+    private final Integer code;
+    private final String description;
+
+    Theme(Integer code, String description) {
+        this.code = code;
+        this.description = description;
     }
 
-    public String getValue() {
-        return value;
+    public Integer getCode() {
+        return code;
     }
 
-    public static Theme fromString(String text) {
-        if (text == null || text.isEmpty()) {
-            throw new IllegalArgumentException("Theme text cannot be null or empty");
-        }
+    public String getDescription() {
+        return description;
+    }
 
-        Theme theme = LOOKUP_MAP.get(text.toLowerCase());
+    public static Theme fromDescription(String description) {
+        Theme theme = DESCRIPTION_MAP.get(description);
         if (theme == null) {
-            throw new IllegalArgumentException("No constant with text '" + text + "' found");
+            throw new IllegalArgumentException("Invalid theme description: " + description);
         }
+        return theme;
+    }
 
+    public static Theme fromCode(Integer code) {
+        Theme theme = CODE_MAP.get(code);
+        if (theme == null) {
+            throw new IllegalArgumentException("Invalid theme code: " + code);
+        }
         return theme;
     }
 }

@@ -1,59 +1,75 @@
 package com.luiz.helpdesk.infrastructure.adapters.in.web;
 
-import com.luiz.helpdesk.application.ports.in.AuthenticationServicePort;
+import com.luiz.helpdesk.application.ports.in.AuthenticationUseCasePort;
 import com.luiz.helpdesk.application.ports.out.DecryptionPort;
+import com.luiz.helpdesk.domain.exception.auth.UnauthorizedException;
 import com.luiz.helpdesk.domain.model.Person;
 import com.luiz.helpdesk.infrastructure.adapters.in.web.dto.AuthenticationDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Authentication", description = "Authentication management APIs")
 public class AuthenticationController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
-
-    private final AuthenticationServicePort authenticationService;
+    private final AuthenticationUseCasePort authenticationService;
     private final DecryptionPort decryptionPort;
 
-    public AuthenticationController(AuthenticationServicePort authenticationService, DecryptionPort decryptionPort) {
+    public AuthenticationController(AuthenticationUseCasePort authenticationService, DecryptionPort decryptionPort) {
         this.authenticationService = authenticationService;
         this.decryptionPort = decryptionPort;
-        logger.info("AuthenticationController initialized");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@Valid @RequestBody AuthenticationDTO request) {
-        logger.info("Login attempt for email: {}", request.getEmail());
-        try {
-            logger.debug("Attempting to decrypt password");
-            String decryptedPassword = decryptionPort.decrypt(request.getPassword());
-            logger.debug("Decrypted password length: {}", decryptedPassword.length());
+    @Operation(summary = "Create the authentication token", description = "Authenticates a user and returns a JWT token")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully authenticated"),
+            @ApiResponse(responseCode = "401", description = "Invalid credentials")
+    })
+    public ResponseEntity<Void> login(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "User credentials", required = true,
+                    content = @Content(schema = @Schema(implementation = AuthenticationDTO.class)))
+            @Valid @RequestBody AuthenticationDTO request) throws Exception {
+        String decryptedPassword = decryptionPort.decrypt(request.getPassword());
+        Person authenticatedPerson = authenticationService.authenticate(request.getEmail(), decryptedPassword);
+        String token = authenticationService.generateToken(authenticatedPerson);
+        return createTokenResponse(token);
+    }
 
-            logger.debug("Attempting to authenticate user");
-            Person authenticatedPerson = authenticationService.authenticate(request.getEmail(), decryptedPassword);
-            logger.info("User authenticated successfully: {}", authenticatedPerson.getEmail());
+    @PostMapping("/refresh-token")
+    @Operation(summary = "Refresh the authentication token", description = "Refreshes an existing JWT token")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Token refreshed successfully",
+                    content = @Content(schema = @Schema(type = "string", example = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."))),
+            @ApiResponse(responseCode = "401", description = "Invalid or expired token")
+    })
+    public ResponseEntity<String> refreshToken(
+            @Parameter(description = "JWT token to be refreshed", required = true)
+            @RequestHeader("Authorization") String token) {
+        String newToken = authenticationService.refreshToken(extractToken(token));
+        return ResponseEntity.ok(newToken);
+    }
 
-            logger.debug("Generating token for authenticated user");
-            String token = authenticationService.generateToken(authenticatedPerson);
-            logger.debug("Token generated successfully");
+    private ResponseEntity<Void> createTokenResponse(String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+        return ResponseEntity.ok().headers(headers).build();
+    }
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
-            logger.info("Login successful for user: {}", authenticatedPerson.getEmail());
-
-            return ResponseEntity.ok().headers(headers).build();
-        } catch (Exception e) {
-            logger.error("Authentication failed for email: {}. Error: {}", request.getEmail(), e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    private String extractToken(String authorizationHeader) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7);
         }
+        throw new UnauthorizedException("Invalid authorization header");
     }
 }

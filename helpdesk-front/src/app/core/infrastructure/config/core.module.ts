@@ -15,8 +15,8 @@ import { ThemeService } from "@core/application/services/theme.service";
 import { THEME_USE_CASE_PORT } from "@domain/ports/in/theme-use-case.port";
 import { ThemeStorageAdapter } from "@adapters/out/persistence/local-storage-theme.adapter";
 import { JWT_DECODER_PORT } from "@core/domain/ports/out/jwt-decoder.port";
-import { JwtDecoderAdapter } from "@core/infrastructure/adapters/out/jwt-decoder.adapter";
-import { LoginUseCase } from "@application/use-cases/login.use-case";
+import { JwtDecoderAdapter } from "@adapters/out/persistence/jwt-decoder.adapter";
+import { LoginUserCaseAdapter } from "@adapters/out/persistence/login.user.case.adapter";
 
 
 @NgModule({
@@ -32,7 +32,7 @@ import { LoginUseCase } from "@application/use-cases/login.use-case";
     provideHttpClient(
       withInterceptors([authInterceptor])
     ),
-    { provide: LOGIN_USE_CASE_PORT, useClass: LoginUseCase },
+    { provide: LOGIN_USE_CASE_PORT, useClass: LoginUserCaseAdapter },
     { provide: AUTH_REPOSITORY_PORT, useClass: AuthRepositoryAdapter },
     { provide: AUTHENTICATION_PORT, useClass: AuthService },
     { provide: TOKEN_STORAGE_PORT, useClass: LocalStorageTokenAdapter },

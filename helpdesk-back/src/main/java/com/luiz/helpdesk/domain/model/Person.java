@@ -5,11 +5,9 @@ import com.luiz.helpdesk.domain.enums.Theme;
 import com.luiz.helpdesk.infrastructure.adapters.in.web.dto.AddressDTO;
 import com.luiz.helpdesk.infrastructure.adapters.in.web.dto.PersonDTO;
 import com.luiz.helpdesk.infrastructure.adapters.out.config.CustomUserDetails;
-import jakarta.persistence.criteria.CriteriaBuilder;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Person {
 
@@ -18,10 +16,10 @@ public class Person {
     private final String cpf;
     private final String email;
     private final String password;
-    private final Set<Profile> profiles;
+    private final Set<Integer> profiles;
     private final LocalDate creationDate;
     private final Address address;
-    private final Theme theme;
+    private final Set<Integer> themes;
 
     private Person(Builder builder) {
         validateFields(builder.name, builder.cpf, builder.email, builder.password);
@@ -33,7 +31,10 @@ public class Person {
         this.profiles = new HashSet<>(builder.profiles);
         this.creationDate = builder.creationDate != null ? builder.creationDate : LocalDate.now();
         this.address = builder.address;
-        this.theme = builder.theme != null ? builder.theme : Theme.INDIGO_PINK;
+        this.themes = new HashSet<>(builder.themes);
+        if (this.themes.isEmpty()) {
+            this.themes.add(Theme.INDIGO_PINK.getCode());
+        }
     }
 
     private void validateFields(String name, String cpf, String email, String password) {
@@ -96,13 +97,13 @@ public class Person {
                 .withCpf(newData.getCpf())
                 .withEmail(newData.getEmail())
                 .withPassword(newData.getPassword())
-                .withProfiles(newData.getProfiles())
+                .withProfile(newData.getProfile())
                 .withTheme(newData.getTheme())
                 .build();
     }
 
-    public Person addProfile(Profile profile) {
-        Set<Profile> newProfiles = new HashSet<>(this.profiles);
+    public Person addProfile(Integer profile) {
+        Set<Integer> newProfiles = new HashSet<>();
         newProfiles.add(profile);
         return toBuilder().withProfiles(newProfiles).build();
     }
@@ -122,13 +123,11 @@ public class Person {
     public static Person fromCustomUserDetails(CustomUserDetails userDetails) {
         return builder()
                 .withEmail(userDetails.getUsername())
-                .withProfiles(userDetails.getAuthorities().stream()
-                        .map(authority -> Profile.valueOf(authority.getAuthority()))
-                        .collect(Collectors.toSet()))
+                .withProfile(Profile.valueOf(userDetails.getAuthorities().iterator().next().getAuthority()).getCode())
                 .build();
     }
 
-    public Person updateCurrentUser(Theme newTheme, String newPassword) {
+    public Person updateCurrentUser(Integer newTheme, String newPassword) {
         Builder builder = this.toBuilder().withTheme(newTheme);
         if (newPassword != null && !newPassword.isEmpty()) {
             builder.withPassword(newPassword);
@@ -163,8 +162,8 @@ public class Person {
         return password;
     }
 
-    public Set<Profile> getProfiles() {
-        return Collections.unmodifiableSet(profiles);
+    public Integer getProfile() {
+        return profiles.isEmpty() ? null : profiles.iterator().next();
     }
 
     public LocalDate getCreationDate() {
@@ -175,12 +174,8 @@ public class Person {
         return address;
     }
 
-    public Theme getTheme() {
-        return theme;
-    }
-
-    public String getThemeValue() {
-        return theme.getValue();
+    public Integer getTheme() {
+        return themes.isEmpty() ? null : themes.iterator().next();
     }
 
     public Builder toBuilder() {
@@ -190,10 +185,10 @@ public class Person {
                 .withCpf(this.cpf)
                 .withEmail(this.email)
                 .withPassword(this.password)
-                .withProfiles(this.profiles)
+                .withProfile(this.getProfile())
                 .withCreationDate(this.creationDate)
                 .withAddress(this.address)
-                .withTheme(this.theme);
+                .withTheme(this.getTheme());
     }
 
     public static class Builder {
@@ -202,10 +197,10 @@ public class Person {
         private String cpf;
         private String email;
         private String password;
-        private Set<Profile> profiles = new HashSet<>();
+        private Set<Integer> profiles = new HashSet<>();
         private LocalDate creationDate;
         private Address address;
-        private Theme theme;
+        private Set<Integer> themes = new HashSet<>();
 
         public Builder withId(Integer id) {
             this.id = id;
@@ -232,8 +227,19 @@ public class Person {
             return this;
         }
 
-        public Builder withProfiles(Set<Profile> profiles) {
-            this.profiles = new HashSet<>(profiles);
+        public Builder withProfile(Integer profile) {
+            this.profiles.clear();
+            if (profile != null) {
+                this.profiles.add(profile);
+            }
+            return this;
+        }
+
+        public Builder withProfiles(Set<Integer> profiles) {
+            this.profiles = new HashSet<>();
+            if (profiles != null && !profiles.isEmpty()) {
+                this.profiles.add(profiles.iterator().next());
+            }
             return this;
         }
 
@@ -247,13 +253,19 @@ public class Person {
             return this;
         }
 
-        public Builder withTheme(Theme theme) {
-            this.theme = theme;
+        public Builder withTheme(Integer theme) {
+            this.themes.clear();
+            if (theme != null) {
+                this.themes.add(theme);
+            }
             return this;
         }
 
-        public Builder withTheme(String themeValue) {
-            this.theme = themeValue != null ? Theme.fromString(themeValue) : null;
+        public Builder withThemes(Set<Integer> themes) {
+            this.themes = new HashSet<>();
+            if (themes != null && !themes.isEmpty()) {
+                this.themes.add(themes.iterator().next());
+            }
             return this;
         }
 
@@ -279,12 +291,12 @@ public class Person {
                 Objects.equals(profiles, person.profiles) &&
                 Objects.equals(creationDate, person.creationDate) &&
                 Objects.equals(address, person.address) &&
-                theme == person.theme;
+                Objects.equals(themes, person.themes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, cpf, email, password, profiles, creationDate, address, theme);
+        return Objects.hash(id, name, cpf, email, password, profiles, creationDate, address, themes);
     }
 
     @Override
@@ -294,10 +306,10 @@ public class Person {
                 .append(", name='").append(name).append('\'')
                 .append(", cpf='").append(cpf).append('\'')
                 .append(", email='").append(email).append('\'')
-                .append(", profiles=").append(profiles)
+                .append(", profile=").append(getProfile())
                 .append(", creationDate=").append(creationDate)
                 .append(", address=").append(address)
-                .append(", theme=").append(theme)
+                .append(", theme=").append(getTheme())
                 .append('}')
                 .toString();
     }

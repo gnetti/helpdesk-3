@@ -1,4 +1,4 @@
-package com.luiz.helpdesk.infrastructure.adapters.out;
+package com.luiz.helpdesk.infrastructure.adapters;
 
 import com.luiz.helpdesk.application.ports.out.PaginationOutputPort;
 import com.luiz.helpdesk.domain.model.Pagination;

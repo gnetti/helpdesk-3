@@ -1,7 +1,7 @@
 package com.luiz.helpdesk.application.services;
 
+import com.luiz.helpdesk.application.ports.in.AuthenticationUseCasePort;
 import com.luiz.helpdesk.application.ports.in.PersonManageUseCasePort;
-import com.luiz.helpdesk.application.ports.in.VerifyLoggedUserUseCase;
 import com.luiz.helpdesk.application.ports.out.PasswordEncoderPort;
 import com.luiz.helpdesk.application.ports.out.PersonPersistenceOutputPort;
 import com.luiz.helpdesk.domain.exception.auth.UnauthorizedException;
@@ -22,14 +22,14 @@ public class PersonManageService implements PersonManageUseCasePort {
 
     private final PersonPersistenceOutputPort personRepository;
     private final PasswordEncoderPort passwordEncoder;
-    private final VerifyLoggedUserUseCase verifyLoggedUserUseCase;
+    private final AuthenticationUseCasePort authenticationUseCasePort;
 
     public PersonManageService(PersonPersistenceOutputPort personRepository,
                                @Lazy PasswordEncoderPort passwordEncoder,
-                               VerifyLoggedUserUseCase verifyLoggedUserUseCase) {
+                               @Lazy AuthenticationUseCasePort authenticationUseCasePort) {
         this.personRepository = personRepository;
         this.passwordEncoder = passwordEncoder;
-        this.verifyLoggedUserUseCase = verifyLoggedUserUseCase;
+        this.authenticationUseCasePort = authenticationUseCasePort;
     }
 
     @Override
@@ -91,7 +91,7 @@ public class PersonManageService implements PersonManageUseCasePort {
     @Override
     @Transactional
     public Person updateCurrentUser(Integer id, Person updatedPerson, String currentPassword, String newPassword) {
-        CustomUserDetails userDetails = verifyLoggedUserUseCase.getAuthenticatedUser();
+        CustomUserDetails userDetails = authenticationUseCasePort.getAuthenticatedUser();
         validateCurrentUserOperation(userDetails.getId(), id);
         Person existingPerson = getPersonById(id)
                 .orElseThrow(() -> new PersonNotFoundException("Person not found with id: " + id));
@@ -104,7 +104,7 @@ public class PersonManageService implements PersonManageUseCasePort {
     @Override
     @Transactional(readOnly = true)
     public Person getCurrentUser() {
-        CustomUserDetails userDetails = verifyLoggedUserUseCase.getAuthenticatedUser();
+        CustomUserDetails userDetails = authenticationUseCasePort.getAuthenticatedUser();
         return personRepository.findById(userDetails.getId())
                 .orElseThrow(() -> new PersonNotFoundException("Person not found with id: " + userDetails.getId()));
     }
