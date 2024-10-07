@@ -5,7 +5,7 @@ import {LOGIN_USE_CASE_PORT, LoginUseCasePort} from "@domain/ports/in/login.use-
 import {AuthService} from "@application/services/auth.service";
 import {THEME_USE_CASE_PORT, ThemeUseCasePort} from "@domain/ports/in/theme-use-case.port";
 import {CryptoService} from "@security//crypto.service";
-import {LoginUtils} from "@utils//login-util";
+import {LoginUtils} from "@utils//login.util";
 
 @Component({
   selector: "app-login",

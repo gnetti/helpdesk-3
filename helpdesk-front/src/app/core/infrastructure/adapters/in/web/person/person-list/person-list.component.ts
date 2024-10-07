@@ -10,7 +10,7 @@ import {PersonHateoasResponse} from '@infrastructure/config/dtos/hateoas-respons
 import {catchError, finalize, switchMap} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {FormUtils} from "@utils//form.util";
-import {DialogUtils} from "@utils//dialog.til";
+import {DialogUtils} from "@utils//dialog.util";
 
 type PersonResponse = PaginatedPersonResponse | PersonHateoasResponse;
 

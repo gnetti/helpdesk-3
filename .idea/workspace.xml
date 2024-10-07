@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6f985a38-0ffb-4e6c-9b10-02d2a5b1782e" name="Changes" comment="Added user settings">
-      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/models/settings-form-control.model.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/validators/settings.validator.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/app/shared/utils/SettingsUtil.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/validators/PasswordStrengthValidator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/validators/Password-strength.validator.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/login/login.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/login/login.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/settings/settings.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/settings/settings.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/settings/settings.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/settings/settings.component.ts" afterDir="false" />
-    </list>
+    <list default="true" id="6f985a38-0ffb-4e6c-9b10-02d2a5b1782e" name="Changes" comment="Optimized user settings" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -66,7 +57,7 @@
       <recent name="X:\helpdesk-3\helpdesk-front\src\app\core\infrastructure\adapters\out\persistence" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.BACKEND">
+  <component name="RunManager" selected="npm.FRONTEND">
     <configuration name="BACKEND" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="helpdesk-back" />
@@ -107,7 +98,7 @@
       <option name="presentableId" value="Default" />
       <updated>1727642563534</updated>
       <workItem from="1727642565615" duration="54671000" />
-      <workItem from="1728213924586" duration="43491000" />
+      <workItem from="1728213924586" duration="43790000" />
     </task>
     <task id="LOCAL-00001" summary="Endpoint improvements me">
       <option name="closed" value="true" />
@@ -149,7 +140,23 @@
       <option name="project" value="LOCAL" />
       <updated>1728308896137</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Optimized user settings">
+      <option name="closed" value="true" />
+      <created>1728324975857</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1728324975857</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Optimized user settings">
+      <option name="closed" value="true" />
+      <created>1728325152284</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1728325152284</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -160,6 +167,7 @@
     <MESSAGE value="Added swagger" />
     <MESSAGE value="Adjustments in Token Jwt structure and entities." />
     <MESSAGE value="Added user settings" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added user settings" />
+    <MESSAGE value="Optimized user settings" />
+    <option name="LAST_COMMIT_MESSAGE" value="Optimized user settings" />
   </component>
 </project>
