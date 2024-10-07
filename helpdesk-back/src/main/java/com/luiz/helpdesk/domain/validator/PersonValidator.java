@@ -1,7 +1,6 @@
 package com.luiz.helpdesk.domain.validator;
 
 import com.luiz.helpdesk.application.ports.out.PersonPersistenceOutputPort;
-import com.luiz.helpdesk.domain.exception.person.InvalidPasswordException;
 import com.luiz.helpdesk.domain.exception.person.InvalidPersonDataException;
 import com.luiz.helpdesk.domain.exception.person.PersonNotFoundException;
 import com.luiz.helpdesk.domain.model.Address;
@@ -28,12 +27,11 @@ public class PersonValidator {
         throwIfErrors(errors);
     }
 
-    public static void validateForCurrentUserUpdate(Person updatedPerson, String currentPassword, String newPassword, PersonPersistenceOutputPort repository, Person existingPerson) {
+    public static void validateForCurrentUserUpdate(Person updatedPerson, String currentPassword, String newPassword, Person existingPerson) {
         List<String> errors = new ArrayList<>();
-        validateBasicPersonDataForCurrentUser(updatedPerson, errors);
-        validateCurrentPasswordProvided(currentPassword, errors);
-        validateNewPasswordIfProvided(newPassword, errors);
-        validateUniqueFieldsForCurrentUser(repository, updatedPerson, existingPerson, errors);
+        validateTheme(updatedPerson.getTheme(), errors);
+        validatePasswordUpdateFields(currentPassword, newPassword, errors);
+        validateAtLeastOneFieldUpdated(updatedPerson.getTheme(), newPassword, existingPerson.getTheme(), errors);
         throwIfErrors(errors);
     }
 
@@ -71,17 +69,24 @@ public class PersonValidator {
         validateField(password, "Password", errors);
     }
 
-    private static void validateCurrentPassword(String encryptedCurrentPassword, List<String> errors) {
-        validateField(encryptedCurrentPassword, "Current password", errors);
+    private static void validateTheme(Integer theme, List<String> errors) {
+        if (theme != null && theme < 0) {
+            errors.add("Theme must be a non-negative integer");
+        }
     }
 
-    private static void validateNewPasswordIfProvided(String newPassword, List<String> errors) {
-        if (newPassword != null) {
-            if (newPassword.trim().isEmpty()) {
-                errors.add("New password cannot be empty if provided");
-            } else if (newPassword.length() < 8) {
-                errors.add("New password must be at least 8 characters long");
-            }
+    private static void validatePasswordUpdateFields(String currentPassword, String newPassword, List<String> errors) {
+        if (newPassword != null && !newPassword.isEmpty()) {
+            validateCurrentPasswordProvided(currentPassword, errors);
+            validateNewPasswordIfProvided(newPassword, errors);
+        }
+    }
+
+    private static void validateAtLeastOneFieldUpdated(Integer newTheme, String newPassword, Integer existingTheme, List<String> errors) {
+        boolean themeChanged = newTheme != null && !newTheme.equals(existingTheme);
+        boolean passwordChanged = newPassword != null && !newPassword.isEmpty();
+        if (!themeChanged && !passwordChanged) {
+            errors.add("At least one field (theme or password) must be updated");
         }
     }
 
@@ -91,15 +96,6 @@ public class PersonValidator {
         }
         if (existingPerson == null || !newPerson.getEmail().equals(existingPerson.getEmail())) {
             validateUniqueField(newPerson.getEmail(), "email", () -> repository.existsByEmailAndIdNot(newPerson.getEmail(), newPerson.getId()), errors);
-        }
-    }
-
-    private static void validateUniqueFieldsForCurrentUser(PersonPersistenceOutputPort repository, Person updatedPerson, Person existingPerson, List<String> errors) {
-        if (!updatedPerson.getEmail().equals(existingPerson.getEmail())) {
-            errors.add("Email cannot be changed for current user update");
-        }
-        if (!updatedPerson.getCpf().equals(existingPerson.getCpf())) {
-            errors.add("CPF cannot be changed for current user update");
         }
     }
 
@@ -145,23 +141,25 @@ public class PersonValidator {
                 .orElseThrow(() -> new PersonNotFoundException("Person not found with email: " + email));
     }
 
-    private static void validateBasicPersonDataForCurrentUser(Person person, List<String> errors) {
-        if (person == null) {
-            errors.add("Updated person data cannot be null");
-            return;
-        }
-        validateField(person.getName(), "Person name", errors);
-    }
-
     private static void validateCurrentPasswordProvided(String currentPassword, List<String> errors) {
         if (currentPassword == null || currentPassword.trim().isEmpty()) {
-            errors.add("Current password must be provided for user update");
+            errors.add("Current password must be provided when updating password");
         }
     }
 
-    public static void validateCurrentPassword(String providedPassword, String storedPassword) {
-        if (providedPassword == null || !providedPassword.equals(storedPassword)) {
-            throw new InvalidPasswordException("Current password is incorrect");
+    private static void validateNewPasswordIfProvided(String newPassword, List<String> errors) {
+        if (newPassword != null) {
+            if (newPassword.trim().isEmpty()) {
+                errors.add("New password cannot be empty if provided");
+            } else if (newPassword.length() < 8) {
+                errors.add("New password must be at least 8 characters long");
+            }
+        }
+    }
+
+    public static void validateCpfAndPassword(String cpf, String password) {
+        if (cpf == null || cpf.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+            throw new InvalidPersonDataException("CPF and Password are invalid or empty");
         }
     }
 }

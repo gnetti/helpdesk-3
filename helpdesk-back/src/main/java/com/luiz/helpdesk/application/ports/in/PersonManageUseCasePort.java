@@ -9,9 +9,9 @@ import com.luiz.helpdesk.domain.model.Person;
 import java.util.Optional;
 
 public interface PersonManageUseCasePort {
-    Person createPerson(Person person);
+    Person createPerson(Person person) throws Exception;
 
-    Person updatePersonWithAddress(Integer id, Person updatedPerson);
+    Person updatePersonWithAddress(Integer id, Person updatedPerson) throws Exception;
 
     Pagination<Person> getAllPersons(Pagination<?> pagination);
 
@@ -29,13 +29,13 @@ public interface PersonManageUseCasePort {
 
     boolean existsPersonByEmailAndIdNot(String email, Integer id);
 
-    Person updateCurrentUser(Integer id, Person updatedPerson, String currentPassword, String newPassword);
+    Person updateCurrentUser(Integer id, Person updatedPerson, String currentPassword, String newPassword) throws Exception;
 
     Person getCurrentUser();
 
     Optional<Person> findPersonByEmailAndIdNot(String email, Integer id);
 
-    boolean verifyPassword(String email, String password);
+    boolean verifyPassword(String email, String password) throws Exception;
 
-    Person encodePassword(Person person);
+    Person encodePassword(Person person) throws Exception;
 }

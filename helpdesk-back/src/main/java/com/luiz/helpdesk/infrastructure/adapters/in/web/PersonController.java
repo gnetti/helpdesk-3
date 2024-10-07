@@ -42,7 +42,7 @@ public class PersonController {
             @ApiResponse(responseCode = "201", description = "Person created successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    public ResponseEntity<PersonDTO> createPerson(@Valid @RequestBody PersonDTO personDTO) {
+    public ResponseEntity<PersonDTO> createPerson(@Valid @RequestBody PersonDTO personDTO) throws Exception {
         Person createdPerson = personUseCase.createPerson(personDTO.toDomainModel());
         URI uri = createResourceUri(createdPerson.getId());
         return ResponseEntity.created(uri).body(PersonDTO.fromDomainModel(createdPerson));
@@ -89,7 +89,7 @@ public class PersonController {
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "404", description = "Person not found")
     })
-    public ResponseEntity<PersonDTO> updatePerson(@Parameter(description = "Person ID") @PathVariable Integer id, @Valid @RequestBody PersonDTO personDTO) {
+    public ResponseEntity<PersonDTO> updatePerson(@Parameter(description = "Person ID") @PathVariable Integer id, @Valid @RequestBody PersonDTO personDTO) throws Exception {
         Person existingPerson = getExistingPerson(id);
         Person updatedPerson = existingPerson.updateWithPersonAndAddress(personDTO, personDTO.getAddress());
         Person savedPerson = personUseCase.updatePersonWithAddress(id, updatedPerson);
@@ -155,7 +155,7 @@ public class PersonController {
             @ApiResponse(responseCode = "200", description = "User updated successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    public ResponseEntity<PersonMeDTO> updateCurrentUser(@Valid @RequestBody PersonMeDTO personMeDTO) {
+    public ResponseEntity<PersonMeDTO> updateCurrentUser(@Valid @RequestBody PersonMeDTO personMeDTO) throws Exception {
         Person existingPerson = personUseCase.getCurrentUser();
         Person updatedPerson = updateCurrentUserPerson(existingPerson, personMeDTO);
         return ResponseEntity.ok(PersonMeDTO.fromDomainModel(updatedPerson));
@@ -187,7 +187,7 @@ public class PersonController {
                 .orElseThrow(() -> new PersonNotFoundException("Person not found with id: " + id));
     }
 
-    private Person updateCurrentUserPerson(Person existingPerson, PersonMeDTO personMeDTO) {
+    private Person updateCurrentUserPerson(Person existingPerson, PersonMeDTO personMeDTO) throws Exception {
         Person updatedPerson = personMeDTO.toUpdateDomainModel(existingPerson);
         return personUseCase.updateCurrentUser(
                 existingPerson.getId(),

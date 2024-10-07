@@ -1,0 +1,200 @@
+<div class="container mat-elevation-z8">
+  <app-spinner></app-spinner>
+  <router-outlet></router-outlet>
+
+  <h1 class="full-width">Configurações do Usuário</h1>
+
+  <img class="settings-image" ngSrc="assets/img/chamado-create.svg" alt="User Settings Image" width="328" height="278">
+
+  <form [formGroup]="settingsForm" class="form">
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>ID</mat-label>
+      <input matInput id="id" formControlName="id" required readonly/>
+      <mat-error *ngIf="settingsForm.get('id')?.hasError('required')">
+        ID é obrigatório
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Nome</mat-label>
+      <input matInput id="name" formControlName="name" required readonly/>
+      <mat-error *ngIf="settingsForm.get('name')?.hasError('required')">
+        Nome é obrigatório
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput id="email" formControlName="email" required readonly type="email"/>
+      <mat-error *ngIf="settingsForm.get('email')?.hasError('required')">
+        Email é obrigatório
+      </mat-error>
+      <mat-error *ngIf="settingsForm.get('email')?.hasError('email')">
+        Email inválido
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Senha Atual</mat-label>
+      <div class="password-container">
+        <input
+          matInput
+          id="currentPassword"
+          formControlName="currentPassword"
+          [type]="showPassword.currentPassword ? 'text' : 'password'"
+          (focus)="onPasswordFocus('currentPassword')"
+          (blur)="onPasswordBlur('currentPassword')"
+        />
+        <div class="button-group">
+          <button
+            type="button"
+            mat-icon-button
+            class="info-button"
+            matTooltip="Digite a sua senha atual, antes de escolher uma nova senha."
+            aria-label="Informação sobre a senha atual">
+            <mat-icon>info_outline</mat-icon>
+          </button>
+          <button
+            type="button"
+            mat-icon-button
+            (click)="togglePasswordVisibility('currentPassword')"
+            class="password-visibility-button">
+            <mat-icon>{{ showPassword.currentPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+        </div>
+      </div>
+      <mat-error *ngIf="settingsForm.get('currentPassword')?.hasError('required')">
+        Senha atual é obrigatória
+      </mat-error>
+    </mat-form-field>
+
+    <div *ngIf="isPasswordFieldsVisible" class="password-fields compact-password-fields">
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Nova Senha</mat-label>
+        <div class="password-container">
+          <input
+            matInput
+            id="newPassword"
+            formControlName="newPassword"
+            [type]="showPassword.newPassword ? 'text' : 'password'"
+            (input)="updatePasswordStrength()"
+          />
+          <div class="button-group">
+            <button
+              type="button"
+              mat-icon-button
+              class="info-button"
+              matTooltip="A nova senha deve ter entre 10 e 15 caracteres e incluir pelo menos uma letra maiúscula, uma minúscula, um número e um caractere especial."
+              aria-label="Informação sobre a nova senha">
+              <mat-icon>info_outline</mat-icon>
+            </button>
+            <button
+              type="button"
+              mat-icon-button
+              (click)="togglePasswordVisibility('newPassword')"
+              class="password-visibility-button">
+              <mat-icon>{{ showPassword.newPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+        </div>
+        <mat-error *ngIf="settingsForm.get('newPassword')?.hasError('required')">
+          Nova senha é obrigatória
+        </mat-error>
+      </mat-form-field>
+
+      <div class="password-validation-group">
+        <div *ngIf="settingsForm.get('newPassword')?.value && passwordStrength.strength !== -1" class="password-strength">
+          <ng-container *ngIf="!passwordStrength.isStrong; else passwordStrong">
+            <mat-progress-bar [value]="passwordStrength.strength"></mat-progress-bar>
+            <span>Força da senha: {{ passwordStrength.strength }}%</span>
+          </ng-container>
+          <ng-template #passwordStrong>
+            <mat-progress-bar [value]="100"></mat-progress-bar>
+            <span class="password-strong">Senha forte (100%)</span>
+          </ng-template>
+        </div>
+
+        <div *ngIf="settingsForm.get('newPassword')?.value && passwordStrength.errors.length > 0"
+             class="password-requirements">
+          <p>Requisitos não atendidos:</p>
+          <ul>
+            <li *ngFor="let error of passwordStrength.errors">{{ error }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Confirmar Nova Senha</mat-label>
+        <div class="password-container">
+          <input
+            matInput
+            id="confirmNewPassword"
+            formControlName="confirmNewPassword"
+            [type]="showPassword.confirmNewPassword ? 'text' : 'password'"
+            (input)="passwordsMatch(settingsForm)"
+          />
+          <div class="button-group">
+            <button
+              type="button"
+              mat-icon-button
+              class="info-button"
+              matTooltip="Confirme a nova senha para garantir que corresponde à senha digitada."
+              aria-label="Informação sobre a confirmação da nova senha">
+              <mat-icon>info_outline</mat-icon>
+            </button>
+            <button
+              type="button"
+              mat-icon-button
+              (click)="togglePasswordVisibility('confirmNewPassword')"
+              class="password-visibility-button">
+              <mat-icon>{{ showPassword.confirmNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+        </div>
+        <mat-error *ngIf="settingsForm.get('confirmNewPassword')?.hasError('required')">
+          Confirmação de senha é obrigatória
+        </mat-error>
+        <mat-error *ngIf="settingsForm.hasError('passwordsMismatch')">
+          As senhas não coincidem
+        </mat-error>
+      </mat-form-field>
+
+      <button
+        type="button"
+        (click)="hidePasswordFields()"
+        class="full-width mat-elevation-z4"
+        mat-raised-button
+        color="warn">
+        Cancelar
+      </button>
+    </div>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Tema</mat-label>
+      <mat-select id="theme" formControlName="theme" required (selectionChange)="onThemeChange($event)">
+        <mat-option *ngFor="let theme of availableThemes" [value]="theme.value">
+          {{ theme.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Perfil</mat-label>
+      <input matInput id="profile" [value]="getProfileName(settingsForm.get('profile')?.value)" required readonly/>
+      <mat-error *ngIf="settingsForm.get('profile')?.hasError('required')">
+        Perfil é obrigatório
+      </mat-error>
+    </mat-form-field>
+  </form>
+
+  <button
+    (click)="updateSettings()"
+    [disabled]="!isSaveEnabled"
+    class="full-width mat-elevation-z4"
+    mat-raised-button
+    color="primary">
+    Salvar Configurações
+  </button>
+
+  <p class="full-width">Desenvolvido por Luiz Generoso</p>
+</div>

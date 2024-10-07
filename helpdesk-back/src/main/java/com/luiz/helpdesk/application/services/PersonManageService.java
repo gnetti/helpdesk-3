@@ -2,10 +2,10 @@ package com.luiz.helpdesk.application.services;
 
 import com.luiz.helpdesk.application.ports.in.AuthenticationUseCasePort;
 import com.luiz.helpdesk.application.ports.in.PersonManageUseCasePort;
+import com.luiz.helpdesk.application.ports.out.DecryptionPort;
 import com.luiz.helpdesk.application.ports.out.PasswordEncoderPort;
 import com.luiz.helpdesk.application.ports.out.PersonPersistenceOutputPort;
 import com.luiz.helpdesk.domain.exception.auth.UnauthorizedException;
-import com.luiz.helpdesk.domain.exception.person.InvalidPasswordException;
 import com.luiz.helpdesk.domain.exception.person.PersonNotFoundException;
 import com.luiz.helpdesk.domain.model.Pagination;
 import com.luiz.helpdesk.domain.model.Person;
@@ -21,34 +21,39 @@ import java.util.Optional;
 public class PersonManageService implements PersonManageUseCasePort {
 
     private final PersonPersistenceOutputPort personRepository;
-    private final PasswordEncoderPort passwordEncoder;
     private final AuthenticationUseCasePort authenticationUseCasePort;
+    private final PasswordEncoderPort passwordEncoder;
+    private final DecryptionPort decryptionService;
 
     public PersonManageService(PersonPersistenceOutputPort personRepository,
+                               @Lazy AuthenticationUseCasePort authenticationUseCasePort,
                                @Lazy PasswordEncoderPort passwordEncoder,
-                               @Lazy AuthenticationUseCasePort authenticationUseCasePort) {
+                               DecryptionPort decryptionService) {
         this.personRepository = personRepository;
-        this.passwordEncoder = passwordEncoder;
         this.authenticationUseCasePort = authenticationUseCasePort;
+        this.passwordEncoder = passwordEncoder;
+        this.decryptionService = decryptionService;
     }
 
     @Override
     @Transactional
-    public Person createPerson(Person person) {
+    public Person createPerson(Person person) throws Exception {
+        PersonValidator.validateCpfAndPassword(person.getCpf(), person.getPassword());
         PersonValidator.validateForCreation(person, personRepository);
         return personRepository.save(encodePassword(person));
     }
 
     @Override
     @Transactional
-    public Person updatePersonWithAddress(Integer id, Person updatedPerson) {
-        Person existingPerson = getPersonById(id).orElseThrow(() -> new PersonNotFoundException("Person not found with id: " + id));
+    public Person updatePersonWithAddress(Integer id, Person updatedPerson) throws Exception {
+        Person existingPerson = getExistingPerson(id);
         PersonValidator.validateForUpdate(updatedPerson, personRepository, existingPerson);
         Person personToUpdate = existingPerson.updateFieldsAndAddress(updatedPerson);
         return personRepository.update(encodePassword(personToUpdate));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Pagination<Person> getAllPersons(Pagination<?> pagination) {
         return personRepository.getAllPersons(pagination);
     }
@@ -90,35 +95,45 @@ public class PersonManageService implements PersonManageUseCasePort {
 
     @Override
     @Transactional
-    public Person updateCurrentUser(Integer id, Person updatedPerson, String currentPassword, String newPassword) {
+    public Person updateCurrentUser(Integer id, Person updatedPerson, String currentPassword, String newPassword) throws Exception {
         CustomUserDetails userDetails = authenticationUseCasePort.getAuthenticatedUser();
         validateCurrentUserOperation(userDetails.getId(), id);
-        Person existingPerson = getPersonById(id)
-                .orElseThrow(() -> new PersonNotFoundException("Person not found with id: " + id));
-        PersonValidator.validateForCurrentUserUpdate(updatedPerson, currentPassword, newPassword, personRepository, existingPerson);
-        verifyCurrentPassword(existingPerson.getEmail(), currentPassword);
-        Person personToUpdate = updatePersonFields(existingPerson, updatedPerson, newPassword);
-        return personRepository.update(personToUpdate);
+        Person existingPerson = getExistingPerson(id);
+        String decryptedCurrentPassword = decryptPassword(currentPassword);
+        String decryptedNewPassword = decryptPassword(newPassword);
+        validateCurrentPassword(decryptedCurrentPassword, existingPerson.getPassword());
+        PersonValidator.validateForCurrentUserUpdate(updatedPerson, decryptedCurrentPassword, decryptedNewPassword, existingPerson);
+        Person personToUpdate = updatePersonFields(existingPerson, updatedPerson, decryptedNewPassword);
+        String encodedNewPassword = encodeNewPassword(decryptedNewPassword);
+
+        return personRepository.updateCurrentUser(userDetails.getId(), personToUpdate, decryptedCurrentPassword, encodedNewPassword);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Person getCurrentUser() {
         CustomUserDetails userDetails = authenticationUseCasePort.getAuthenticatedUser();
-        return personRepository.findById(userDetails.getId())
-                .orElseThrow(() -> new PersonNotFoundException("Person not found with id: " + userDetails.getId()));
+        try {
+            return personRepository.getCurrentUser(userDetails.getId());
+        } catch (PersonNotFoundException e) {
+            throw new UnauthorizedException("Current user not found");
+        }
     }
 
     @Override
-    public boolean verifyPassword(String email, String password) {
+    @Transactional(readOnly = true)
+    public boolean verifyPassword(String email, String password) throws Exception {
+        String decryptedPassword = decryptionService.decrypt(password);
         return personRepository.findByEmail(email)
-                .map(person -> passwordEncoder.matches(password, person.getPassword()))
+                .map(person -> passwordEncoder.matches(decryptedPassword, person.getPassword()))
                 .orElse(false);
     }
 
     @Override
-    public Person encodePassword(Person person) {
-        return person.withPassword(passwordEncoder.encode(person.getPassword()));
+    @Transactional
+    public Person encodePassword(Person person) throws Exception {
+        String decryptedPassword = decryptionService.decrypt(person.getPassword());
+        return person.withPassword(passwordEncoder.encode(decryptedPassword));
     }
 
     @Override
@@ -130,6 +145,7 @@ public class PersonManageService implements PersonManageUseCasePort {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existsPersonByCpfAndIdNot(String cpf, Integer id) {
         PersonValidator.validateCpf(cpf);
         PersonValidator.validateId(id);
@@ -137,39 +153,48 @@ public class PersonManageService implements PersonManageUseCasePort {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existsPersonByEmailAndIdNot(String email, Integer id) {
         PersonValidator.validateEmail(email);
         PersonValidator.validateId(id);
         return personRepository.existsByEmailAndIdNot(email, id);
     }
 
-    private void validateCurrentUserOperation(Integer authenticatedUserId, Integer requestedUserId) {
-        if (!authenticatedUserId.equals(requestedUserId)) {
+    private void validateCurrentUserOperation(Integer tokenUserId, Integer requestUserId) {
+        if (!tokenUserId.equals(requestUserId)) {
             throw new UnauthorizedException("You are not authorized to perform this operation");
         }
     }
 
-    private void verifyCurrentPassword(String email, String currentPassword) {
-        if (!verifyPassword(email, currentPassword)) {
-            throw new InvalidPasswordException("Current password is incorrect");
-        }
+    private Person getExistingPerson(Integer id) {
+        return personRepository.findById(id)
+                .orElseThrow(() -> new PersonNotFoundException("Person not found with id: " + id));
     }
 
     private Person updatePersonFields(Person existingPerson, Person updatedPerson, String newPassword) {
-        Person.Builder builder = existingPerson.toBuilder()
-                .withTheme(updatedPerson.getTheme());
-
-        if (newPassword != null && !newPassword.isEmpty()) {
-            validateNewPassword(existingPerson, newPassword);
-            builder.withPassword(passwordEncoder.encode(newPassword));
+        Person.Builder builder = existingPerson.toBuilder();
+        if (updatedPerson.getTheme() != null) {
+            builder.withTheme(updatedPerson.getTheme());
         }
-
+        if (newPassword != null && !newPassword.isEmpty()) {
+            builder.withPassword(newPassword);
+        }
         return builder.build();
     }
 
-    private void validateNewPassword(Person existingPerson, String newPassword) {
-        if (passwordEncoder.matches(newPassword, existingPerson.getPassword())) {
-            throw new InvalidPasswordException("New password must be different from the current password");
+    private String decryptPassword(String password) throws Exception {
+        return password != null ? decryptionService.decrypt(password) : null;
+    }
+
+    private void validateCurrentPassword(String decryptedCurrentPassword, String storedPassword) {
+        if (!passwordEncoder.matches(decryptedCurrentPassword, storedPassword)) {
+            throw new UnauthorizedException("Current password is incorrect");
         }
+    }
+
+    private String encodeNewPassword(String decryptedNewPassword) {
+        return decryptedNewPassword != null && !decryptedNewPassword.isEmpty()
+                ? passwordEncoder.encode(decryptedNewPassword)
+                : null;
     }
 }

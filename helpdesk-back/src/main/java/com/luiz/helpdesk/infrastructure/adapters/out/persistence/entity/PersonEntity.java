@@ -1,10 +1,9 @@
 package com.luiz.helpdesk.infrastructure.adapters.out.persistence.entity;
 
-import com.luiz.helpdesk.domain.enums.Profile;
-import com.luiz.helpdesk.domain.enums.Theme;
 import com.luiz.helpdesk.domain.model.Person;
 import com.luiz.helpdesk.infrastructure.adapters.out.persistence.utils.RecursionControlWrapperUtil;
 import jakarta.persistence.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -49,6 +48,15 @@ public class PersonEntity {
     private Set<Integer> themes = new HashSet<>();
 
     public PersonEntity() {
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void encodePassword() {
+        if (this.password != null && !this.password.startsWith("$2a$")) {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            this.password = encoder.encode(this.password);
+        }
     }
 
     public void updateFromDomainModel(Person person) {
@@ -108,43 +116,15 @@ public class PersonEntity {
         });
     }
 
-    public PersonEntity updateFromDomainModelGetMe(Person person) {
-        this.id = person.getId();
-        this.name = person.getName();
-        this.cpf = person.getCpf();
-        this.email = person.getEmail();
-        this.profiles.clear();
-        this.profiles.add(person.getProfile());
-        this.themes.clear();
-        this.themes.add(person.getTheme());
-        this.creationDate = person.getCreationDate() != null ? person.getCreationDate() : LocalDate.now();
-        return this;
-    }
 
-    public PersonEntity updateFromDomainModelPutMe(Person person) {
-        this.name = person.getName();
-        this.cpf = person.getCpf();
-        this.email = person.getEmail();
-        if (person.getPassword() != null && !person.getPassword().isEmpty()) {
-            this.password = person.getPassword();
+    public void updateCurrentUser(Integer newTheme, String newPassword) {
+        if (newTheme != null) {
+            this.themes.clear();
+            this.themes.add(newTheme);
         }
-        this.profiles.clear();
-        this.profiles.add(person.getProfile());
-        this.themes.clear();
-        this.themes.add(person.getTheme());
-        return this;
-    }
-
-    public Person toDomainModelGetMe() {
-        return Person.builder()
-                .withId(id)
-                .withName(name)
-                .withCpf(cpf)
-                .withEmail(email)
-                .withCreationDate(creationDate)
-                .withProfile(profiles.isEmpty() ? null : profiles.iterator().next())
-                .withTheme(themes.isEmpty() ? null : themes.iterator().next())
-                .build();
+        if (newPassword != null && !newPassword.isEmpty()) {
+            this.password = newPassword;
+        }
     }
 
     public static void incrementRecursionDepth() {

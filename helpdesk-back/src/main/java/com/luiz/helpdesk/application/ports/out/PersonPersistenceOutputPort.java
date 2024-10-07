@@ -26,11 +26,10 @@ public interface PersonPersistenceOutputPort {
 
     Pagination<Person> getAllPersons(Pagination<?> pagination);
 
-    Person updateCurrentUser(String email, Person updatedPerson, String encryptedCurrentPassword, String newPassword) throws Exception;
+    Person getCurrentUser(Integer id);
+
+    Person updateCurrentUser(Integer id, Person updatedPerson, String encryptedCurrentPassword, String newPassword) throws Exception;
 
     Optional<Person> findByEmailAndIdNot(String email, Integer id);
 
-    boolean verifyPassword(String email, String password);
-
-    Person encodePassword(Person person);
 }

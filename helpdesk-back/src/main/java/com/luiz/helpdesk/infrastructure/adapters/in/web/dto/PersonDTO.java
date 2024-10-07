@@ -27,6 +27,7 @@ import java.util.Set;
                 + "\"theme\":1,"
                 + "\"address\":{...}"
                 + "}")
+
 public class PersonDTO {
 
     @Schema(description = "Unique identifier of the person", example = "1")

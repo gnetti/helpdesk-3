@@ -95,27 +95,20 @@ public class PersonPersistenceOutputAdapter implements PersonPersistenceOutputPo
     }
 
     @Override
+    public Person getCurrentUser(Integer id) {
+        return jpaPersonRepository.findById(id)
+                .map(PersonEntity::toDomainModel)
+                .orElseThrow(() -> new PersonNotFoundException("Person not found with id: " + id));
+    }
+
     @Transactional
-    public Person updateCurrentUser(String email, Person updatedPerson, String currentPassword, String newPassword) {
-        PersonEntity existingEntity = jpaPersonRepository.findByEmail(email)
-                .orElseThrow(() -> new PersonNotFoundException("Person not found with email: " + email));
-        existingEntity.updateFromDomainModel(updatedPerson);
-        if (newPassword != null && !newPassword.isEmpty()) {
-            existingEntity.setPassword(newPassword);
-        }
+    @Override
+    public Person updateCurrentUser(Integer id, Person updatedPerson, String encryptedCurrentPassword, String newPassword) {
+        PersonEntity existingEntity = jpaPersonRepository.findById(id)
+                .orElseThrow(() -> new PersonNotFoundException("Person not found with id: " + id));
+        existingEntity.updateCurrentUser(updatedPerson.getTheme(), newPassword);
         PersonEntity updatedEntity = jpaPersonRepository.save(existingEntity);
         return updatedEntity.toDomainModel();
     }
 
-    @Override
-    public boolean verifyPassword(String email, String password) {
-        return jpaPersonRepository.findByEmail(email)
-                .map(entity -> entity.getPassword().equals(password))
-                .orElse(false);
-    }
-
-    @Override
-    public Person encodePassword(Person person) {
-        return person;
-    }
 }

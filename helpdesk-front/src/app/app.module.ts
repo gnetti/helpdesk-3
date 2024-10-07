@@ -31,6 +31,7 @@ import {PersonModule} from "@modules/person.module";
 import {MAT_DIALOG_DEFAULT_OPTIONS} from "@angular/material/dialog";
 import {SettingsModule} from "@modules/settings.module";
 
+
 @NgModule({
   declarations: [
     AppComponent,

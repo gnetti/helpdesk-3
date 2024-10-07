@@ -10,12 +10,12 @@ export enum Theme {
 }
 
 export const ThemeNames: Record<Theme, string> = {
-  [Theme.AZURE_BLUE]: "azureBlue",
-  [Theme.CYAN_ORANGE]: "cyanOrange",
-  [Theme.DEEP_PURPLE_AMBER]: "deepPurpleAmber",
-  [Theme.INDIGO_PINK]: "indigoPink",
-  [Theme.MAGENTA_VIOLET]: "magentaViolet",
-  [Theme.PINK_BLUE_GREY]: "pinkBlueGrey",
-  [Theme.PURPLE_GREEN]: "purpleGreen",
-  [Theme.ROSE_RED]: "roseRed"
+  [Theme.AZURE_BLUE]: "Azure Blue",
+  [Theme.CYAN_ORANGE]: "Cyan Orange",
+  [Theme.DEEP_PURPLE_AMBER]: "Deep Purple Amber",
+  [Theme.INDIGO_PINK]: "Indigo Pink",
+  [Theme.MAGENTA_VIOLET]: "Magenta Violet",
+  [Theme.PINK_BLUE_GREY]: "Pink Blue Grey",
+  [Theme.PURPLE_GREEN]: "Purple Green",
+  [Theme.ROSE_RED]: "Rose Red"
 };
