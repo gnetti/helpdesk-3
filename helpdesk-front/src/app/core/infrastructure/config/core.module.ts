@@ -10,7 +10,7 @@ import { LocalStorageTokenAdapter } from "@adapters/out/persistence/local-storag
 import { AUTHENTICATION_PORT } from "@domain/ports/in/authentication.port";
 import { environment } from "@env/environment";
 import { AuthService } from "@application/services/auth.service";
-import { THEME_SERVICE_PORT } from "@domain/ports/out/theme.storage.port";
+import { THEME_SERVICE_PORT } from "@domain/ports/out/theme-storage.port";
 import { ThemeService } from "@core/application/services/theme.service";
 import { THEME_USE_CASE_PORT } from "@domain/ports/in/theme-use-case.port";
 import { ThemeStorageAdapter } from "@adapters/out/persistence/local-storage-theme.adapter";

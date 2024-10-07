@@ -2,20 +2,20 @@ import { environment } from "src/environments/environment";
 import {Theme, ThemeNames} from "@enums//theme.enum";
 
 
-export class ThemeUtils {
+export class ThemeUtil {
   static readonly DEFAULT_THEME: Theme =
-    ThemeUtils.isValidTheme(Number(environment.defaultTheme))
+    ThemeUtil.isValidTheme(Number(environment.defaultTheme))
       ? Number(environment.defaultTheme) as Theme
       : Theme.INDIGO_PINK;
 
   static getThemeEnum(theme: number | string): Theme {
     if (typeof theme === 'number') {
-      return ThemeUtils.isValidTheme(theme) ? theme : ThemeUtils.DEFAULT_THEME;
+      return ThemeUtil.isValidTheme(theme) ? theme : ThemeUtil.DEFAULT_THEME;
     }
     const themeEntry = Object.entries(ThemeNames).find(([_, value]) =>
       value.toLowerCase() === theme.toLowerCase().replace(/-/g, '_')
     );
-    return themeEntry ? parseInt(themeEntry[0]) as Theme : ThemeUtils.DEFAULT_THEME;
+    return themeEntry ? parseInt(themeEntry[0]) as Theme : ThemeUtil.DEFAULT_THEME;
   }
 
   static createOrGetThemeLinkElement(): HTMLLinkElement {

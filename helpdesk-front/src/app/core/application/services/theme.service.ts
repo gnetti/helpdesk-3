@@ -1,8 +1,8 @@
 import { Inject, Injectable } from "@angular/core";
 import { ThemeUseCasePort } from "@domain/ports/in/theme-use-case.port";
-import { THEME_SERVICE_PORT, ThemeStoragePort } from "@domain/ports/out/theme.storage.port";
+import { THEME_SERVICE_PORT, ThemeStoragePort } from "@domain/ports/out/theme-storage.port";
 import { ThemeConfig } from "@infrastructure/config/theme.config";
-import { ThemeUtils } from "@shared/utils/theme.utils";
+import { ThemeUtil } from "@utils//theme.util";
 import {Theme} from "@enums//theme.enum";
 
 @Injectable({
@@ -14,7 +14,7 @@ export class ThemeService implements ThemeUseCasePort {
   constructor(
     @Inject(THEME_SERVICE_PORT) private themeStorage: ThemeStoragePort
   ) {
-    this.themeLinkElement = ThemeUtils.createOrGetThemeLinkElement();
+    this.themeLinkElement = ThemeUtil.createOrGetThemeLinkElement();
     this.loadSavedTheme();
   }
 
@@ -24,18 +24,18 @@ export class ThemeService implements ThemeUseCasePort {
       this.themeLinkElement.href = `/themes/${themeFileName}`;
       this.themeStorage.setTheme(theme.toString());
     } else {
-      console.warn(`Theme file not found for theme: ${ThemeUtils.getThemeName(theme)}`);
+      console.warn(`Theme file not found for theme: ${ThemeUtil.getThemeName(theme)}`);
     }
   }
 
   getCurrentTheme(): Theme {
     const savedTheme = this.themeStorage.getTheme();
-    return savedTheme !== null ? ThemeUtils.getThemeEnum(Number(savedTheme)) : this.getDefaultTheme();
+    return savedTheme !== null ? ThemeUtil.getThemeEnum(Number(savedTheme)) : this.getDefaultTheme();
   }
 
   setThemeFromToken(decodedToken: any): void {
     if (decodedToken?.theme !== undefined) {
-      const themeEnum = ThemeUtils.getThemeEnum(decodedToken.theme);
+      const themeEnum = ThemeUtil.getThemeEnum(decodedToken.theme);
       this.setTheme(themeEnum);
     } else {
       this.setTheme(this.getDefaultTheme());
@@ -47,13 +47,13 @@ export class ThemeService implements ThemeUseCasePort {
   }
 
   getDefaultTheme(): Theme {
-    return ThemeUtils.DEFAULT_THEME;
+    return ThemeUtil.DEFAULT_THEME;
   }
 
   private loadSavedTheme(): void {
     const savedTheme = this.themeStorage.getTheme();
     if (savedTheme !== null) {
-      const themeEnum = ThemeUtils.getThemeEnum(Number(savedTheme));
+      const themeEnum = ThemeUtil.getThemeEnum(Number(savedTheme));
       this.setTheme(themeEnum);
     } else {
       this.setTheme(this.getDefaultTheme());

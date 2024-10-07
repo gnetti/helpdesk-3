@@ -11,7 +11,7 @@ import {
   SettingsHelper,
   ThemeOption
 } from "@model//settings-form-control.model";
-import {SettingsUtils} from "@utils//SettingsUtil";
+import {SettingsUtils} from "@utils//settings.util";
 import {Theme} from "@enums//theme.enum";
 import {CryptoService} from "@security//crypto.service";
 import {SettingsValidator} from "@validators//settings.validator";

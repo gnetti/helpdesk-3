@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ThemeStoragePort } from "@domain/ports/out/theme.storage.port";
+import { ThemeStoragePort } from "@domain/ports/out/theme-storage.port";
 
 @Injectable({
   providedIn: 'root',

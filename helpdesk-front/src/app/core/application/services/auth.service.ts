@@ -4,7 +4,7 @@ import { TOKEN_STORAGE_PORT, TokenStoragePort } from "@core/domain/ports/out/tok
 import { JWT_DECODER_PORT, JwtDecoderPort } from "@core/domain/ports/out/jwt-decoder.port";
 import { User } from "@core/domain/models/user.model";
 import { THEME_USE_CASE_PORT, ThemeUseCasePort } from "@domain/ports/in/theme-use-case.port";
-import { ThemeUtils } from "@shared/utils/theme.utils";
+import { ThemeUtil } from "@utils//theme.util";
 import {Profile} from "@enums//profile.enum";
 
 @Injectable({
@@ -71,7 +71,7 @@ export class AuthService {
       id: decodedToken.id,
       email: decodedToken.sub,
       profile: this.getProfileFromToken(decodedToken.profile),
-      theme: ThemeUtils.getThemeEnum(decodedToken.theme)
+      theme: ThemeUtil.getThemeEnum(decodedToken.theme)
     };
   }
 
