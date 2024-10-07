@@ -103,7 +103,8 @@
       </mat-form-field>
 
       <div class="password-validation-group">
-        <div *ngIf="settingsForm.get('newPassword')?.value && passwordStrength.strength !== -1" class="password-strength">
+        <div *ngIf="settingsForm.get('newPassword')?.value && passwordStrength.strength !== -1"
+             class="password-strength">
           <ng-container *ngIf="!passwordStrength.isStrong; else passwordStrong">
             <mat-progress-bar [value]="passwordStrength.strength"></mat-progress-bar>
             <span>Força da senha: {{ passwordStrength.strength }}%</span>
@@ -131,7 +132,6 @@
             id="confirmNewPassword"
             formControlName="confirmNewPassword"
             [type]="showPassword.confirmNewPassword ? 'text' : 'password'"
-            (input)="passwordsMatch(settingsForm)"
           />
           <div class="button-group">
             <button

@@ -4,37 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6f985a38-0ffb-4e6c-9b10-02d2a5b1782e" name="Changes" comment="Adjustments in Token Jwt structure and entities.">
-      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/validators/PasswordStrengthValidator.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/settings/settings.component.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/settings/settings.component.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/settings/settings.component.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/app/shared/pipes/theme-title-case.pipe.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/in/PersonManageUseCasePort.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/in/PersonManageUseCasePort.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/out/DecryptionPort.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/out/DecryptionPort.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/out/PersonPersistenceOutputPort.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/out/PersonPersistenceOutputPort.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/services/AuthenticationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/services/AuthenticationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/services/PersonManageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/services/PersonManageService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/exception/GlobalExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/validator/PersonValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/validator/PersonValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/PersonPersistenceOutputAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/PersonPersistenceOutputAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/in/web/PersonController.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/in/web/PersonController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/in/web/dto/PersonDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/in/web/dto/PersonDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/in/web/dto/PersonMeDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/in/web/dto/PersonMeDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/entity/PersonEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/entity/PersonEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/clean-angular-cache.ps1" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/clean-angular-cache.ps1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/app-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/app-routing.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/app.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/application/services/settings.service..ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/application/services/setting.service..ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/enums/theme.enum.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/enums/theme.enum.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/models/user-settings.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/models/user-settings.model.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/ports/in/settings-use-case.port.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/ports/in/settings-use-case.port.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/ports/out/settings-repository.port.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/ports/out/settings-repository.port.ts" afterDir="false" />
+    <list default="true" id="6f985a38-0ffb-4e6c-9b10-02d2a5b1782e" name="Changes" comment="Added user settings">
+      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/models/settings-form-control.model.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/validators/settings.validator.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/app/shared/utils/SettingsUtil.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/validators/PasswordStrengthValidator.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/validators/Password-strength.validator.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/login/login.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/login/login.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/nav/nav.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/nav/nav.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/out/persistence/settings.repository.adapter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/out/persistence/settings.repository.adapter.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/modules/settings.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/modules/settings.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/settings/settings.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/settings/settings.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/settings/settings.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/settings/settings.component.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,7 +107,7 @@
       <option name="presentableId" value="Default" />
       <updated>1727642563534</updated>
       <workItem from="1727642565615" duration="54671000" />
-      <workItem from="1728213924586" duration="39651000" />
+      <workItem from="1728213924586" duration="43491000" />
     </task>
     <task id="LOCAL-00001" summary="Endpoint improvements me">
       <option name="closed" value="true" />
@@ -155,7 +133,23 @@
       <option name="project" value="LOCAL" />
       <updated>1728173528091</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Added user settings">
+      <option name="closed" value="true" />
+      <created>1728308862999</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1728308862999</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Added user settings">
+      <option name="closed" value="true" />
+      <created>1728308896137</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1728308896137</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -165,6 +159,7 @@
     <MESSAGE value="Endpoint improvements me" />
     <MESSAGE value="Added swagger" />
     <MESSAGE value="Adjustments in Token Jwt structure and entities." />
-    <option name="LAST_COMMIT_MESSAGE" value="Adjustments in Token Jwt structure and entities." />
+    <MESSAGE value="Added user settings" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added user settings" />
   </component>
 </project>
