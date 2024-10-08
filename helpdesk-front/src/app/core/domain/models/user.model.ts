@@ -6,4 +6,5 @@ export interface User {
   email: string;
   profile: Profile;
   theme: Theme;
+
 }

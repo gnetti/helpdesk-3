@@ -60,7 +60,8 @@
             "scripts": [],
             "preserveSymlinks": true,
             "allowedCommonJsDependencies": [
-              "crypto-js"
+              "crypto-js",
+              "ts-md5"
             ]
           },
           "configurations": {

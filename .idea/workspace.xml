@@ -4,7 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6f985a38-0ffb-4e6c-9b10-02d2a5b1782e" name="Changes" comment="Optimized user settings" />
+    <list default="true" id="6f985a38-0ffb-4e6c-9b10-02d2a5b1782e" name="Changes" comment="Optimized user settings">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/menu/menu.component.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/menu/menu.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/menu/menu.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-front/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/angular.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-front/clean-angular-cache.ps1" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/clean-angular-cache.ps1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-front/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-front/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/application/services/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/application/services/auth.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/models/user.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/models/user.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/header/header.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/header/header.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/nav/nav.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/nav/nav.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/modules/settings.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/modules/settings.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/index.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -32,32 +50,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;Spring Boot.BACKEND.executor&quot;: &quot;Run&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;npm.FRONTEND.executor&quot;: &quot;Run&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;X:\\helpdesk-3\\helpdesk-front\\node_modules\\typescript\\lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Spring Boot.BACKEND.executor": "Run",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.FRONTEND.executor": "Run",
+    "ts.external.directory.path": "X:\\helpdesk-3\\helpdesk-front\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="X:\helpdesk-3\helpdesk-front\src\app\core\application\services" />
       <recent name="X:\helpdesk-3\helpdesk-front\src\app\core\infrastructure\adapters\out\persistence" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.FRONTEND">
+  <component name="RunManager" selected="Spring Boot.BACKEND">
     <configuration name="BACKEND" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="helpdesk-back" />
@@ -98,7 +117,7 @@
       <option name="presentableId" value="Default" />
       <updated>1727642563534</updated>
       <workItem from="1727642565615" duration="54671000" />
-      <workItem from="1728213924586" duration="43790000" />
+      <workItem from="1728213924586" duration="54529000" />
     </task>
     <task id="LOCAL-00001" summary="Endpoint improvements me">
       <option name="closed" value="true" />
@@ -156,7 +175,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728325152284</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Optimized user settings">
+      <option name="closed" value="true" />
+      <created>1728325301168</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1728325301168</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

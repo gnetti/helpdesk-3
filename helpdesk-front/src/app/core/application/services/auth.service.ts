@@ -60,7 +60,7 @@ export class AuthService {
     return this.currentUserValue ? Profile[this.currentUserValue.profile] : '';
   }
 
-  private getUserFromToken(): User | null {
+  getUserFromToken(): User | null {
     const token = this.getToken();
     if (!token) return null;
 
