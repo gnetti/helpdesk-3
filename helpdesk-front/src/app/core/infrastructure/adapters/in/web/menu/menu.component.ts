@@ -43,12 +43,10 @@ export class MenuComponent implements OnInit {
 
   async logout(): Promise<void> {
     try {
-      sessionStorage.clear();
       await this.router.navigate(["login"]);
       this.authService.logout();
       this.toast.success("Logout realizado com sucesso", "Logout");
     } catch (error) {
-      console.error("Erro ao fazer logout:", error);
       this.toast.error("Erro ao realizar logout", "Erro");
     }
   }

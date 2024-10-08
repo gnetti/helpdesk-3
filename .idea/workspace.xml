@@ -4,24 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6f985a38-0ffb-4e6c-9b10-02d2a5b1782e" name="Changes" comment="Optimized user settings">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/menu/menu.component.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/menu/menu.component.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/menu/menu.component.ts" afterDir="false" />
+    <list default="true" id="6f985a38-0ffb-4e6c-9b10-02d2a5b1782e" name="Changes" comment="Added avatar">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/angular.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/clean-angular-cache.ps1" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/clean-angular-cache.ps1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/helpdesk-front/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/application/services/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/application/services/auth.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/models/user.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/models/user.model.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/header/header.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/header/header.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/nav/nav.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/nav/nav.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/modules/settings.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/modules/settings.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/menu/menu.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/menu/menu.component.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +62,7 @@
       <recent name="X:\helpdesk-3\helpdesk-front\src\app\core\infrastructure\adapters\out\persistence" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.BACKEND">
+  <component name="RunManager" selected="npm.FRONTEND">
     <configuration name="BACKEND" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="helpdesk-back" />
@@ -117,7 +103,7 @@
       <option name="presentableId" value="Default" />
       <updated>1727642563534</updated>
       <workItem from="1727642565615" duration="54671000" />
-      <workItem from="1728213924586" duration="54529000" />
+      <workItem from="1728213924586" duration="54825000" />
     </task>
     <task id="LOCAL-00001" summary="Endpoint improvements me">
       <option name="closed" value="true" />
@@ -183,7 +169,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728325301168</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Added avatar">
+      <option name="closed" value="true" />
+      <created>1728351747570</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1728351747570</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -195,6 +189,7 @@
     <MESSAGE value="Adjustments in Token Jwt structure and entities." />
     <MESSAGE value="Added user settings" />
     <MESSAGE value="Optimized user settings" />
-    <option name="LAST_COMMIT_MESSAGE" value="Optimized user settings" />
+    <MESSAGE value="Added avatar" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added avatar" />
   </component>
 </project>
