@@ -36,6 +36,7 @@ public class JwtTokenProvider implements JwtTokenProviderPort {
                 .builder()
                 .claim("sub", person.getEmail())
                 .claim("id", person.getId())
+                .claim("name", person.getName())
                 .claim("profile", person.getProfile())
                 .claim("theme", person.getTheme())
                 .issuedAt(Date.from(now))

@@ -31,14 +31,15 @@ export class MenuComponent implements OnInit {
   }
 
   getUserInitials(): string {
-    if (this.user && this.user.email) {
-      const [localPart] = this.user.email.split("@");
-      if (localPart.length >= 2) {
-        return (localPart[0] + localPart[localPart.length - 1]).toUpperCase();
+    if (this.user && this.user.name) {
+      const nameParts = this.user.name.split(' ').filter(part => part.length > 0);
+      if (nameParts.length >= 2) {
+        return (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
+      } else if (nameParts.length === 1) {
+        return nameParts[0][0].toUpperCase();
       }
-      return localPart[0].toUpperCase();
     }
-    return "U";
+    return "UD";
   }
 
   async logout(): Promise<void> {

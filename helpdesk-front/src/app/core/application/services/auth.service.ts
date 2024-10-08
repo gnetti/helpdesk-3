@@ -69,6 +69,7 @@ export class AuthService {
 
     return {
       id: decodedToken.id,
+      name: decodedToken.name,
       email: decodedToken.sub,
       profile: this.getProfileFromToken(decodedToken.profile),
       theme: ThemeUtil.getThemeEnum(decodedToken.theme)

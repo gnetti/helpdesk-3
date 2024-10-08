@@ -43,6 +43,7 @@ export class AuthRepositoryAdapter implements AuthRepositoryPort {
     const decodedToken = this.jwtHelper.decodeToken(token);
     return {
       id: decodedToken.id,
+      name: decodedToken.name,
       email: decodedToken.sub,
       profile: this.getProfileFromToken(decodedToken.profile),
       theme: ThemeUtil.getThemeEnum(decodedToken.theme)

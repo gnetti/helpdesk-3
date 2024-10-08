@@ -21,8 +21,8 @@
 }
 
 .avatar-container {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   overflow: hidden;
   display: flex;
@@ -33,7 +33,7 @@
 .avatar-initials {
   font-size: 20px;
   font-weight: bold;
-  color: #333333;
+  color: #fff8f8;
   text-transform: uppercase;
 }
 

@@ -62,7 +62,7 @@ public class DatabaseInitializationService implements InitializeDatabaseUseCaseP
             );
 
             Person admin = personFactory
-                    .createPerson("admin", "12345678900", "admin@email.com",
+                    .createPerson("Luiz Generoso", "12345678900", "admin@email.com",
                             encodedPassword, Profile.ADMIN.getCode(), creationDate, adminTheme)
                     .withAddress(address);
 
