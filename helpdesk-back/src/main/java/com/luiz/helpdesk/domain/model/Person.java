@@ -16,10 +16,10 @@ public class Person {
     private final String cpf;
     private final String email;
     private final String password;
-    private final Set<Integer> profiles;
+    private final Integer profile;
     private final LocalDate creationDate;
     private final Address address;
-    private final Set<Integer> themes;
+    private final Integer theme;
 
     private Person(Builder builder) {
         validateFields(builder.name, builder.cpf, builder.email, builder.password);
@@ -28,13 +28,10 @@ public class Person {
         this.cpf = builder.cpf;
         this.email = builder.email;
         this.password = builder.password;
-        this.profiles = new HashSet<>(builder.profiles);
+        this.profile = builder.profile;
         this.creationDate = builder.creationDate != null ? builder.creationDate : LocalDate.now();
         this.address = builder.address;
-        this.themes = new HashSet<>(builder.themes);
-        if (this.themes.isEmpty()) {
-            this.themes.add(Theme.INDIGO_PINK.getCode());
-        }
+        this.theme = builder.theme != null ? builder.theme : Theme.INDIGO_PINK.getCode();
     }
 
     private void validateFields(String name, String cpf, String email, String password) {
@@ -102,12 +99,6 @@ public class Person {
                 .build();
     }
 
-    public Person addProfile(Integer profile) {
-        Set<Integer> newProfiles = new HashSet<>();
-        newProfiles.add(profile);
-        return toBuilder().withProfiles(newProfiles).build();
-    }
-
     public Person updateWithAddress(Address newAddress) {
         Address updatedAddress = (this.address == null)
                 ? Address.createNew(newAddress.getStreet(), newAddress.getComplement(), newAddress.getNeighborhood(),
@@ -138,7 +129,7 @@ public class Person {
     public Person stripSensitiveInfo() {
         return this.toBuilder()
                 .withEmail(null)
-                .withProfiles(null)
+                .withProfile(null)
                 .build();
     }
 
@@ -163,7 +154,7 @@ public class Person {
     }
 
     public Integer getProfile() {
-        return profiles.isEmpty() ? null : profiles.iterator().next();
+        return profile;
     }
 
     public LocalDate getCreationDate() {
@@ -175,7 +166,7 @@ public class Person {
     }
 
     public Integer getTheme() {
-        return themes.isEmpty() ? null : themes.iterator().next();
+        return theme;
     }
 
     public Builder toBuilder() {
@@ -185,10 +176,10 @@ public class Person {
                 .withCpf(this.cpf)
                 .withEmail(this.email)
                 .withPassword(this.password)
-                .withProfile(this.getProfile())
+                .withProfile(this.profile)
                 .withCreationDate(this.creationDate)
                 .withAddress(this.address)
-                .withTheme(this.getTheme());
+                .withTheme(this.theme);
     }
 
     public static class Builder {
@@ -197,10 +188,10 @@ public class Person {
         private String cpf;
         private String email;
         private String password;
-        private Set<Integer> profiles = new HashSet<>();
+        private Integer profile;
         private LocalDate creationDate;
         private Address address;
-        private Set<Integer> themes = new HashSet<>();
+        private Integer theme;
 
         public Builder withId(Integer id) {
             this.id = id;
@@ -228,18 +219,7 @@ public class Person {
         }
 
         public Builder withProfile(Integer profile) {
-            this.profiles.clear();
-            if (profile != null) {
-                this.profiles.add(profile);
-            }
-            return this;
-        }
-
-        public Builder withProfiles(Set<Integer> profiles) {
-            this.profiles = new HashSet<>();
-            if (profiles != null && !profiles.isEmpty()) {
-                this.profiles.add(profiles.iterator().next());
-            }
+            this.profile = profile;
             return this;
         }
 
@@ -254,18 +234,7 @@ public class Person {
         }
 
         public Builder withTheme(Integer theme) {
-            this.themes.clear();
-            if (theme != null) {
-                this.themes.add(theme);
-            }
-            return this;
-        }
-
-        public Builder withThemes(Set<Integer> themes) {
-            this.themes = new HashSet<>();
-            if (themes != null && !themes.isEmpty()) {
-                this.themes.add(themes.iterator().next());
-            }
+            this.theme = theme;
             return this;
         }
 
@@ -288,29 +257,28 @@ public class Person {
                 Objects.equals(cpf, person.cpf) &&
                 Objects.equals(email, person.email) &&
                 Objects.equals(password, person.password) &&
-                Objects.equals(profiles, person.profiles) &&
+                Objects.equals(profile, person.profile) &&
                 Objects.equals(creationDate, person.creationDate) &&
                 Objects.equals(address, person.address) &&
-                Objects.equals(themes, person.themes);
+                Objects.equals(theme, person.theme);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, cpf, email, password, profiles, creationDate, address, themes);
+        return Objects.hash(id, name, cpf, email, password, profile, creationDate, address, theme);
     }
 
     @Override
     public String toString() {
-        return new StringBuilder("Person{")
-                .append("id=").append(id)
-                .append(", name='").append(name).append('\'')
-                .append(", cpf='").append(cpf).append('\'')
-                .append(", email='").append(email).append('\'')
-                .append(", profile=").append(getProfile())
-                .append(", creationDate=").append(creationDate)
-                .append(", address=").append(address)
-                .append(", theme=").append(getTheme())
-                .append('}')
-                .toString();
+        return "Person{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", email='" + email + '\'' +
+                ", profile=" + profile +
+                ", creationDate=" + creationDate +
+                ", address=" + address +
+                ", theme=" + theme +
+                '}';
     }
 }

@@ -11,9 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @Schema(description = "Data Transfer Object for Person information",
         example = "{"
@@ -53,7 +51,7 @@ public class PersonDTO {
 
     @Schema(description = "Profile code of the person", example = "1")
     @NotNull(message = "Profile is required")
-    private Set<Integer> profiles = new HashSet<>();
+    private Integer profile;
 
     @Schema(description = "Creation date of the person record", example = "2023-05-20")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -63,9 +61,9 @@ public class PersonDTO {
     private AddressDTO address;
 
     @Schema(description = "Theme code of the person", example = "1")
-    private Set<Integer> themes = new HashSet<>();
+    private Integer theme;
 
-       public PersonDTO() {
+    public PersonDTO() {
     }
 
     public PersonDTO(Integer id, String name, String cpf, String email, String password, Integer profile, LocalDate creationDate, Integer theme) {
@@ -74,9 +72,9 @@ public class PersonDTO {
         this.cpf = cpf;
         this.email = email;
         this.password = password;
-        this.profiles.add(profile != null ? profile : Profile.CLIENT.getCode());
+        this.profile = profile != null ? profile : Profile.CLIENT.getCode();
         this.creationDate = creationDate != null ? creationDate : LocalDate.now();
-        this.themes.add(theme != null ? theme : Theme.INDIGO_PINK.getCode());
+        this.theme = theme != null ? theme : Theme.INDIGO_PINK.getCode();
     }
 
     @Schema(description = "Convert DTO to domain model")
@@ -88,8 +86,8 @@ public class PersonDTO {
                 .withEmail(email)
                 .withPassword(password)
                 .withCreationDate(creationDate)
-                .withProfile(getProfile())
-                .withTheme(getTheme());
+                .withProfile(profile)
+                .withTheme(theme);
 
         if (address != null) {
             builder.withAddress(address.toDomainModel());
@@ -116,7 +114,6 @@ public class PersonDTO {
         return dto;
     }
 
-    @Schema(description = "Get the person's ID")
     public Integer getId() {
         return id;
     }
@@ -125,7 +122,6 @@ public class PersonDTO {
         this.id = id;
     }
 
-    @Schema(description = "Get the person's name")
     public String getName() {
         return name;
     }
@@ -134,7 +130,6 @@ public class PersonDTO {
         this.name = name;
     }
 
-    @Schema(description = "Get the person's CPF")
     public String getCpf() {
         return cpf;
     }
@@ -143,7 +138,6 @@ public class PersonDTO {
         this.cpf = cpf;
     }
 
-    @Schema(description = "Get the person's email")
     public String getEmail() {
         return email;
     }
@@ -152,7 +146,6 @@ public class PersonDTO {
         this.email = email;
     }
 
-    @Schema(description = "Get the person's password")
     public String getPassword() {
         return password;
     }
@@ -161,19 +154,14 @@ public class PersonDTO {
         this.password = password;
     }
 
-    @Schema(description = "Get the person's profile code")
     public Integer getProfile() {
-        return profiles.isEmpty() ? null : profiles.iterator().next();
+        return profile;
     }
 
     public void setProfile(Integer profile) {
-        this.profiles.clear();
-        if (profile != null) {
-            this.profiles.add(profile);
-        }
+        this.profile = profile;
     }
 
-    @Schema(description = "Get the person's creation date")
     public LocalDate getCreationDate() {
         return creationDate;
     }
@@ -182,7 +170,6 @@ public class PersonDTO {
         this.creationDate = creationDate;
     }
 
-    @Schema(description = "Get the person's address")
     public AddressDTO getAddress() {
         return address;
     }
@@ -191,16 +178,12 @@ public class PersonDTO {
         this.address = address;
     }
 
-    @Schema(description = "Get the person's theme code")
     public Integer getTheme() {
-        return themes.isEmpty() ? null : themes.iterator().next();
+        return theme;
     }
 
     public void setTheme(Integer theme) {
-        this.themes.clear();
-        if (theme != null) {
-            this.themes.add(theme);
-        }
+        this.theme = theme;
     }
 
     @Override
@@ -213,15 +196,15 @@ public class PersonDTO {
                 Objects.equals(cpf, personDTO.cpf) &&
                 Objects.equals(email, personDTO.email) &&
                 Objects.equals(password, personDTO.password) &&
-                Objects.equals(profiles, personDTO.profiles) &&
+                Objects.equals(profile, personDTO.profile) &&
                 Objects.equals(creationDate, personDTO.creationDate) &&
                 Objects.equals(address, personDTO.address) &&
-                Objects.equals(themes, personDTO.themes);
+                Objects.equals(theme, personDTO.theme);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, cpf, email, password, profiles, creationDate, address, themes);
+        return Objects.hash(id, name, cpf, email, password, profile, creationDate, address, theme);
     }
 
     @Override
@@ -232,10 +215,10 @@ public class PersonDTO {
                 ", cpf='" + cpf + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", profile=" + getProfile() +
+                ", profile=" + profile +
                 ", creationDate=" + creationDate +
                 ", address=" + address +
-                ", theme=" + getTheme() +
+                ", theme=" + theme +
                 '}';
     }
 }

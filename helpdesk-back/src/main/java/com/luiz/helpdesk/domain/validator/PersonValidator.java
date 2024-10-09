@@ -5,6 +5,7 @@ import com.luiz.helpdesk.domain.exception.person.InvalidPersonDataException;
 import com.luiz.helpdesk.domain.exception.person.PersonNotFoundException;
 import com.luiz.helpdesk.domain.model.Address;
 import com.luiz.helpdesk.domain.model.Person;
+import com.luiz.helpdesk.domain.enums.Profile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ public class PersonValidator {
         List<String> errors = new ArrayList<>();
         validateBasicPersonData(person, errors);
         validatePasswordNotEmpty(person.getPassword(), errors);
+        validateProfile(person.getProfile(), errors);
         validateUniqueFields(repository, person, null, errors);
         throwIfErrors(errors);
     }
@@ -23,6 +25,7 @@ public class PersonValidator {
     public static void validateForUpdate(Person person, PersonPersistenceOutputPort repository, Person existingPerson) {
         List<String> errors = new ArrayList<>();
         validateBasicPersonData(person, errors);
+        validateProfile(person.getProfile(), errors);
         validateUniqueFields(repository, person, existingPerson, errors);
         throwIfErrors(errors);
     }
@@ -67,6 +70,18 @@ public class PersonValidator {
 
     private static void validatePasswordNotEmpty(String password, List<String> errors) {
         validateField(password, "Password", errors);
+    }
+
+    private static void validateProfile(Integer profile, List<String> errors) {
+        if (profile == null) {
+            errors.add("Profile cannot be null");
+        } else {
+            try {
+                Profile.fromCode(profile);
+            } catch (IllegalArgumentException e) {
+                errors.add("Invalid profile code");
+            }
+        }
     }
 
     private static void validateTheme(Integer theme, List<String> errors) {
