@@ -5,9 +5,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public enum Profile {
-    ADMIN(0, "ROLE_ADMIN"),
-    CLIENT(1, "ROLE_CLIENT"),
-    TECHNICIAN(2, "ROLE_TECHNICIAN");
+    ROOT(0, "ROLE_ROOT"),
+    ADMIN(1, "ROLE_ADMIN"),
+    CLIENT(2, "ROLE_CLIENT"),
+    TECHNICIAN(3, "ROLE_TECHNICIAN");
 
     private static final Map<Integer, Profile> CODE_MAP;
     private static final Map<String, Profile> DESCRIPTION_MAP;

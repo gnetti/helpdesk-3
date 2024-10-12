@@ -1,10 +1,12 @@
 package com.luiz.helpdesk.domain.exception;
 
+import com.luiz.helpdesk.domain.exception.auth.UnauthorizedException;
 import com.luiz.helpdesk.domain.exception.person.InvalidPasswordException;
 import com.luiz.helpdesk.domain.exception.person.InvalidPersonDataException;
 import com.luiz.helpdesk.domain.exception.person.PersonAlreadyExistsException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -81,5 +83,18 @@ public class GlobalExceptionHandler {
         body.put("message", ex.getMessage());
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ProblemDetail> handleUnauthorizedException(UnauthorizedException ex) {
+        ConcreteErrorResponse errorResponse = new ConcreteErrorResponse(
+                HttpStatus.UNAUTHORIZED,
+                "Unauthorized",
+                ex.getMessage()
+        );
+        return ResponseEntity
+                .status(errorResponse.getStatus())
+                .headers(errorResponse.getHeaders())
+                .body(errorResponse.getBody());
     }
 }

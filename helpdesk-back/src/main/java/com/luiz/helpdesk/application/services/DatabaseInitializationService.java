@@ -3,15 +3,19 @@ package com.luiz.helpdesk.application.services;
 import com.luiz.helpdesk.application.ports.in.InitializeDatabaseUseCasePort;
 import com.luiz.helpdesk.application.ports.out.PasswordEncoderPort;
 import com.luiz.helpdesk.application.ports.out.PersonPersistenceOutputPort;
+import com.luiz.helpdesk.application.ports.out.TokenTimePersistenceOutputPort;
 import com.luiz.helpdesk.domain.enums.Profile;
 import com.luiz.helpdesk.domain.enums.Theme;
 import com.luiz.helpdesk.domain.factory.AddressFactory;
 import com.luiz.helpdesk.domain.factory.PersonFactory;
+import com.luiz.helpdesk.domain.factory.TokenTimeProfileFactory;
 import com.luiz.helpdesk.domain.model.Address;
 import com.luiz.helpdesk.domain.model.Person;
+import com.luiz.helpdesk.domain.model.TokenTimeProfile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -19,22 +23,28 @@ import java.util.*;
 public class DatabaseInitializationService implements InitializeDatabaseUseCasePort {
 
     private final PersonPersistenceOutputPort personRepository;
+    private final TokenTimePersistenceOutputPort tokenTimeRepository;
     private final PasswordEncoderPort passwordEncoder;
     private final PersonFactory personFactory;
     private final AddressFactory addressFactory;
+    private final TokenTimeProfileFactory tokenTimeProfileFactory;
     private final Set<String> usedEmails = new HashSet<>();
     private final Set<String> usedCPFs = new HashSet<>();
 
     public DatabaseInitializationService(
             PersonPersistenceOutputPort personRepository,
+            TokenTimePersistenceOutputPort tokenTimeRepository,
             PasswordEncoderPort passwordEncoder,
             PersonFactory personFactory,
-            AddressFactory addressFactory
+            AddressFactory addressFactory,
+            TokenTimeProfileFactory tokenTimeProfileFactory
     ) {
         this.personRepository = personRepository;
+        this.tokenTimeRepository = tokenTimeRepository;
         this.passwordEncoder = passwordEncoder;
         this.personFactory = personFactory;
         this.addressFactory = addressFactory;
+        this.tokenTimeProfileFactory = tokenTimeProfileFactory;
     }
 
     @Override
@@ -42,6 +52,7 @@ public class DatabaseInitializationService implements InitializeDatabaseUseCaseP
     public void initializeDatabase() {
         createAdmin();
         createRandomPeople();
+        initializeTokenTimeProfiles();
     }
 
     private void createAdmin() {
@@ -63,7 +74,7 @@ public class DatabaseInitializationService implements InitializeDatabaseUseCaseP
 
             Person admin = personFactory
                     .createPerson("Luiz Generoso", "12345678900", "admin@email.com",
-                            encodedPassword, Profile.ADMIN.getCode(), creationDate, adminTheme)
+                            encodedPassword, Profile.ROOT.getCode(), creationDate, adminTheme)
                     .withAddress(address);
 
             personRepository.save(admin);
@@ -169,5 +180,37 @@ public class DatabaseInitializationService implements InitializeDatabaseUseCaseP
                 String.format("%05d-%03d", random.nextInt(100000), random.nextInt(1000)),
                 String.valueOf(random.nextInt(1000) + 1)
         );
+    }
+
+    private void initializeTokenTimeProfiles() {
+        List<TokenTimeProfile> tokenTimeProfiles = Arrays.asList(
+                tokenTimeProfileFactory.createTokenTimeProfile(
+                        Profile.ADMIN,
+                        new BigDecimal("30.155"),
+                        new BigDecimal("30"),
+                        new BigDecimal("15"),
+                        new BigDecimal("0.017")
+                ),
+                tokenTimeProfileFactory.createTokenTimeProfile(
+                        Profile.CLIENT,
+                        new BigDecimal("60.125"),
+                        new BigDecimal("60"),
+                        new BigDecimal("1"),
+                        new BigDecimal("0.017")
+                ),
+                tokenTimeProfileFactory.createTokenTimeProfile(
+                        Profile.TECHNICIAN,
+                        new BigDecimal("30.125"),
+                        new BigDecimal("30"),
+                        new BigDecimal("0.2"),
+                        new BigDecimal("0.017")
+                )
+        );
+
+        for (TokenTimeProfile profile : tokenTimeProfiles) {
+            if (!tokenTimeRepository.existsByProfile(profile.getProfile())) {
+                tokenTimeRepository.saveTokenTime(profile);
+            }
+        }
     }
 }

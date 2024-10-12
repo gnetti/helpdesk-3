@@ -32,7 +32,7 @@ public class AuthenticationService implements AuthenticationUseCasePort {
         AuthenticationValidator.validateEmailNotBlank(email);
         AuthenticationValidator.validatePasswordNotBlank(password);
         Person person = findPersonByEmail(email);
-        validateCredentials(password, person.getPassword());
+        AuthenticationValidator.validateCredentials(password, person.getPassword(), passwordEncoder);
         return person;
     }
 

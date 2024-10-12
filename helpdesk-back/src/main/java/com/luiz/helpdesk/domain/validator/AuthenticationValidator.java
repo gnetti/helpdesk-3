@@ -1,14 +1,13 @@
 package com.luiz.helpdesk.domain.validator;
 
+import com.luiz.helpdesk.application.ports.out.PasswordEncoderPort;
 import com.luiz.helpdesk.domain.exception.auth.UnauthorizedException;
 import com.luiz.helpdesk.infrastructure.adapters.out.config.CustomUserDetails;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class AuthenticationValidator {
-
-    public static void validateCredentials(String rawPassword, String encodedPassword, PasswordEncoder passwordEncoder) {
+    public static void validateCredentials(String rawPassword, String encodedPassword, PasswordEncoderPort passwordEncoder) {
         if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
             throw new BadCredentialsException("Invalid email or password");
         }
@@ -38,4 +37,5 @@ public class AuthenticationValidator {
             throw new BadCredentialsException("Password cannot be blank");
         }
     }
+
 }
