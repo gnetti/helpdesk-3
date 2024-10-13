@@ -2,6 +2,7 @@ package com.luiz.helpdesk.infrastructure.adapters.in.web;
 
 import com.luiz.helpdesk.application.ports.in.TokenTimeManagementUseCasePort;
 import com.luiz.helpdesk.domain.enums.Profile;
+import com.luiz.helpdesk.domain.model.TokenTimeProfile;
 import com.luiz.helpdesk.infrastructure.adapters.in.web.dto.TokenTimeProfileDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -21,48 +22,49 @@ public class TokenTimeController {
         this.tokenTimeService = tokenTimeService;
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<TokenTimeProfileDTO>> findAll() {
+        return ResponseEntity.ok(tokenTimeService.findAll());
+    }
+
     @PostMapping
     public ResponseEntity<TokenTimeProfileDTO> create(@Valid @RequestBody TokenTimeProfileDTO tokenTimeProfileDTO) {
         TokenTimeProfileDTO createdProfile = tokenTimeService.create(tokenTimeProfileDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{profile}")
-                .buildAndExpand(createdProfile.getProfile()).toUri();
+                .buildAndExpand(createdProfile.getProfileCode()).toUri();
         return ResponseEntity.created(uri).body(createdProfile);
     }
 
-    @PutMapping("/{profile}")
-    public ResponseEntity<TokenTimeProfileDTO> update(@PathVariable Profile profile, @Valid @RequestBody TokenTimeProfileDTO tokenTimeProfileDTO) {
-        TokenTimeProfileDTO updatedProfile = tokenTimeService.update(profile, tokenTimeProfileDTO);
-        return ResponseEntity.ok(updatedProfile);
-    }
-
-    @GetMapping("/{profile}")
-    public ResponseEntity<TokenTimeProfileDTO> findByProfile(@PathVariable Profile profile) {
-        return tokenTimeService.findByProfile(profile)
+    @GetMapping("/profile")
+    public ResponseEntity<TokenTimeProfileDTO> getTokenTimeProfileByQuery(@RequestParam Integer profileCode) {
+        return tokenTimeService.findByProfile(profileCode)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping
-    public ResponseEntity<List<TokenTimeProfileDTO>> findAll() {
-        List<TokenTimeProfileDTO> profiles = tokenTimeService.findAll();
-        return ResponseEntity.ok(profiles);
+    @GetMapping("/login/profile")
+    public ResponseEntity<TokenTimeProfileDTO> getTokenTimeProfile(@RequestParam Integer profileCode) {
+        return tokenTimeService.findByProfileForLogin(profileCode)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<TokenTimeProfileDTO> update(@RequestParam Integer profileCode, @Valid @RequestBody TokenTimeProfileDTO tokenTimeProfileDTO) {
+        TokenTimeProfileDTO existingProfileDTO = tokenTimeService.getTokenTimeProfile(profileCode);
+        TokenTimeProfile existingProfile = existingProfileDTO.toDomainModel();
+        TokenTimeProfile updatedProfile = tokenTimeProfileDTO.updateDomainModel(existingProfile);
+        TokenTimeProfileDTO result = tokenTimeService.update(profileCode, TokenTimeProfileDTO.fromDomainModel(updatedProfile));
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/expiration")
-    public ResponseEntity<Long> getExpirationTimeInMillis(@RequestParam Profile profile) {
-        long expirationTime = tokenTimeService.getExpirationTimeInMillis(profile);
-        return ResponseEntity.ok(expirationTime);
-    }
-
-    @GetMapping("/profile")
-    public ResponseEntity<TokenTimeProfileDTO> getTokenTimeProfile(@RequestParam Profile profile) {
-        TokenTimeProfileDTO tokenTimeProfileDTO = tokenTimeService.getTokenTimeProfile(profile);
-        return ResponseEntity.ok(tokenTimeProfileDTO);
+    public ResponseEntity<Long> getExpirationTimeInMillis(@RequestParam Integer profileCode) {
+        return ResponseEntity.ok(tokenTimeService.getExpirationTimeInMillis(Profile.fromCode(profileCode)));
     }
 
     @GetMapping("/exists")
-    public ResponseEntity<Boolean> existsByProfile(@RequestParam Profile profile) {
-        boolean exists = tokenTimeService.existsByProfile(profile);
-        return ResponseEntity.ok(exists);
+    public ResponseEntity<Boolean> existsByProfile(@RequestParam Integer profileCode) {
+        return ResponseEntity.ok(tokenTimeService.existsByProfile(profileCode));
     }
 }

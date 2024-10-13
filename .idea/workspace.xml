@@ -4,38 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6f985a38-0ffb-4e6c-9b10-02d2a5b1782e" name="Changes" comment="Profile Setting">
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/in/TokenTimeManagementUseCasePort.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/out/TokenTimePersistenceOutputPort.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/services/TokenTimeManageService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/exception/ConcreteErrorResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/exception/tokenTime/DuplicateProfileException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/exception/tokenTime/ForbiddenException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/exception/tokenTime/ObjectNotFoundException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/exception/tokenTime/TokenTimeProfileNotFoundException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/exception/tokenTime/TokenTimeUpdateException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/exception/tokenTime/UnauthorizedAccessException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/factory/TokenTimeProfileFactory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/factory/TokenTimeProfileFactoryImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/model/TokenTimeProfile.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/validator/TokenTimeValidator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/TokenTimePersistenceOutputAdapter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/in/web/TokenTimeController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/in/web/dto/TokenTimeProfileDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/entity/TokenTimeProfilesEntity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/springdata/JpaTokenTimeRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/utils/TokenTimeUtil.java" afterDir="false" />
+    <list default="true" id="6f985a38-0ffb-4e6c-9b10-02d2a5b1782e" name="Changes" comment="Added token time service no backend">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/services/AuthenticationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/services/AuthenticationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/in/TokenTimeManagementUseCasePort.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/in/TokenTimeManagementUseCasePort.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/out/TokenTimePersistenceOutputPort.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/out/TokenTimePersistenceOutputPort.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/services/DatabaseInitializationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/services/DatabaseInitializationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/enums/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/enums/Profile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/exception/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/exception/GlobalExceptionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/model/Profile.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/model/Profile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/validator/AuthenticationValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/validator/AuthenticationValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/config/CustomUserDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/config/CustomUserDetails.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/services/TokenTimeManageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/services/TokenTimeManageService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/factory/TokenTimeProfileFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/factory/TokenTimeProfileFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/factory/TokenTimeProfileFactoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/factory/TokenTimeProfileFactoryImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/validator/TokenTimeValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/validator/TokenTimeValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/TokenTimePersistenceOutputAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/TokenTimePersistenceOutputAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/in/web/TokenTimeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/in/web/TokenTimeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/in/web/dto/TokenTimeProfileDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/in/web/dto/TokenTimeProfileDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/config/JwtTokenProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/config/JwtTokenProvider.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/entity/TokenTimeProfilesEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/entity/TokenTimeProfilesEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/utils/TokenTimeUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/utils/TokenTimeUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/security/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/security/JwtAuthenticationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,7 +119,7 @@
       <workItem from="1728488845473" duration="3070000" />
       <workItem from="1728503694942" duration="12363000" />
       <workItem from="1728690027701" duration="584000" />
-      <workItem from="1728690717005" duration="18450000" />
+      <workItem from="1728690717005" duration="37391000" />
     </task>
     <task id="LOCAL-00001" summary="Endpoint improvements me">
       <option name="closed" value="true" />
@@ -225,7 +209,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728490882169</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Added token time service no backend">
+      <option name="closed" value="true" />
+      <created>1728740295812</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1728740295812</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -239,6 +231,7 @@
     <MESSAGE value="Optimized user settings" />
     <MESSAGE value="Added avatar" />
     <MESSAGE value="Profile Setting" />
-    <option name="LAST_COMMIT_MESSAGE" value="Profile Setting" />
+    <MESSAGE value="Added token time service no backend" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added token time service no backend" />
   </component>
 </project>

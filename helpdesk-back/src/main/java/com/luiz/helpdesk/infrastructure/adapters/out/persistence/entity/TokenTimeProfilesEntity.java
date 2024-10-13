@@ -37,7 +37,7 @@ public class TokenTimeProfilesEntity implements Serializable {
     }
 
     private TokenTimeProfilesEntity(Builder builder) {
-        this.profile = builder.profile.ordinal();
+        this.profile = builder.profile.getCode();
         this.tokenExpirationTimeMinutes = builder.tokenExpirationTimeMinutes;
         this.timeToShowDialogMinutes = builder.timeToShowDialogMinutes;
         this.dialogDisplayTimeForTokenUpdateMinutes = builder.dialogDisplayTimeForTokenUpdateMinutes;
@@ -56,7 +56,7 @@ public class TokenTimeProfilesEntity implements Serializable {
 
     public TokenTimeProfile toDomainModel() {
         return TokenTimeProfile.builder()
-                .withProfile(Profile.values()[this.profile])
+                .withProfile(Profile.fromCode(this.profile))
                 .withTokenExpirationTimeMinutes(this.tokenExpirationTimeMinutes)
                 .withTimeToShowDialogMinutes(this.timeToShowDialogMinutes)
                 .withDialogDisplayTimeForTokenUpdateMinutes(this.dialogDisplayTimeForTokenUpdateMinutes)
@@ -65,7 +65,7 @@ public class TokenTimeProfilesEntity implements Serializable {
     }
 
     public void updateFromDomainModel(TokenTimeProfile domainModel) {
-        this.profile = domainModel.getProfile().ordinal();
+        this.profile = domainModel.getProfile().getCode();
         this.tokenExpirationTimeMinutes = domainModel.getTokenExpirationTimeMinutes();
         this.timeToShowDialogMinutes = domainModel.getTimeToShowDialogMinutes();
         this.dialogDisplayTimeForTokenUpdateMinutes = domainModel.getDialogDisplayTimeForTokenUpdateMinutes();
@@ -74,7 +74,7 @@ public class TokenTimeProfilesEntity implements Serializable {
 
     public Builder toBuilder() {
         return new Builder()
-                .withProfile(Profile.values()[this.profile])
+                .withProfile(Profile.fromCode(this.profile))
                 .withTokenExpirationTimeMinutes(this.tokenExpirationTimeMinutes)
                 .withTimeToShowDialogMinutes(this.timeToShowDialogMinutes)
                 .withDialogDisplayTimeForTokenUpdateMinutes(this.dialogDisplayTimeForTokenUpdateMinutes)
@@ -123,7 +123,7 @@ public class TokenTimeProfilesEntity implements Serializable {
     }
 
     public Profile getProfile() {
-        return Profile.values()[profile];
+        return Profile.fromCode(profile);
     }
 
     public BigDecimal getTokenExpirationTimeMinutes() {

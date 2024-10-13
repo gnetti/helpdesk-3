@@ -11,7 +11,6 @@ import java.util.Objects;
 
 @Schema(description = "Data Transfer Object for Token Time Profile information",
         example = "{"
-                + "\"profile\":\"ADMIN\","
                 + "\"tokenExpirationTimeMinutes\":60,"
                 + "\"timeToShowDialogMinutes\":5,"
                 + "\"dialogDisplayTimeForTokenUpdateMinutes\":1,"
@@ -20,9 +19,8 @@ import java.util.Objects;
 
 public class TokenTimeProfileDTO {
 
-    @Schema(description = "Profile associated with the token time settings", example = "ADMIN")
-    @NotNull(message = "Profile is required")
-    private Profile profile;
+    @Schema(description = "Profile code associated with the token time settings", example = "1")
+    private Integer profileCode;
 
     @Schema(description = "Token expiration time in minutes", example = "60")
     @NotNull(message = "Token expiration time is required")
@@ -47,9 +45,9 @@ public class TokenTimeProfileDTO {
     public TokenTimeProfileDTO() {
     }
 
-    public TokenTimeProfileDTO(Profile profile, BigDecimal tokenExpirationTimeMinutes, BigDecimal timeToShowDialogMinutes,
+    public TokenTimeProfileDTO(Integer profileCode, BigDecimal tokenExpirationTimeMinutes, BigDecimal timeToShowDialogMinutes,
                                BigDecimal dialogDisplayTimeForTokenUpdateMinutes, BigDecimal tokenUpdateIntervalMinutes) {
-        this.profile = profile;
+        this.profileCode = profileCode;
         this.tokenExpirationTimeMinutes = tokenExpirationTimeMinutes;
         this.timeToShowDialogMinutes = timeToShowDialogMinutes;
         this.dialogDisplayTimeForTokenUpdateMinutes = dialogDisplayTimeForTokenUpdateMinutes;
@@ -59,7 +57,7 @@ public class TokenTimeProfileDTO {
     @Schema(description = "Create DTO from domain model")
     public static TokenTimeProfileDTO fromDomainModel(TokenTimeProfile domainModel) {
         return new TokenTimeProfileDTO(
-                domainModel.getProfile(),
+                domainModel.getProfile().getCode(),
                 domainModel.getTokenExpirationTimeMinutes(),
                 domainModel.getTimeToShowDialogMinutes(),
                 domainModel.getDialogDisplayTimeForTokenUpdateMinutes(),
@@ -69,8 +67,11 @@ public class TokenTimeProfileDTO {
 
     @Schema(description = "Convert DTO to domain model")
     public TokenTimeProfile toDomainModel() {
+        if (this.profileCode == null) {
+            throw new IllegalArgumentException("Profile code cannot be null");
+        }
         return TokenTimeProfile.builder()
-                .withProfile(this.profile)
+                .withProfile(Profile.fromCode(this.profileCode))
                 .withTokenExpirationTimeMinutes(this.tokenExpirationTimeMinutes)
                 .withTimeToShowDialogMinutes(this.timeToShowDialogMinutes)
                 .withDialogDisplayTimeForTokenUpdateMinutes(this.dialogDisplayTimeForTokenUpdateMinutes)
@@ -78,12 +79,23 @@ public class TokenTimeProfileDTO {
                 .build();
     }
 
-    public Profile getProfile() {
-        return profile;
+    @Schema(description = "Update existing domain model with DTO data")
+    public TokenTimeProfile updateDomainModel(TokenTimeProfile existingProfile) {
+        return TokenTimeProfile.builder()
+                .withProfile(existingProfile.getProfile())
+                .withTokenExpirationTimeMinutes(this.tokenExpirationTimeMinutes)
+                .withTimeToShowDialogMinutes(this.timeToShowDialogMinutes)
+                .withDialogDisplayTimeForTokenUpdateMinutes(this.dialogDisplayTimeForTokenUpdateMinutes)
+                .withTokenUpdateIntervalMinutes(this.tokenUpdateIntervalMinutes)
+                .build();
     }
 
-    public void setProfile(Profile profile) {
-        this.profile = profile;
+    public Integer getProfileCode() {
+        return profileCode;
+    }
+
+    public void setProfileCode(Integer profileCode) {
+        this.profileCode = profileCode;
     }
 
     public BigDecimal getTokenExpirationTimeMinutes() {
@@ -121,20 +133,19 @@ public class TokenTimeProfileDTO {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof TokenTimeProfileDTO)) return false;
-        TokenTimeProfileDTO that = (TokenTimeProfileDTO) o;
-        return profile == that.profile;
+        if (!(o instanceof TokenTimeProfileDTO that)) return false;
+        return Objects.equals(profileCode, that.profileCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(profile);
+        return Objects.hash(profileCode);
     }
 
     @Override
     public String toString() {
         return "TokenTimeProfileDTO{" +
-                "profile=" + profile +
+                "profileCode=" + profileCode +
                 ", tokenExpirationTimeMinutes=" + tokenExpirationTimeMinutes +
                 ", timeToShowDialogMinutes=" + timeToShowDialogMinutes +
                 ", dialogDisplayTimeForTokenUpdateMinutes=" + dialogDisplayTimeForTokenUpdateMinutes +

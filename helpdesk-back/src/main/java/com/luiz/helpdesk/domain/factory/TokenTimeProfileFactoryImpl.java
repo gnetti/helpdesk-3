@@ -11,11 +11,12 @@ public class TokenTimeProfileFactoryImpl implements TokenTimeProfileFactory {
 
     @Override
     public TokenTimeProfile createTokenTimeProfile(
-            Profile profile,
+            int profileCode,
             BigDecimal tokenExpirationTimeMinutes,
             BigDecimal timeToShowDialogMinutes,
             BigDecimal dialogDisplayTimeForTokenUpdateMinutes,
             BigDecimal tokenUpdateIntervalMinutes) {
+        Profile profile = Profile.fromCode(profileCode);
         return TokenTimeProfile.builder()
                 .withProfile(profile)
                 .withTokenExpirationTimeMinutes(tokenExpirationTimeMinutes)

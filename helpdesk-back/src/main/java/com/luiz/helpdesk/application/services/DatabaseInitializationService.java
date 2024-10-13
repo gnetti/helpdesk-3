@@ -185,21 +185,21 @@ public class DatabaseInitializationService implements InitializeDatabaseUseCaseP
     private void initializeTokenTimeProfiles() {
         List<TokenTimeProfile> tokenTimeProfiles = Arrays.asList(
                 tokenTimeProfileFactory.createTokenTimeProfile(
-                        Profile.ADMIN,
+                        Profile.ADMIN.getCode(),
                         new BigDecimal("30.155"),
                         new BigDecimal("30"),
                         new BigDecimal("15"),
                         new BigDecimal("0.017")
                 ),
                 tokenTimeProfileFactory.createTokenTimeProfile(
-                        Profile.CLIENT,
+                        Profile.CLIENT.getCode(),
                         new BigDecimal("60.125"),
                         new BigDecimal("60"),
                         new BigDecimal("1"),
                         new BigDecimal("0.017")
                 ),
                 tokenTimeProfileFactory.createTokenTimeProfile(
-                        Profile.TECHNICIAN,
+                        Profile.TECHNICIAN.getCode(),
                         new BigDecimal("30.125"),
                         new BigDecimal("30"),
                         new BigDecimal("0.2"),
@@ -208,7 +208,7 @@ public class DatabaseInitializationService implements InitializeDatabaseUseCaseP
         );
 
         for (TokenTimeProfile profile : tokenTimeProfiles) {
-            if (!tokenTimeRepository.existsByProfile(profile.getProfile())) {
+            if (!tokenTimeRepository.existsByProfile(profile.getProfile().getCode())) {
                 tokenTimeRepository.saveTokenTime(profile);
             }
         }
