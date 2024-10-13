@@ -20,7 +20,7 @@ public class ProfileService implements ProfileUseCasePort {
         try {
             return Profile.fromDescription("ROLE_" + normalizedDescription);
         } catch (IllegalArgumentException e) {
-            throw new ProfileNotFoundException("No profile found for description: " + description, e);
+            throw new ProfileNotFoundException("Nenhum perfil encontrado para descrição: " + description, e);
         }
     }
 
@@ -31,7 +31,7 @@ public class ProfileService implements ProfileUseCasePort {
         try {
             return Profile.fromCode(code);
         } catch (IllegalArgumentException e) {
-            throw new ProfileNotFoundException("No profile found for code: " + code, e);
+            throw new ProfileNotFoundException("Nenhum perfil encontrado para o código: " + code, e);
         }
     }
 

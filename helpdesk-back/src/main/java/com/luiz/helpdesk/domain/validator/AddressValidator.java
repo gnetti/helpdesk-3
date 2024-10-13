@@ -7,25 +7,25 @@ public class AddressValidator {
 
     public static void validateAddress(Address address) {
         if (address == null) {
-            throw new InvalidAddressDataException("Address cannot be null");
+            throw new InvalidAddressDataException("O endereço não pode ser nulo");
         }
     }
 
     public static void validateAddressId(Integer id) {
         if (id == null) {
-            throw new InvalidAddressDataException("Address ID cannot be null");
+            throw new InvalidAddressDataException("O ID do endereço não pode ser nulo");
         }
     }
 
     public static void validatePersonId(Integer personId) {
         if (personId == null) {
-            throw new InvalidAddressDataException("Person ID cannot be null");
+            throw new InvalidAddressDataException("O ID da pessoa não pode ser nulo");
         }
     }
 
     public static void validateZipCode(String zipCode) {
         if (zipCode == null || zipCode.trim().isEmpty()) {
-            throw new InvalidAddressDataException("Zip code cannot be null or empty");
+            throw new InvalidAddressDataException("O CEP não pode ser nulo ou vazio");
         }
     }
 

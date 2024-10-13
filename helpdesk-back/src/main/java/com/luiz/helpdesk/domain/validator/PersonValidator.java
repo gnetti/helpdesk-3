@@ -40,53 +40,53 @@ public class PersonValidator {
 
     private static void validateBasicPersonData(Person person, List<String> errors) {
         if (person == null) {
-            errors.add("Person cannot be null");
+            errors.add("A pessoa não pode ser nula");
             return;
         }
-        validateField(person.getName(), "Person name", errors);
-        validateField(person.getCpf(), "Person CPF", errors);
-        validateField(person.getEmail(), "Person email", errors);
+        validateField(person.getName(), "Nome da pessoa", errors);
+        validateField(person.getCpf(), "CPF da pessoa", errors);
+        validateField(person.getEmail(), "E-mail da pessoa", errors);
         validateAddress(person.getAddress(), errors);
     }
 
     private static void validateAddress(Address address, List<String> errors) {
         if (address == null) {
-            errors.add("Person must have an address");
+            errors.add("A pessoa deve ter um endereço");
             return;
         }
-        validateField(address.getStreet(), "Address street", errors);
-        validateField(address.getNeighborhood(), "Address neighborhood", errors);
-        validateField(address.getCity(), "Address city", errors);
-        validateField(address.getState(), "Address state", errors);
-        validateField(address.getZipCode(), "Address zip code", errors);
-        validateField(address.getNumber(), "Address number", errors);
+        validateField(address.getStreet(), "Rua do endereço", errors);
+        validateField(address.getNeighborhood(), "Bairro do endereço", errors);
+        validateField(address.getCity(), "Cidade do endereço", errors);
+        validateField(address.getState(), "Estado do endereço", errors);
+        validateField(address.getZipCode(), "CEP do endereço", errors);
+        validateField(address.getNumber(), "Número do endereço", errors);
     }
 
     private static void validateField(String field, String fieldName, List<String> errors) {
         if (field == null || field.trim().isEmpty()) {
-            errors.add(fieldName + " cannot be null or empty");
+            errors.add(fieldName + " não pode ser nulo ou vazio");
         }
     }
 
     private static void validatePasswordNotEmpty(String password, List<String> errors) {
-        validateField(password, "Password", errors);
+        validateField(password, "Senha", errors);
     }
 
     private static void validateProfile(Integer profile, List<String> errors) {
         if (profile == null) {
-            errors.add("Profile cannot be null");
+            errors.add("O perfil não pode ser nulo");
         } else {
             try {
                 Profile.fromCode(profile);
             } catch (IllegalArgumentException e) {
-                errors.add("Invalid profile code");
+                errors.add("Código de perfil inválido");
             }
         }
     }
 
     private static void validateTheme(Integer theme, List<String> errors) {
         if (theme != null && theme < 0) {
-            errors.add("Theme must be a non-negative integer");
+            errors.add("O tema deve ser um número inteiro não negativo");
         }
     }
 
@@ -101,7 +101,7 @@ public class PersonValidator {
         boolean themeChanged = newTheme != null && !newTheme.equals(existingTheme);
         boolean passwordChanged = newPassword != null && !newPassword.isEmpty();
         if (!themeChanged && !passwordChanged) {
-            errors.add("At least one field (theme or password) must be updated");
+            errors.add("Pelo menos um campo (tema ou senha) deve ser atualizado");
         }
     }
 
@@ -110,13 +110,13 @@ public class PersonValidator {
             validateUniqueField(newPerson.getCpf(), "CPF", () -> repository.existsByCpfAndIdNot(newPerson.getCpf(), newPerson.getId()), errors);
         }
         if (existingPerson == null || !newPerson.getEmail().equals(existingPerson.getEmail())) {
-            validateUniqueField(newPerson.getEmail(), "email", () -> repository.existsByEmailAndIdNot(newPerson.getEmail(), newPerson.getId()), errors);
+            validateUniqueField(newPerson.getEmail(), "e-mail", () -> repository.existsByEmailAndIdNot(newPerson.getEmail(), newPerson.getId()), errors);
         }
     }
 
     private static void validateUniqueField(String field, String fieldName, Supplier<Boolean> existsCheck, List<String> errors) {
         if (existsCheck.get()) {
-            errors.add("Person with " + fieldName + " " + field + " already exists");
+            errors.add("Já existe uma pessoa com " + fieldName + " " + field);
         }
     }
 
@@ -128,53 +128,53 @@ public class PersonValidator {
 
     public static void validateId(Integer id) {
         if (id == null) {
-            throw new InvalidPersonDataException("Id cannot be null");
+            throw new InvalidPersonDataException("O ID não pode ser nulo");
         }
     }
 
     public static void validateCpf(String cpf) {
         if (cpf == null || cpf.trim().isEmpty()) {
-            throw new InvalidPersonDataException("CPF cannot be null or empty");
+            throw new InvalidPersonDataException("O CPF não pode ser nulo ou vazio");
         }
     }
 
     public static void validateEmail(String email) {
         if (email == null || email.trim().isEmpty()) {
-            throw new InvalidPersonDataException("Email cannot be null or empty");
+            throw new InvalidPersonDataException("O e-mail não pode ser nulo ou vazio");
         }
     }
 
     public static void validatePersonExists(PersonPersistenceOutputPort repository, Integer id) {
         if (!repository.existsById(id)) {
-            throw new PersonNotFoundException("Person not found with id: " + id);
+            throw new PersonNotFoundException("Pessoa não encontrada com o id: " + id);
         }
     }
 
     public static Person validateAndGetPersonByEmail(PersonPersistenceOutputPort repository, String email) {
         validateEmail(email);
         return repository.findByEmail(email)
-                .orElseThrow(() -> new PersonNotFoundException("Person not found with email: " + email));
+                .orElseThrow(() -> new PersonNotFoundException("Pessoa não encontrada com o e-mail: " + email));
     }
 
     private static void validateCurrentPasswordProvided(String currentPassword, List<String> errors) {
         if (currentPassword == null || currentPassword.trim().isEmpty()) {
-            errors.add("Current password must be provided when updating password");
+            errors.add("A senha atual deve ser fornecida ao atualizar a senha");
         }
     }
 
     private static void validateNewPasswordIfProvided(String newPassword, List<String> errors) {
         if (newPassword != null) {
             if (newPassword.trim().isEmpty()) {
-                errors.add("New password cannot be empty if provided");
+                errors.add("A nova senha não pode estar vazia se fornecida");
             } else if (newPassword.length() < 8) {
-                errors.add("New password must be at least 8 characters long");
+                errors.add("A nova senha deve ter pelo menos 8 caracteres");
             }
         }
     }
 
     public static void validateCpfAndPassword(String cpf, String password) {
         if (cpf == null || cpf.trim().isEmpty() || password == null || password.trim().isEmpty()) {
-            throw new InvalidPersonDataException("CPF and Password are invalid or empty");
+            throw new InvalidPersonDataException("CPF e Senha são inválidos ou vazios");
         }
     }
 }

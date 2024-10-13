@@ -45,7 +45,7 @@ public class TokenTimeManageService implements TokenTimeManagementUseCasePort {
         );
         return tokenTimeRepository.updateTokenTime(profileCode, tokenTimeProfileDTO.toDomainModel())
                 .map(updatedProfile -> TokenTimeUtil.handleUpdate(profileCode, tokenTimeProfileDTO, updatedProfile))
-                .orElseThrow(() -> new TokenTimeUpdateException("Failed to update TokenTimeProfile for profile: " + Profile.fromCode(profileCode)));
+                .orElseThrow(() -> new TokenTimeUpdateException("Falha ao atualizar TokenTimeProfile para perfil: " + Profile.fromCode(profileCode)));
     }
 
     @Override
@@ -81,6 +81,6 @@ public class TokenTimeManageService implements TokenTimeManagementUseCasePort {
     public TokenTimeProfileDTO getTokenTimeProfile(Integer profileCode) throws TokenTimeUpdateException {
         return tokenTimeRepository.findByProfile(profileCode)
                 .map(TokenTimeProfileDTO::fromDomainModel)
-                .orElseThrow(() -> new TokenTimeUpdateException("TokenTimeProfile not found for profile: " + Profile.fromCode(profileCode)));
+                .orElseThrow(() -> new TokenTimeUpdateException("TokenTimeProfile não encontrado para perfil: " + Profile.fromCode(profileCode)));
     }
 }

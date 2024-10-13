@@ -32,7 +32,7 @@ export class SettingsValidator {
   }
 
   showUpdateError(error: any): void {
-    const errorMessage = error.error?.message || 'Erro ao atualizar as configurações.';
+    const errorMessage = error?.error?.detail || error?.error?.message || 'Erro ao atualizar as configurações.';
     this.toast.error(errorMessage, 'Erro');
   }
 

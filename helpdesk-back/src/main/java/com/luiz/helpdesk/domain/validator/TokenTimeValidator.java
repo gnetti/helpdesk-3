@@ -9,38 +9,38 @@ import com.luiz.helpdesk.domain.model.TokenTimeProfile;
 public class TokenTimeValidator {
     public static void validateRootAccess(boolean isRoot) throws UnauthorizedAccessException {
         if (!isRoot) {
-            throw new UnauthorizedAccessException("Access denied: Only ROOT users can access this resource.");
+            throw new UnauthorizedAccessException("Acesso negado: Apenas usuários ROOT podem acessar este recurso.");
         }
     }
 
     public static void validateUniqueProfile(boolean exists, Profile profile) throws DuplicateProfileException {
         if (exists) {
-            throw new DuplicateProfileException("A record already exists for the profile", profile);
+            throw new DuplicateProfileException("Já existe um registro para o perfil", profile);
         }
     }
 
     public static void validateProfileExists(boolean exists, Profile profile) throws ProfileNotFoundException {
         if (!exists) {
-            throw new ProfileNotFoundException("TokenTimeProfile not found for profile: " + profile);
+            throw new ProfileNotFoundException("TokenTimeProfile não encontrado para o perfil: " + profile);
         }
     }
 
     public static void validateTokenTimeProfileNotNull(TokenTimeProfile tokenTimeProfile, Profile profile) throws ProfileNotFoundException {
         if (tokenTimeProfile == null) {
-            throw new ProfileNotFoundException("TokenTimeProfile not found for profile: " + profile);
+            throw new ProfileNotFoundException("TokenTimeProfile não encontrado para o perfil: " + profile);
         }
     }
 
     public static void validateNotRootProfile(Integer profileCode) throws IllegalArgumentException {
         validateProfileCodeNotNull(profileCode);
         if (Profile.ROOT.getCode().equals(profileCode)) {
-            throw new IllegalArgumentException("Cannot modify ROOT profile");
+            throw new IllegalArgumentException("Não é possível modificar o perfil ROOT");
         }
     }
 
     public static void validateProfileCodeNotNull(Integer profileCode) throws IllegalArgumentException {
         if (profileCode == null) {
-            throw new IllegalArgumentException("Profile code cannot be null");
+            throw new IllegalArgumentException("O código do perfil não pode ser nulo");
         }
     }
 
@@ -49,7 +49,7 @@ public class TokenTimeValidator {
         try {
             Profile.fromCode(profileCode);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid profile code: " + profileCode);
+            throw new IllegalArgumentException("Código de perfil inválido: " + profileCode);
         }
     }
 }

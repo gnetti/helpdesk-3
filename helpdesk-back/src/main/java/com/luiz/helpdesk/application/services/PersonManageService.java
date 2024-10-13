@@ -116,7 +116,7 @@ public class PersonManageService implements PersonManageUseCasePort {
         try {
             return personRepository.getCurrentUser(userDetails.getId());
         } catch (PersonNotFoundException e) {
-            throw new UnauthorizedException("Current user not found");
+            throw new UnauthorizedException("Usuário atual não encontrado");
         }
     }
 
@@ -162,13 +162,13 @@ public class PersonManageService implements PersonManageUseCasePort {
 
     private void validateCurrentUserOperation(Integer tokenUserId, Integer requestUserId) {
         if (!tokenUserId.equals(requestUserId)) {
-            throw new UnauthorizedException("You are not authorized to perform this operation");
+            throw new UnauthorizedException("Você não está autorizado a executar esta operação");
         }
     }
 
     private Person getExistingPerson(Integer id) {
         return personRepository.findById(id)
-                .orElseThrow(() -> new PersonNotFoundException("Person not found with id: " + id));
+                .orElseThrow(() -> new PersonNotFoundException("Pessoa não encontrada com id: " + id));
     }
 
     private Person updatePersonFields(Person existingPerson, Person updatedPerson, String newPassword) {
@@ -188,7 +188,7 @@ public class PersonManageService implements PersonManageUseCasePort {
 
     private void validateCurrentPassword(String decryptedCurrentPassword, String storedPassword) {
         if (!passwordEncoder.matches(decryptedCurrentPassword, storedPassword)) {
-            throw new UnauthorizedException("Current password is incorrect");
+            throw new UnauthorizedException("A senha atual está incorreta");
         }
     }
 

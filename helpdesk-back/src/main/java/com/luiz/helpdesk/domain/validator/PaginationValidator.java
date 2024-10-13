@@ -37,7 +37,7 @@ public class PaginationValidator {
     public int validatePageNumber(Integer page, List<String> errors) {
         int validatedPage = (page != null) ? page : defaultPage;
         if (validatedPage < 0) {
-            errors.add("Page number must not be less than zero");
+            errors.add("O número da página não pode ser menor que zero");
         }
         return validatedPage;
     }
@@ -45,10 +45,10 @@ public class PaginationValidator {
     public int validatePageSize(Integer size, List<String> errors) {
         int validatedSize = (size != null) ? size : defaultSize;
         if (validatedSize < minPageSize) {
-            errors.add("Page size must not be less than " + minPageSize);
+            errors.add("O tamanho da página não pode ser menor que " + minPageSize);
         }
         if (validatedSize > maxPageSize) {
-            errors.add("Page size must not be greater than " + maxPageSize);
+            errors.add("O tamanho da página não pode ser maior que " + maxPageSize);
         }
         return validatedSize;
     }
@@ -79,14 +79,14 @@ public class PaginationValidator {
 
     public static void setDefaultPage(int newDefaultPage) {
         if (newDefaultPage < 0) {
-            throw new IllegalArgumentException("Default page must not be less than zero");
+            throw new IllegalArgumentException("A página padrão não pode ser menor que zero");
         }
         defaultPage = newDefaultPage;
     }
 
     public static void setDefaultSize(int newDefaultSize) {
         if (newDefaultSize < minPageSize || newDefaultSize > maxPageSize) {
-            throw new IllegalArgumentException("Default size must be between " + minPageSize + " and " + maxPageSize);
+            throw new IllegalArgumentException("O tamanho padrão deve estar entre " + minPageSize + " e " + maxPageSize);
         }
         defaultSize = newDefaultSize;
     }

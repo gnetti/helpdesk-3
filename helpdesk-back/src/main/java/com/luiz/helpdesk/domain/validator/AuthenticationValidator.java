@@ -9,32 +9,32 @@ import org.springframework.security.core.Authentication;
 public class AuthenticationValidator {
     public static void validateCredentials(String rawPassword, String encodedPassword, PasswordEncoderPort passwordEncoder) {
         if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
-            throw new BadCredentialsException("Invalid email or password");
+            throw new BadCredentialsException("E-mail ou senha inválidos");
         }
     }
 
     public static CustomUserDetails validateAndGetUserDetails(Authentication authentication) {
         if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails)) {
-            throw new UnauthorizedException("User not authenticated");
+            throw new UnauthorizedException("Usuário não autenticado");
         }
         return (CustomUserDetails) authentication.getPrincipal();
     }
 
     public static void validateToken(boolean isValid) {
         if (!isValid) {
-            throw new UnauthorizedException("Invalid or expired token");
+            throw new UnauthorizedException("Token inválido ou expirado");
         }
     }
 
     public static void validateEmailNotBlank(String email) {
         if (email == null || email.trim().isEmpty()) {
-            throw new BadCredentialsException("Email cannot be blank");
+            throw new BadCredentialsException("O e-mail não pode ficar em branco");
         }
     }
 
     public static void validatePasswordNotBlank(String password) {
         if (password == null || password.trim().isEmpty()) {
-            throw new BadCredentialsException("Password cannot be blank");
+            throw new BadCredentialsException("A senha não pode ficar em branco");
         }
     }
 

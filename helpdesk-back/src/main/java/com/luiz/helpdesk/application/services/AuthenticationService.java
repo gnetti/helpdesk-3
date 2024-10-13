@@ -58,13 +58,13 @@ public class AuthenticationService implements AuthenticationUseCasePort {
         try {
             return personUseCase.findPersonByEmail(email);
         } catch (PersonNotFoundException e) {
-            throw new BadCredentialsException("Invalid email or password");
+            throw new BadCredentialsException("E-mail ou senha inválidos");
         }
     }
 
     private void validateCredentials(String rawPassword, String encodedPassword) {
         if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
-            throw new BadCredentialsException("Invalid email or password");
+            throw new BadCredentialsException("E-mail ou senha inválidos");
         }
     }
 }
