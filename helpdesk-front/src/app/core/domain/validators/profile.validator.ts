@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 @Injectable({
   providedIn: 'root'
 })
-export class SettingsValidator {
+export class ProfileValidator {
   constructor(private toast: ToastrService) {}
 
   validateForm(isValid: boolean): boolean {
@@ -15,8 +15,8 @@ export class SettingsValidator {
     return true;
   }
 
-  validateUpdatedSettings(updatedSettings: any): boolean {
-    if (Object.keys(updatedSettings).length === 0) {
+  validateUpdatedProfile(updatedProfile: any): boolean {
+    if (Object.keys(updatedProfile).length === 0) {
       this.showNoChangesInfo();
       return false;
     }

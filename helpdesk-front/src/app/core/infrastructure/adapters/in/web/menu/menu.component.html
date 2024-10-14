@@ -8,12 +8,16 @@
     </button>
     <mat-menu #userMenu="matMenu">
       <button mat-menu-item [routerLink]="['/settings']">
-        <mat-icon>settings_applications</mat-icon>
-        <span>Settings</span>
+        <mat-icon>settings</mat-icon>
+        <span>Configurações</span>
+      </button>
+      <button mat-menu-item [routerLink]="['/profile']">
+        <mat-icon>person</mat-icon>
+        <span>Meu perfil</span>
       </button>
       <button mat-menu-item (click)="logout()">
         <mat-icon>exit_to_app</mat-icon>
-        <span>Logout</span>
+        <span>Sair</span>
       </button>
     </mat-menu>
   </mat-toolbar-row>

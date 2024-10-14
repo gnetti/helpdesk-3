@@ -6,7 +6,7 @@ import {AuthGuard} from "@adapters/in/web/guards/auth.guard";
 import {DashboardComponent} from "@adapters/in/web/dashboard/dashboard.component";
 import {PersonListComponent} from "@adapters/in/web/person/person-list/person-list.component";
 import {PersonCreateComponent} from "@adapters/in/web/person/person-create/person-create.component";
-import {SettingsComponent} from "@adapters/in/web/settings/settings.component";
+import {ProfileComponent} from "@adapters/in/web/profile/profile.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -23,7 +23,7 @@ const routes: Routes = [
           {path: "create", component: PersonCreateComponent}
         ]
       },
-      {path: "settings", component: SettingsComponent},
+      {path: "profile", component: ProfileComponent},
       {path: "", redirectTo: "dashboard", pathMatch: "full"}
     ]
   },

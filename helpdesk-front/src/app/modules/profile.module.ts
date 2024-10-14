@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from "@angular/core";
 import { CommonModule, NgOptimizedImage } from "@angular/common";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterLink, RouterOutlet } from "@angular/router";
@@ -13,18 +13,18 @@ import { MatMenuModule } from "@angular/material/menu";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { GravatarModule } from "ngx-gravatar";
 
-import { SETTINGS_USE_CASE_PORT } from "@domain/ports/in/settings-use-case.port";
-import { SETTINGS_REPOSITORY_PORT } from "@domain/ports/out/settings-repository.port";
-import { SettingsRepositoryAdapter } from "@adapters/out/persistence/settings.repository.adapter";
-import { SettingsComponent } from "@adapters/in/web/settings/settings.component";
-import { SettingsUseCase } from "@application/services/setting.service.";
+import { PROFILE_USE_CASE_PORT } from "@domain/ports/in/profile-use-case.port";
+import { PROFILE_REPOSITORY_PORT } from "@domain/ports/out/profile-repository.port";
+import { ProfileRepositoryAdapter } from "@adapters/out/persistence/profile.repository.adapter";
+import { ProfileComponent } from "@adapters/in/web/profile/profile.component";
 import { PersonModule } from "@modules/person.module";
 import { ThemeTitleCasePipe } from "@shared/pipes/theme-title-case.pipe";
 import { MenuComponent } from "@adapters/in/web/menu/menu.component";
+import { ProfileUseCase } from "@application/services/profile.service";
 
 @NgModule({
   declarations: [
-    SettingsComponent,
+    ProfileComponent,
     ThemeTitleCasePipe,
     MenuComponent
   ],
@@ -47,13 +47,14 @@ import { MenuComponent } from "@adapters/in/web/menu/menu.component";
     GravatarModule
   ],
   providers: [
-    { provide: SETTINGS_USE_CASE_PORT, useClass: SettingsUseCase },
-    { provide: SETTINGS_REPOSITORY_PORT, useClass: SettingsRepositoryAdapter }
+    { provide: PROFILE_USE_CASE_PORT, useClass: ProfileUseCase },
+    { provide: PROFILE_REPOSITORY_PORT, useClass: ProfileRepositoryAdapter }
   ],
   exports: [
-    SettingsComponent,
+    ProfileComponent,
     MenuComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class SettingsModule { }
+export class ProfileModule {
+}

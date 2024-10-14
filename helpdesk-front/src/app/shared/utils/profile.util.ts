@@ -1,10 +1,10 @@
-import {ThemeOption} from "@model//settings-form-control.model";
+import {ThemeOption} from "@model//user-profile-form-control.model";
 import {Theme, ThemeNames} from "@enums//theme.enum";
 import {Profile} from "@enums//profile.enum";
-import {UserSettingsPut} from "@model//user-settings.model";
+import {UserProfilePut} from "@model//user-profile.model";
 
 
-export class SettingsUtils {
+export class ProfileUtils {
   static getAvailableThemes(): ThemeOption[] {
     return Object.values(Theme)
       .filter((value): value is Theme => typeof value === 'number')
@@ -27,11 +27,11 @@ export class SettingsUtils {
     }
   }
 
-  static getUpdatedSettings(formValue: any, originalTheme: Theme, isPasswordFieldsVisible: boolean): UserSettingsPut {
-    const updatedSettings: UserSettingsPut = {};
+  static getUpdatedProfile(formValue: any, originalTheme: Theme, isPasswordFieldsVisible: boolean): UserProfilePut {
+    const updatedProfile: UserProfilePut = {};
 
     if (originalTheme !== formValue.theme) {
-      updatedSettings.theme = formValue.theme;
+      updatedProfile.theme = formValue.theme;
     }
 
     if (isPasswordFieldsVisible) {
@@ -39,13 +39,13 @@ export class SettingsUtils {
         if (formValue.newPassword !== formValue.confirmNewPassword) {
           throw new Error('As senhas não coincidem.');
         }
-        updatedSettings.currentPassword = formValue.currentPassword;
-        updatedSettings.newPassword = formValue.newPassword;
+        updatedProfile.currentPassword = formValue.currentPassword;
+        updatedProfile.newPassword = formValue.newPassword;
       } else if (formValue.currentPassword || formValue.newPassword || formValue.confirmNewPassword) {
         throw new Error('Preencha todos os campos de senha para atualizar.');
       }
     }
 
-    return updatedSettings;
+    return updatedProfile;
   }
 }

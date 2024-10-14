@@ -29,7 +29,7 @@ import {HeaderComponent} from "@adapters/in/web/header/header.component";
 import {CoreModule} from "@infrastructure/config/core.module";
 import {PersonModule} from "@modules/person.module";
 import {MAT_DIALOG_DEFAULT_OPTIONS} from "@angular/material/dialog";
-import {SettingsModule} from "@modules/settings.module";
+import {ProfileModule} from "@modules/profile.module";
 
 
 @NgModule({
@@ -46,7 +46,7 @@ import {SettingsModule} from "@modules/settings.module";
     CoreModule,
     AuthModule,
     PersonModule,
-    SettingsModule,
+    ProfileModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,

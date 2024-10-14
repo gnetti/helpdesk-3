@@ -1,9 +1,9 @@
 import { FormControl } from '@angular/forms';
-import { UserSettingsGet } from "./user-settings.model";
+import { UserProfileGet } from "./user-profile.model";
 import { Theme } from "@enums//theme.enum";
 
-export type SettingsFormControlModel = {
-  [K in keyof UserSettingsGet]: FormControl<UserSettingsGet[K]>;
+export type UserProfileFormControlModel = {
+  [K in keyof UserProfileGet]: FormControl<UserProfileGet[K]>;
 } & {
   currentPassword: FormControl<string>;
   newPassword: FormControl<string>;
@@ -22,7 +22,7 @@ export interface ThemeOption {
   name: string;
 }
 
-export class SettingsValidator {
+export class ProfileValidator {
   static validatePasswordFields(currentPassword: string, newPassword: string, confirmNewPassword: string): void {
     if (!currentPassword || !newPassword || !confirmNewPassword) {
       throw new Error('Preencha todos os campos de senha para atualizar.');
@@ -33,7 +33,7 @@ export class SettingsValidator {
   }
 }
 
-export class SettingsHelper {
+export class ProfileHelper {
   static readonly PASSWORD_PLACEHOLDER = '**********';
 
   static initializePasswordStrength(): PasswordStrength {

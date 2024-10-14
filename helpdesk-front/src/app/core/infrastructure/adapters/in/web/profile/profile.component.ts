@@ -1,34 +1,34 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject } from "rxjs";
-import { SETTINGS_USE_CASE_PORT, SettingsUseCasePort } from "@domain/ports/in/settings-use-case.port";
+import { PROFILE_USE_CASE_PORT, ProfileUseCasePort } from "@domain/ports/in/profile-use-case.port";
 import { ThemeService } from "@application/services/theme.service";
 import { takeUntil } from "rxjs/operators";
 import { MatSelectChange } from "@angular/material/select";
 import {
   PasswordStrength,
-  SettingsFormControlModel,
-  SettingsHelper,
+  UserProfileFormControlModel,
+  ProfileHelper,
   ThemeOption
-} from "@model//settings-form-control.model";
-import {SettingsUtils} from "@utils//settings.util";
+} from "@model//user-profile-form-control.model";
+import {ProfileUtils} from "@utils//profile.util";
 import {Theme} from "@enums//theme.enum";
 import {CryptoService} from "@security//crypto.service";
-import {SettingsValidator} from "@validators//settings.validator";
+import {ProfileValidator} from "@validators//profile.validator";
 import {Profile} from "@enums//profile.enum";
 import {PasswordStrengthValidator} from "@validators//Password-strength.validator";
-import {UserSettingsGet, UserSettingsResponse} from "@model//user-settings.model";
+import {UserProfileGet, UserProfileResponse} from "@model//user-profile.model";
 
 @Component({
-  selector: 'app-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.css']
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.css']
 })
-export class SettingsComponent implements OnInit, OnDestroy {
-  settingsForm!: FormGroup<SettingsFormControlModel>;
+export class ProfileComponent implements OnInit, OnDestroy {
+  profileForm!: FormGroup<UserProfileFormControlModel>;
   isPasswordFieldsVisible = false;
   isCancelButtonVisible = false;
-  availableThemes: ThemeOption[] = SettingsUtils.getAvailableThemes();
+  availableThemes: ThemeOption[] = ProfileUtils.getAvailableThemes();
   isSaveEnabled = false;
   originalTheme!: Theme;
   showPassword = {currentPassword: false,
@@ -36,20 +36,20 @@ export class SettingsComponent implements OnInit, OnDestroy {
   passwordErrors: any = {};
   private destroy$ = new Subject<void>();
   hasClickedCurrentPassword = false;
-  passwordStrength: PasswordStrength = SettingsHelper.initializePasswordStrength();
-  passwordPlaceholder = SettingsHelper.getPasswordPlaceholders();
+  passwordStrength: PasswordStrength = ProfileHelper.initializePasswordStrength();
+  passwordPlaceholder = ProfileHelper.getPasswordPlaceholders();
 
   constructor(
-    @Inject(SETTINGS_USE_CASE_PORT) private settingsUseCase: SettingsUseCasePort,
+    @Inject(PROFILE_USE_CASE_PORT) private profileUseCase: ProfileUseCasePort,
     private fb: FormBuilder,
     private themeService: ThemeService,
     private cryptoService: CryptoService,
-    private settingsValidator: SettingsValidator
+    private profileValidator: ProfileValidator
   ) {}
 
   ngOnInit(): void {
     this.initForm();
-    this.loadUserSettings();
+    this.loadUserProfile();
     this.setupFormChangeListeners();
   }
 
@@ -59,7 +59,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   private initForm(): void {
-    this.settingsForm = this.fb.group<SettingsFormControlModel>({
+    this.profileForm = this.fb.group<UserProfileFormControlModel>({
       id: this.fb.nonNullable.control(0),
       name: this.fb.nonNullable.control(''),
       email: this.fb.nonNullable.control(''),
@@ -77,12 +77,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   private disableFormControls(): void {
     ['id', 'name', 'email', 'profile'].forEach(control => {
-      this.settingsForm.get(control)?.disable();
+      this.profileForm.get(control)?.disable();
     });
   }
 
   private setupFormChangeListeners(): void {
-    this.settingsForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
+    this.profileForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.updateSaveButtonState();
     });
 
@@ -91,7 +91,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   private setupPasswordChangeListeners(): void {
     ['newPassword', 'confirmNewPassword'].forEach(field => {
-      this.settingsForm.get(field)?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.profileForm.get(field)?.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
         this.validatePassword(field);
         this.handlePasswordFieldChange(field);
       });
@@ -99,87 +99,87 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   private handlePasswordFieldChange(field: string): void {
-    field === 'newPassword' ? this.updatePasswordStrength() : this.settingsForm.updateValueAndValidity();
+    field === 'newPassword' ? this.updatePasswordStrength() : this.profileForm.updateValueAndValidity();
   }
 
-  loadUserSettings(): void {
-    this.settingsUseCase.getCurrentUser().pipe(takeUntil(this.destroy$)).subscribe({
-      next: this.handleUserSettingsLoaded.bind(this),
-      error: this.settingsValidator.showLoadError.bind(this.settingsValidator)
+  loadUserProfile(): void {
+    this.profileUseCase.getCurrentUser().pipe(takeUntil(this.destroy$)).subscribe({
+      next: this.handleUserProfileLoaded.bind(this),
+      error: this.profileValidator.showLoadError.bind(this.profileValidator)
     });
   }
 
-  private handleUserSettingsLoaded(settings: UserSettingsGet): void {
-    this.patchFormWithSettings(settings);
-    this.themeService.setTheme(settings.theme);
-    this.originalTheme = settings.theme;
+  private handleUserProfileLoaded(profile: UserProfileGet): void {
+    this.patchFormWithProfile(profile);
+    this.themeService.setTheme(profile.theme);
+    this.originalTheme = profile.theme;
     this.updateSaveButtonState();
   }
 
-  private patchFormWithSettings(settings: UserSettingsGet): void {
-    this.settingsForm.patchValue({
-      id: settings.id,
-      name: settings.name,
-      email: settings.email,
-      profile: settings.profile,
-      theme: settings.theme,
+  private patchFormWithProfile(profile: UserProfileGet): void {
+    this.profileForm.patchValue({
+      id: profile.id,
+      name: profile.name,
+      email: profile.email,
+      profile: profile.profile,
+      theme: profile.theme,
     });
   }
 
-  updateSettings(): void {
-    this.settingsValidator.validateForm(this.settingsForm.valid);
+  updateProfile(): void {
+    this.profileValidator.validateForm(this.profileForm.valid);
 
-    if (!this.settingsForm.valid) {
+    if (!this.profileForm.valid) {
       return;
     }
 
     try {
-      const updatedSettings = SettingsUtils.getUpdatedSettings(
-        this.settingsForm.getRawValue(),
+      const updatedProfile = ProfileUtils.getUpdatedProfile(
+        this.profileForm.getRawValue(),
         this.originalTheme,
         this.isPasswordFieldsVisible
       );
-      this.processUpdatedSettings(updatedSettings);
+      this.processUpdatedProfile(updatedProfile);
     } catch (error: any) {
-      this.settingsValidator.showUpdateError(error);
+      this.profileValidator.showUpdateError(error);
     }
   }
 
-  private processUpdatedSettings(updatedSettings: any): void {
-    this.settingsValidator.validateUpdatedSettings(updatedSettings);
+  private processUpdatedProfile(updatedProfile: any): void {
+    this.profileValidator.validateUpdatedProfile(updatedProfile);
 
-    if (Object.keys(updatedSettings).length === 0) {
+    if (Object.keys(updatedProfile).length === 0) {
       return;
     }
 
-    this.encryptPasswordFields(updatedSettings);
-    this.settingsUseCase.updateCurrentUser(updatedSettings).pipe(takeUntil(this.destroy$)).subscribe({
+    this.encryptPasswordFields(updatedProfile);
+    this.profileUseCase.updateCurrentUser(updatedProfile).pipe(takeUntil(this.destroy$)).subscribe({
       next: this.onUpdateSuccess.bind(this),
       error: this.onUpdateError.bind(this)
     });
   }
 
-  private encryptPasswordFields(updatedSettings: any): void {
+  private encryptPasswordFields(updatedProfile: any): void {
     ['currentPassword', 'newPassword'].forEach(field => {
-      if (updatedSettings[field]) {
-        updatedSettings[field] = this.cryptoService.encrypt(updatedSettings[field]);
+      if (updatedProfile[field]) {
+        updatedProfile[field] = this.cryptoService.encrypt(updatedProfile[field]);
       }
     });
   }
 
-  private onUpdateSuccess(updatedSettings: UserSettingsResponse): void {
-    this.themeService.setTheme(updatedSettings.theme);
-    this.originalTheme = updatedSettings.theme;
+  private onUpdateSuccess(updatedProfile: UserProfileResponse): void {
+    this.themeService.setTheme(updatedProfile.theme);
+    this.originalTheme = updatedProfile.theme;
     this.hidePasswordFields();
-    this.settingsForm.markAsPristine();
+    this.profileForm.markAsPristine();
     this.updateSaveButtonState();
-    this.settingsValidator.showUpdateSuccess();
+    this.profileValidator.showUpdateSuccess();
   }
 
   private onUpdateError(error: any): void {
-    this.settingsValidator.showUpdateError(error);
+    this.profileValidator.showUpdateError(error);
     this.hidePasswordFields();
-    this.settingsForm.markAsPristine();
+    this.profileForm.markAsPristine();
     this.updateSaveButtonState();
   }
 
@@ -191,9 +191,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   private setPasswordValidators(): void {
-    this.settingsForm.get('currentPassword')?.setValidators([Validators.required]);
-    this.settingsForm.get('newPassword')?.setValidators([Validators.required, PasswordStrengthValidator.validate]);
-    this.settingsForm.get('confirmNewPassword')?.setValidators([Validators.required]);
+    this.profileForm.get('currentPassword')?.setValidators([Validators.required]);
+    this.profileForm.get('newPassword')?.setValidators([Validators.required, PasswordStrengthValidator.validate]);
+    this.profileForm.get('confirmNewPassword')?.setValidators([Validators.required]);
   }
 
   hidePasswordFields(): void {
@@ -203,11 +203,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.clearPasswordValidators();
     this.updateFormValidityAndState();
     this.hasClickedCurrentPassword = false;
-    this.passwordStrength = SettingsHelper.initializePasswordStrength();
+    this.passwordStrength = ProfileHelper.initializePasswordStrength();
   }
 
   private resetPasswordFields(): void {
-    this.settingsForm.patchValue({
+    this.profileForm.patchValue({
       currentPassword: this.passwordPlaceholder['currentPassword'],
       newPassword: '',
       confirmNewPassword: ''
@@ -216,19 +216,19 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   private clearPasswordValidators(): void {
     ['currentPassword', 'newPassword', 'confirmNewPassword'].forEach(field => {
-      this.settingsForm.get(field)?.clearValidators();
+      this.profileForm.get(field)?.clearValidators();
     });
   }
 
   private updateFormValidityAndState(): void {
     ['currentPassword', 'newPassword', 'confirmNewPassword'].forEach(field => {
-      this.settingsForm.get(field)?.updateValueAndValidity();
+      this.profileForm.get(field)?.updateValueAndValidity();
     });
     this.updateSaveButtonState();
   }
 
   updateSaveButtonState(): void {
-    this.isSaveEnabled = this.settingsForm.dirty && this.settingsForm.valid;
+    this.isSaveEnabled = this.profileForm.dirty && this.profileForm.valid;
   }
 
   togglePasswordVisibility(field: 'currentPassword' | 'newPassword' | 'confirmNewPassword'): void {
@@ -238,14 +238,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   private handleCurrentPasswordClick(field: string): void {
     if (field === 'currentPassword' && !this.hasClickedCurrentPassword) {
-      this.settingsForm.patchValue({currentPassword: ''});
+      this.profileForm.patchValue({currentPassword: ''});
       this.hasClickedCurrentPassword = true;
       this.showPasswordFields();
     }
   }
 
   private validatePassword(field: string): void {
-    const control = this.settingsForm.get(field);
+    const control = this.profileForm.get(field);
     if (control?.invalid && (control.dirty || control.touched)) {
       this.passwordErrors[field] = control.errors;
     } else {
@@ -254,7 +254,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   protected updatePasswordStrength(): void {
-    const password = this.settingsForm.get('newPassword')?.value ?? '';
+    const password = this.profileForm.get('newPassword')?.value ?? '';
     const strengthResult = PasswordStrengthValidator.getPasswordStrength(password);
     this.updatePasswordStrengthState(strengthResult);
   }
@@ -293,13 +293,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   onThemeChange(event: MatSelectChange): void {
     const newTheme = event.value as Theme;
-    this.settingsForm.get('theme')?.setValue(newTheme);
+    this.profileForm.get('theme')?.setValue(newTheme);
     this.themeService.setTheme(newTheme);
     this.updateSaveButtonState();
   }
 
   getProfileName(profile: Profile | null | undefined): string {
-    return SettingsUtils.getProfileName(profile);
+    return ProfileUtils.getProfileName(profile);
   }
 
   onPasswordFocus(field: string): void {
@@ -308,8 +308,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   private clearPasswordPlaceholder(field: string): void {
-    if (this.settingsForm.get(field)?.value === this.passwordPlaceholder[field]) {
-      this.settingsForm.get(field)?.setValue('');
+    if (this.profileForm.get(field)?.value === this.passwordPlaceholder[field]) {
+      this.profileForm.get(field)?.setValue('');
     }
   }
 
@@ -321,8 +321,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   onPasswordBlur(field: string): void {
-    if (!this.settingsForm.get(field)?.value) {
-      this.settingsForm.get(field)?.setValue(this.passwordPlaceholder[field]);
+    if (!this.profileForm.get(field)?.value) {
+      this.profileForm.get(field)?.setValue(this.passwordPlaceholder[field]);
     }
   }
 }
