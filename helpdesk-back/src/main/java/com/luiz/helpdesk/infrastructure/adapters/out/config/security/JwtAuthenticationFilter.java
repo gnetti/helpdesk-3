@@ -1,4 +1,4 @@
-package com.luiz.helpdesk.infrastructure.adapters.out.security;
+package com.luiz.helpdesk.infrastructure.adapters.out.config.security;
 
 import com.luiz.helpdesk.application.ports.in.PersonManageUseCasePort;
 import com.luiz.helpdesk.domain.enums.Profile;

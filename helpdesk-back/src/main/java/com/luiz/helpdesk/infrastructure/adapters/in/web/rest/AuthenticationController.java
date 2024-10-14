@@ -1,4 +1,4 @@
-package com.luiz.helpdesk.infrastructure.adapters.in.web;
+package com.luiz.helpdesk.infrastructure.adapters.in.web.rest;
 
 import com.luiz.helpdesk.application.ports.in.AuthenticationUseCasePort;
 import com.luiz.helpdesk.application.ports.out.DecryptionPort;

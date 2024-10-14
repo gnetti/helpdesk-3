@@ -186,24 +186,24 @@ public class DatabaseInitializationService implements InitializeDatabaseUseCaseP
         List<TokenTimeProfile> tokenTimeProfiles = Arrays.asList(
                 tokenTimeProfileFactory.createTokenTimeProfile(
                         Profile.ADMIN.getCode(),
-                        new BigDecimal("30.155"),
-                        new BigDecimal("30"),
-                        new BigDecimal("15"),
-                        new BigDecimal("0.017")
+                        new BigDecimal("60.12"),
+                        new BigDecimal("30.00"),
+                        new BigDecimal("15.00"),
+                        new BigDecimal("1.00")
                 ),
                 tokenTimeProfileFactory.createTokenTimeProfile(
                         Profile.CLIENT.getCode(),
-                        new BigDecimal("60.125"),
-                        new BigDecimal("60"),
-                        new BigDecimal("1"),
-                        new BigDecimal("0.017")
+                        new BigDecimal("60.15"),
+                        new BigDecimal("30.00"),
+                        new BigDecimal("15.00"),
+                        new BigDecimal("3.00")
                 ),
                 tokenTimeProfileFactory.createTokenTimeProfile(
                         Profile.TECHNICIAN.getCode(),
-                        new BigDecimal("30.125"),
-                        new BigDecimal("30"),
-                        new BigDecimal("0.2"),
-                        new BigDecimal("0.017")
+                        new BigDecimal("60.17"),
+                        new BigDecimal("30.00"),
+                        new BigDecimal("15.00"),
+                        new BigDecimal("5.00")
                 )
         );
 

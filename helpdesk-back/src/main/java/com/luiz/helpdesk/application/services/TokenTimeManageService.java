@@ -56,7 +56,7 @@ public class TokenTimeManageService implements TokenTimeManagementUseCasePort {
 
     @Override
     public Optional<TokenTimeProfileDTO> findByProfileForLogin(Integer profileCode) {
-        return tokenTimeRepository.findByProfileForLogin(profileCode).map(TokenTimeProfileDTO::fromDomainModel);
+        return tokenTimeRepository.findByProfileForLogin(profileCode).map(TokenTimeProfileDTO::fromDomainModelForLogin);
     }
 
     @Override

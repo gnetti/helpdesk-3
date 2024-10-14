@@ -2,6 +2,10 @@ package com.luiz.helpdesk.domain.model;
 
 import com.luiz.helpdesk.domain.enums.Profile;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +13,7 @@ import java.util.Objects;
 
 public class TokenTimeProfile {
 
+    private final Long id;
     private final Profile profile;
     private final BigDecimal tokenExpirationTimeMinutes;
     private final BigDecimal timeToShowDialogMinutes;
@@ -18,6 +23,7 @@ public class TokenTimeProfile {
     private TokenTimeProfile(Builder builder) {
         validateFields(builder.profile, builder.tokenExpirationTimeMinutes, builder.timeToShowDialogMinutes,
                 builder.dialogDisplayTimeForTokenUpdateMinutes, builder.tokenUpdateIntervalMinutes);
+        this.id = builder.profile == Profile.ROOT ? null : builder.id;
         this.profile = builder.profile;
         this.tokenExpirationTimeMinutes = builder.tokenExpirationTimeMinutes;
         this.timeToShowDialogMinutes = builder.timeToShowDialogMinutes;
@@ -51,26 +57,33 @@ public class TokenTimeProfile {
     }
 
     static String getString(List<String> invalidFields) {
-        StringBuilder errorMessage = new StringBuilder();
-        for (int i = 0; i < invalidFields.size(); i++) {
-            if (i > 0) {
-                errorMessage.append(i == invalidFields.size() - 1 ? " and " : ", ");
-            }
-            errorMessage.append(invalidFields.get(i));
+        if (invalidFields.isEmpty()) {
+            return "";
         }
-        errorMessage.append(invalidFields.size() > 1 ? " are" : " is");
-        errorMessage.append(" invalid or empty");
-        return errorMessage.toString();
+
+        String joinedFields = String.join(", ", invalidFields);
+        String lastField = invalidFields.get(invalidFields.size() - 1);
+
+        if (invalidFields.size() > 1) {
+            joinedFields = joinedFields.substring(0, joinedFields.lastIndexOf(", ")) + " and " + lastField;
+        }
+
+        String verb = invalidFields.size() > 1 ? "are" : "is";
+        return joinedFields + " " + verb + " invalid or empty";
     }
 
-    public TokenTimeProfile updateFields(TokenTimeProfile newData) {
-        return toBuilder()
-                .withProfile(newData.getProfile())
-                .withTokenExpirationTimeMinutes(newData.getTokenExpirationTimeMinutes())
-                .withTimeToShowDialogMinutes(newData.getTimeToShowDialogMinutes())
-                .withDialogDisplayTimeForTokenUpdateMinutes(newData.getDialogDisplayTimeForTokenUpdateMinutes())
-                .withTokenUpdateIntervalMinutes(newData.getTokenUpdateIntervalMinutes())
+    public TokenTimeProfile withoutId() {
+        return new Builder()
+                .withProfile(this.profile)
+                .withTokenExpirationTimeMinutes(this.tokenExpirationTimeMinutes)
+                .withTimeToShowDialogMinutes(this.timeToShowDialogMinutes)
+                .withDialogDisplayTimeForTokenUpdateMinutes(this.dialogDisplayTimeForTokenUpdateMinutes)
+                .withTokenUpdateIntervalMinutes(this.tokenUpdateIntervalMinutes)
                 .build();
+    }
+
+    public Long getId() {
+        return profile == Profile.ROOT ? null : id;
     }
 
     public Profile getProfile() {
@@ -93,21 +106,18 @@ public class TokenTimeProfile {
         return tokenUpdateIntervalMinutes;
     }
 
-    public Builder toBuilder() {
-        return new Builder()
-                .withProfile(this.profile)
-                .withTokenExpirationTimeMinutes(this.tokenExpirationTimeMinutes)
-                .withTimeToShowDialogMinutes(this.timeToShowDialogMinutes)
-                .withDialogDisplayTimeForTokenUpdateMinutes(this.dialogDisplayTimeForTokenUpdateMinutes)
-                .withTokenUpdateIntervalMinutes(this.tokenUpdateIntervalMinutes);
-    }
-
     public static class Builder {
+        private Long id;
         private Profile profile;
         private BigDecimal tokenExpirationTimeMinutes;
         private BigDecimal timeToShowDialogMinutes;
         private BigDecimal dialogDisplayTimeForTokenUpdateMinutes;
         private BigDecimal tokenUpdateIntervalMinutes;
+
+        public Builder withId(Long id) {
+            this.id = id;
+            return this;
+        }
 
         public Builder withProfile(Profile profile) {
             this.profile = profile;
@@ -148,7 +158,8 @@ public class TokenTimeProfile {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TokenTimeProfile that = (TokenTimeProfile) o;
-        return profile == that.profile &&
+        return Objects.equals(getId(), that.getId()) &&
+                profile == that.profile &&
                 Objects.equals(tokenExpirationTimeMinutes, that.tokenExpirationTimeMinutes) &&
                 Objects.equals(timeToShowDialogMinutes, that.timeToShowDialogMinutes) &&
                 Objects.equals(dialogDisplayTimeForTokenUpdateMinutes, that.dialogDisplayTimeForTokenUpdateMinutes) &&
@@ -157,14 +168,15 @@ public class TokenTimeProfile {
 
     @Override
     public int hashCode() {
-        return Objects.hash(profile, tokenExpirationTimeMinutes, timeToShowDialogMinutes,
+        return Objects.hash(getId(), profile, tokenExpirationTimeMinutes, timeToShowDialogMinutes,
                 dialogDisplayTimeForTokenUpdateMinutes, tokenUpdateIntervalMinutes);
     }
 
     @Override
     public String toString() {
         return "TokenTimeProfile{" +
-                "profile=" + profile +
+                "id=" + getId() +
+                ", profile=" + profile +
                 ", tokenExpirationTimeMinutes=" + tokenExpirationTimeMinutes +
                 ", timeToShowDialogMinutes=" + timeToShowDialogMinutes +
                 ", dialogDisplayTimeForTokenUpdateMinutes=" + dialogDisplayTimeForTokenUpdateMinutes +

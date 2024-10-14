@@ -1,4 +1,4 @@
-package com.luiz.helpdesk.infrastructure.adapters;
+package com.luiz.helpdesk.infrastructure.adapters.out.persistence;
 
 import com.luiz.helpdesk.application.ports.out.PersonPersistenceOutputPort;
 import com.luiz.helpdesk.domain.exception.person.PersonNotFoundException;

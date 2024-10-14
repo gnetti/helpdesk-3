@@ -1,30 +1,132 @@
 .container {
-   width: 90%;
-   margin: auto;
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 1rem;
 }
 
 table {
-   width: 100%;
+  width: 100%;
 }
 
 mat-form-field {
-   width: 100%;
+  width: 100%;
 }
 
 button {
-   width: 100%;
+  width: 100%;
 }
 
 h1 {
-   width: 100%;
-   text-align: center;
-   margin-bottom: 2rem;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
 .edit {
-   color: rgb(0, 153, 255);
+  color: rgb(0, 153, 255);
 }
 
 .delete {
-   color: red;
+  color: red;
+}
+
+@media (min-width: 601px) {
+  th[data-full-text]::after {
+    content: attr(data-full-text);
+    display: inline-block;
+  }
+
+  th[data-full-text] {
+    font-size: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    width: 95%;
+    padding: 0.5rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  table {
+    font-size: 0.9rem;
+  }
+
+  .mat-header-cell,
+  .mat-cell {
+    padding: 8px;
+  }
+
+  .mat-column-actions {
+    width: 80px;
+  }
+
+  button {
+    font-size: 0.9rem;
+    padding: 4px 8px;
+  }
+
+  th[data-full-text]::after {
+    content: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .mat-column-id {
+    display: none;
+  }
+
+  .mat-header-cell,
+  .mat-cell {
+    padding: 8px 4px;
+    font-size: 0.9rem;
+  }
+
+  .mat-header-row .mat-header-cell:first-child,
+  .mat-row .mat-cell:first-child {
+    padding-left: 8px;
+  }
+
+  .mat-header-row .mat-header-cell:last-child,
+  .mat-row .mat-cell:last-child {
+    padding-right: 8px;
+  }
+
+  .mat-cell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
+  }
+}
+
+@media (max-width: 400px) {
+  .mat-table {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mat-row {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0,0,0,.12);
+  }
+
+  .mat-cell {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 8px;
+  }
+
+  .mat-cell:before {
+    content: attr(data-label);
+    font-weight: bold;
+    padding-right: 8px;
+  }
 }

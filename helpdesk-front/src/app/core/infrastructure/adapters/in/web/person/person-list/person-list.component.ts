@@ -20,7 +20,7 @@ type PersonResponse = PaginatedPersonResponse | PersonHateoasResponse;
   styleUrls: ['./person-list.component.css']
 })
 export class PersonListComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['id', 'name', 'cpf', 'email', 'actions'];
+  displayedColumns: string[] = ['id', 'name', 'cpf', 'actions'];
   dataSource: MatTableDataSource<Person> = new MatTableDataSource<Person>([]);
   isLoading: boolean = false;
   totalElements: number = 0;

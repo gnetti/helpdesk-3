@@ -1,0 +1,101 @@
+<div class="settings-container mat-elevation-z8">
+  <app-spinner></app-spinner>
+  <h1 class="settings-title">Configurações</h1>
+  <img class="settings-image" ngSrc="assets/img/form-image.svg" alt="User Profile Image" width="328" height="278">
+  <form [formGroup]="tokenTimeForm" class="settings-form">
+    <h2 class="settings-subtitle">Configurações do Token JWT</h2>
+
+    <mat-form-field appearance="outline" class="settings-field">
+      <mat-label>Perfil</mat-label>
+      <mat-select formControlName="profileCode">
+        <mat-option *ngFor="let profile of profiles" [value]="profile.value">
+          {{ profile.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="settings-field" appearance="outline">
+      <mat-label>Tempo de Expiração do Token (minutos)</mat-label>
+      <input matInput formControlName="tokenExpirationTimeMinutes" appBigDecimalMask>
+      <button mat-icon-button matSuffix class="info-button"
+              matTooltip="Este é o tempo total que o token JWT possui quando é gerado e guardado no frontend, após esse tempo ele expira.">
+        <mat-icon>info</mat-icon>
+      </button>
+      <mat-error *ngIf="tokenTimeForm.get('tokenExpirationTimeMinutes')?.hasError('required')">
+        O campo Tempo de Expiração do Token é obrigatório.
+      </mat-error>
+      <mat-error *ngIf="tokenTimeForm.get('tokenExpirationTimeMinutes')?.hasError('min')">
+        O valor deve ser pelo menos 60 minutos.
+      </mat-error>
+      <mat-error *ngIf="tokenTimeForm.get('tokenExpirationTimeMinutes')?.hasError('max')">
+        O valor não pode ser maior que 1440 minutos.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="settings-field" appearance="outline">
+      <mat-label>Tempo Restante do Token para Exibir Diálogo (minutos)</mat-label>
+      <input matInput formControlName="timeToShowDialogMinutes" appBigDecimalMask>
+      <button mat-icon-button matSuffix class="info-button"
+              matTooltip="Tempo relativo ao que falta para o token expirar, quando falta este tempo, abre um diálogo para renovar o token.">
+        <mat-icon>info</mat-icon>
+      </button>
+      <mat-error *ngIf="tokenTimeForm.get('timeToShowDialogMinutes')?.hasError('required')">
+        O campo Tempo para Exibir Diálogo de Token é obrigatório.
+      </mat-error>
+      <mat-error *ngIf="tokenTimeForm.get('timeToShowDialogMinutes')?.hasError('min')">
+        O tempo para exibir o diálogo deve ser pelo menos 15 minutos.
+      </mat-error>
+      <mat-error *ngIf="tokenTimeForm.get('timeToShowDialogMinutes')?.hasError('max')">
+        O tempo para exibir o diálogo não pode ser maior que 30 minutos.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="settings-field" appearance="outline">
+      <mat-label>Tempo de Exibição do Diálogo para Atualizar Token (minutos)</mat-label>
+      <input matInput formControlName="dialogDisplayTimeForTokenUpdateMinutes" appBigDecimalMask>
+      <button mat-icon-button matSuffix class="info-button"
+              matTooltip="Tempo que o diálogo ficará aberto aguardando o usuário atualizar seu token.">
+        <mat-icon>info</mat-icon>
+      </button>
+      <mat-error *ngIf="tokenTimeForm.get('dialogDisplayTimeForTokenUpdateMinutes')?.hasError('required')">
+        O campo Tempo de Exibição do Diálogo para Atualizar Token é obrigatório.
+      </mat-error>
+      <mat-error *ngIf="tokenTimeForm.get('dialogDisplayTimeForTokenUpdateMinutes')?.hasError('min')">
+        O valor deve ser pelo menos 2 minutos.
+      </mat-error>
+      <mat-error *ngIf="tokenTimeForm.get('dialogDisplayTimeForTokenUpdateMinutes')?.hasError('max')">
+        O valor não pode ser maior que 15 minutos.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="settings-field" appearance="outline">
+      <mat-label>Intervalo de Atualização do Token (minutos)</mat-label>
+      <input matInput formControlName="tokenUpdateIntervalMinutes" appBigDecimalMask>
+      <button mat-icon-button matSuffix class="info-button"
+              matTooltip="Intervalo para verificar o tempo útil do token.">
+        <mat-icon>info</mat-icon>
+      </button>
+      <mat-error *ngIf="tokenTimeForm.get('tokenUpdateIntervalMinutes')?.hasError('required')">
+        O campo Intervalo de Atualização do Token é obrigatório.
+      </mat-error>
+      <mat-error *ngIf="tokenTimeForm.get('tokenUpdateIntervalMinutes')?.hasError('min')">
+        O intervalo de atualização do token deve ser pelo menos 1 minuto.
+      </mat-error>
+      <mat-error *ngIf="tokenTimeForm.get('tokenUpdateIntervalMinutes')?.hasError('max')">
+        O intervalo de atualização do token não pode ser maior que 5 minutos.
+      </mat-error>
+    </mat-form-field>
+  </form>
+
+  <mat-error *ngIf="tokenTimeForm.hasError('inadequateWarningTime')">
+    O tempo para exibir o diálogo deve garantir pelo menos 15 minutos antes da expiração do Token.
+  </mat-error>
+
+  <button mat-raised-button color="primary" class="save-button"
+          (click)="saveTokenTimeSettings()"
+          [disabled]="tokenTimeForm.invalid || isSaving || !formModified">
+    Salvar Configurações
+  </button>
+
+  <p class="developer-info">Desenvolvido por Luiz Generoso</p>
+</div>

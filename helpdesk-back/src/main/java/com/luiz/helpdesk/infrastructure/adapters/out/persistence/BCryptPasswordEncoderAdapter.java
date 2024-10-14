@@ -1,4 +1,4 @@
-package com.luiz.helpdesk.infrastructure.adapters;
+package com.luiz.helpdesk.infrastructure.adapters.out.persistence;
 
 import com.luiz.helpdesk.application.ports.out.PasswordEncoderPort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

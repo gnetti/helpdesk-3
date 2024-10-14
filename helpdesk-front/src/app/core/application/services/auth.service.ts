@@ -4,8 +4,9 @@ import { TOKEN_STORAGE_PORT, TokenStoragePort } from "@core/domain/ports/out/tok
 import { JWT_DECODER_PORT, JwtDecoderPort } from "@core/domain/ports/out/jwt-decoder.port";
 import { User } from "@core/domain/models/user.model";
 import { THEME_USE_CASE_PORT, ThemeUseCasePort } from "@domain/ports/in/theme-use-case.port";
+import { Profile } from "@enums//profile.enum";
 import { ThemeUtil } from "@utils//theme.util";
-import {Profile} from "@enums//profile.enum";
+
 
 @Injectable({
   providedIn: "root"
@@ -53,11 +54,17 @@ export class AuthService {
   }
 
   hasRole(role: Profile): boolean {
-    return this.currentUserValue?.profile === role;
+    if (!this.currentUserValue) return false;
+    const userProfile = this.currentUserValue.profile;
+    return typeof userProfile === 'string'
+      ? Profile[userProfile as keyof typeof Profile] === role
+      : userProfile === role;
   }
 
   getProfileName(): string {
-    return this.currentUserValue ? Profile[this.currentUserValue.profile] : '';
+    if (!this.currentUserValue) return '';
+    const profile = this.currentUserValue.profile;
+    return typeof profile === 'string' ? profile : Profile[profile];
   }
 
   getUserFromToken(): User | null {

@@ -2,22 +2,24 @@ package com.luiz.helpdesk.infrastructure.adapters.out.persistence.entity;
 
 import com.luiz.helpdesk.domain.enums.Profile;
 import com.luiz.helpdesk.domain.model.TokenTimeProfile;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "token_time_profiles")
+@Table(name = "token_time_profiles", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"profile"}, name = "uk_token_time_profile")
+})
 public class TokenTimeProfilesEntity implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(nullable = false, unique = true)
     private Integer profile;
 
@@ -56,6 +58,7 @@ public class TokenTimeProfilesEntity implements Serializable {
 
     public TokenTimeProfile toDomainModel() {
         return TokenTimeProfile.builder()
+                .withId(this.id)
                 .withProfile(Profile.fromCode(this.profile))
                 .withTokenExpirationTimeMinutes(this.tokenExpirationTimeMinutes)
                 .withTimeToShowDialogMinutes(this.timeToShowDialogMinutes)
@@ -120,6 +123,10 @@ public class TokenTimeProfilesEntity implements Serializable {
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Profile getProfile() {

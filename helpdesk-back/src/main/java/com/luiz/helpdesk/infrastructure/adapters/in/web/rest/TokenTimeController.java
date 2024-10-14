@@ -1,11 +1,14 @@
-package com.luiz.helpdesk.infrastructure.adapters.in.web;
+package com.luiz.helpdesk.infrastructure.adapters.in.web.rest;
 
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.luiz.helpdesk.application.ports.in.TokenTimeManagementUseCasePort;
 import com.luiz.helpdesk.domain.enums.Profile;
+import com.luiz.helpdesk.infrastructure.adapters.out.config.serialization.LoginDTOFilter;
 import com.luiz.helpdesk.domain.model.TokenTimeProfile;
 import com.luiz.helpdesk.infrastructure.adapters.in.web.dto.TokenTimeProfileDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -41,11 +44,14 @@ public class TokenTimeController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
     @GetMapping("/login/profile")
-    public ResponseEntity<TokenTimeProfileDTO> getTokenTimeProfile(@RequestParam Integer profileCode) {
+    public ResponseEntity<MappingJacksonValue> getTokenTimeProfile(@RequestParam Integer profileCode) {
         return tokenTimeService.findByProfileForLogin(profileCode)
-                .map(ResponseEntity::ok)
+                .map(dto -> {
+                    MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(dto);
+                    mappingJacksonValue.setFilters(new SimpleFilterProvider().addFilter("loginDTOFilter", new LoginDTOFilter()));
+                    return ResponseEntity.ok(mappingJacksonValue);
+                })
                 .orElse(ResponseEntity.notFound().build());
     }
 

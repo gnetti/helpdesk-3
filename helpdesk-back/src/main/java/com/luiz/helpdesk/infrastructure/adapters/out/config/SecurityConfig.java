@@ -1,6 +1,6 @@
 package com.luiz.helpdesk.infrastructure.adapters.out.config;
 
-import com.luiz.helpdesk.infrastructure.adapters.out.security.JwtAuthenticationFilter;
+import com.luiz.helpdesk.infrastructure.adapters.out.config.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

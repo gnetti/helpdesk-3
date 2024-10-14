@@ -6,7 +6,8 @@ import { firstValueFrom } from "rxjs";
 import { environment } from "@env/environment";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { ThemeUtil } from "@utils//theme.util";
-import {Profile} from "@enums//profile.enum";
+import { Profile } from "@enums//profile.enum";
+
 
 @Injectable()
 export class AuthRepositoryAdapter implements AuthRepositoryPort {

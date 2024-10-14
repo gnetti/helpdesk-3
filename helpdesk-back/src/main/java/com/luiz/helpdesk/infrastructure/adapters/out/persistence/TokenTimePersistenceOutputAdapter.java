@@ -1,4 +1,4 @@
-package com.luiz.helpdesk.infrastructure.adapters;
+package com.luiz.helpdesk.infrastructure.adapters.out.persistence;
 
 import com.luiz.helpdesk.application.ports.out.TokenTimePersistenceOutputPort;
 import com.luiz.helpdesk.domain.enums.Profile;
