@@ -12,35 +12,33 @@ export class FormUtils {
   }
 
   static getPageParams(pageIndex: number, pageSize: number): { page: number; size: number } {
-    return {
-      page: pageIndex,
-      size: pageSize
-    };
+    return { page: pageIndex, size: pageSize };
   }
 
   static applyFilter(event: Event, dataSource: any): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    dataSource.filter = filterValue.trim().toLowerCase();
+    dataSource.filter = (event.target as HTMLInputElement).value.trim().toLowerCase();
 
     if (dataSource.paginator) {
       dataSource.paginator.firstPage();
     }
   }
 
-  static extractLinks(links: any): { [key: string]: string } {
-    return Object.entries(links).reduce((acc, [key, value]: [string, any]) => {
-      acc[key] = value.href;
-      return acc;
-    }, {} as { [key: string]: string });
+  static extractLinks(links: Record<string, { href: string }>): Record<string, string> {
+    return Object.fromEntries(
+      Object.entries(links).map(([key, { href }]) => [key, href])
+    );
   }
 
   static validateCpf(cpf: string): boolean {
-    cpf = cpf.replace(/[^\d]+/g, '');
+    cpf = cpf.replace(/\D+/g, '');
     if (cpf.length !== 11 || !!cpf.match(/(\d)\1{10}/)) return false;
-    const cpfDigits = cpf.split('').map(el => +el);
-    const rest = (count: number) => (cpfDigits
-      .slice(0, count-12)
-      .reduce((soma, el, index) => (soma + el * (count-index)), 0) * 10) % 11 % 10;
+
+    const cpfDigits = cpf.split('').map(Number);
+    const rest = (count: number) => (
+      cpfDigits.slice(0, count - 12)
+        .reduce((sum, digit, index) => sum + digit * (count - index), 0) * 10
+    ) % 11 % 10;
+
     return rest(10) === cpfDigits[9] && rest(11) === cpfDigits[10];
   }
 
@@ -49,7 +47,7 @@ export class FormUtils {
   }
 
   static unmaskCpf(cpf: string): string {
-    return cpf.replace(/[^\d]+/g, '');
+    return cpf.replace(/\D+/g, '');
   }
 
   static maskCep(cep: string): string {
@@ -57,6 +55,14 @@ export class FormUtils {
   }
 
   static unmaskCep(cep: string): string {
-    return cep.replace(/[^\d]+/g, '');
+    return cep.replace(/\D+/g, '');
+  }
+
+  static updatePagination(paginator: any, response: any): void {
+    if (paginator) {
+      paginator.length = response.totalElements;
+      paginator.pageSize = response.pageSize || response.size;
+      paginator.pageIndex = response.pageNumber || response.number;
+    }
   }
 }

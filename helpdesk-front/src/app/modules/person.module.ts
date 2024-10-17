@@ -20,9 +20,10 @@ import {CEP_SERVICE_PORT} from "@application/services/cep-service.port";
 import {CepServiceAdapter} from "@adapters/out/persistence/cep-service.adapter";
 import {GetAddressByCepUseCase} from "@domain/ports/in/get-address-by-cep.use-case";
 import {PersonCreateComponent} from "@adapters/in/web/person/person-create/person-create.component";
-import {ReactiveFormsModule} from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
+import { MatOption, MatSelect } from "@angular/material/select";
 
 
 @NgModule({
@@ -52,6 +53,9 @@ import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
     ReactiveFormsModule,
     MatCheckbox,
     NgxMaskDirective,
+    MatSelect,
+    MatOption,
+    FormsModule
   ],
   exports: [PersonListComponent, SpinnerComponent],
   providers: [

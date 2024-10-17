@@ -1,21 +1,21 @@
-import {Inject, Injectable} from '@angular/core';
-import {PersonUseCasePort} from '@domain/ports/in/person-use-case.port';
-import {PERSON_REPOSITORY_PORT, PersonRepositoryPort} from '@domain/ports/out/person-repository.port';
-import {Person} from '@model//person.model';
-import {Observable} from 'rxjs';
+import { Inject, Injectable } from "@angular/core";
+import { PersonUseCasePort } from "@domain/ports/in/person-use-case.port";
+import { PERSON_REPOSITORY_PORT, PersonRepositoryPort } from "@domain/ports/out/person-repository.port";
+import { PaginatedPersonResponse, Person } from "@model//person.model";
+import { Observable } from "rxjs";
+import { GetAllPersonsParams, PersonHateoasResponse } from "@dto//hateoas-response.dto";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class PersonService implements PersonUseCasePort {
-  constructor(@Inject(PERSON_REPOSITORY_PORT) private personRepository: PersonRepositoryPort) {
-  }
+  constructor(@Inject(PERSON_REPOSITORY_PORT) private personRepository: PersonRepositoryPort) {}
 
   createPerson(person: Person): Observable<Person> {
     return this.personRepository.createPerson(person);
   }
 
-  getAllPersons(params?: any): Observable<any> {
+  getAllPersons(params: GetAllPersonsParams): Observable<PaginatedPersonResponse | PersonHateoasResponse> {
     return this.personRepository.getAllPersons(params);
   }
 

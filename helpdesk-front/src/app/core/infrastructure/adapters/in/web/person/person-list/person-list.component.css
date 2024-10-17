@@ -1,8 +1,6 @@
 .container {
   width: 90%;
-  max-width: 1200px;
   margin: auto;
-  padding: 1rem;
 }
 
 table {
@@ -14,7 +12,7 @@ mat-form-field {
 }
 
 button {
-  width: 100%;
+  width: auto;
 }
 
 h1 {
@@ -31,102 +29,236 @@ h1 {
   color: red;
 }
 
-@media (min-width: 601px) {
-  th[data-full-text]::after {
-    content: attr(data-full-text);
-    display: inline-block;
-  }
-
-  th[data-full-text] {
-    font-size: 0;
-  }
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
 }
 
-@media (max-width: 600px) {
-  .container {
-    width: 95%;
-    padding: 0.5rem;
-  }
-
-  h1 {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-
-  table {
-    font-size: 0.9rem;
-  }
-
-  .mat-header-cell,
-  .mat-cell {
-    padding: 8px;
-  }
-
-  .mat-column-actions {
-    width: 80px;
-  }
-
-  button {
-    font-size: 0.9rem;
-    padding: 4px 8px;
-  }
-
-  th[data-full-text]::after {
-    content: none;
-  }
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-@media (max-width: 600px) {
-  .mat-column-id {
-    display: none;
-  }
-
-  .mat-header-cell,
-  .mat-cell {
-    padding: 8px 4px;
-    font-size: 0.9rem;
-  }
-
-  .mat-header-row .mat-header-cell:first-child,
-  .mat-row .mat-cell:first-child {
-    padding-left: 8px;
-  }
-
-  .mat-header-row .mat-header-cell:last-child,
-  .mat-row .mat-cell:last-child {
-    padding-right: 8px;
-  }
-
-  .mat-cell {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100px;
-  }
+.page-size-selector {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
 }
 
-@media (max-width: 400px) {
+.page-size-selector mat-form-field {
+  width: 80px;
+  height: 40px;
+}
+
+.page-size-selector .mat-mdc-text-field-wrapper {
+  padding: 0;
+  background-color: #919191;
+  border-radius: 20px;
+}
+
+.page-size-selector .mat-mdc-form-field-flex {
+  height: 40px;
+  align-items: center;
+  padding: 0 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.page-size-selector .mat-mdc-form-field-infix {
+  padding: 0;
+  border-top: none;
+  display: flex;
+  align-items: center;
+}
+
+.page-size-selector .mat-mdc-select-value {
+  padding: 0;
+  line-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-size-selector .mat-mdc-select-arrow-wrapper {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  position: absolute;
+  right: 5px;
+  top: 0;
+}
+
+.page-size-selector .mat-mdc-form-field-underline {
+  display: none;
+}
+
+.page-size-selector .mat-mdc-select-value-text {
+  color: white;
+  font-size: 16px;
+}
+
+.page-size-selector .mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-floating-label.mdc-floating-label {
+  display: none;
+}
+
+.page-size-selector .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.page-size-selector .mat-mdc-select-arrow {
+  color: red;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid;
+  margin: 0 4px;
+}
+
+.pagination-info {
+  text-align: center;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.g-bubble-container {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.g-bubble {
+  background-color: #919191;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white !important;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  border: none;
+  padding: 0;
+  min-width: unset;
+  line-height: 40px;
+}
+
+.g-bubble:hover {
+  background-color: #b6b6b6;
+}
+
+.g-bubble__active {
+  background-color: #6193a1;
+}
+
+.g-bubble:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+mat-paginator {
+  background: transparent !important;
+}
+
+.mat-mdc-paginator-range-actions {
+  margin-right: 12px !important;
+}
+
+.actions-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.actions-container button {
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.actions-container mat-form-field {
+  flex-grow: 1;
+  min-width: 200px;
+}
+
+@media screen and (max-width: 600px) {
   .mat-table {
-    display: flex;
-    flex-direction: column;
+    border: 0;
+    vertical-align: middle;
   }
 
-  .mat-row {
-    display: flex;
-    flex-direction: column;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(0,0,0,.12);
+  .mat-table caption {
+    font-size: 1em;
   }
 
-  .mat-cell {
-    display: flex;
-    justify-content: space-between;
-    padding: 4px 8px;
+  .mat-table .mat-header-cell {
+    border: 10px solid;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    position: absolute;
+    width: 1px;
   }
 
-  .mat-cell:before {
+  .mat-table .mat-row {
+    border-bottom: 5px solid #ddd;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .mat-table .mat-cell {
+    border-bottom: 1px solid #ddd;
+    display: block;
+    font-size: 1em;
+    text-align: right;
+    padding-right: 1em;
+    height: 30px;
+    line-height: 30px;
+  }
+
+  .mat-table .mat-cell:before {
     content: attr(data-label);
+    float: left;
     font-weight: bold;
-    padding-right: 8px;
+    text-transform: uppercase;
+    padding-right: 10px;
+  }
+
+  .actions-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions-container button,
+  .actions-container mat-form-field {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .pagination-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .page-size-selector {
+    margin-right: 0;
+    margin-bottom: 8px;
+  }
+
+  .pagination {
+    flex-direction: column;
+  }
+
+  .g-bubble-container {
+    margin-bottom: 8px;
   }
 }

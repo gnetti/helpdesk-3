@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -60,6 +62,23 @@ public class PersonManageService implements PersonManageUseCasePort {
 
     @Override
     @Transactional(readOnly = true)
+    public Pagination<Person> getAllPersonsWithFilters(Pagination<?> pagination, Map<String, String> filters) {
+        String sortBy = filters.getOrDefault("sortBy", "id");
+        String sortDirection = filters.getOrDefault("sortDirection", "ASC");
+        Map<String, String> actualFilters = new HashMap<>(filters);
+        actualFilters.remove("sortBy");
+        actualFilters.remove("sortDirection");
+        return personRepository.getAllPersonsWithFilters(pagination, sortBy, sortDirection, actualFilters);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Pagination<Person> getAllPersonsWithFilters(Pagination<?> pagination, String sortBy, String sortDirection, Map<String, String> filters) {
+        return personRepository.getAllPersonsWithFilters(pagination, sortBy, sortDirection, filters);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Optional<Person> getPersonById(Integer id) {
         PersonValidator.validateId(id);
         return personRepository.findById(id);
@@ -82,7 +101,7 @@ public class PersonManageService implements PersonManageUseCasePort {
 
     @Override
     @Transactional(readOnly = true)
-    public Person findPersonByEmail(String email) {
+    public Person findPersonByEmail(String email) throws PersonNotFoundException {
         return PersonValidator.validateAndGetPersonByEmail(personRepository, email);
     }
 
@@ -111,7 +130,7 @@ public class PersonManageService implements PersonManageUseCasePort {
 
     @Override
     @Transactional(readOnly = true)
-    public Person getCurrentUser() {
+    public Person getCurrentUser() throws UnauthorizedException {
         CustomUserDetails userDetails = authenticationUseCasePort.getAuthenticatedUser();
         try {
             return personRepository.getCurrentUser(userDetails.getId());
@@ -123,10 +142,10 @@ public class PersonManageService implements PersonManageUseCasePort {
     @Override
     @Transactional(readOnly = true)
     public boolean verifyPassword(String email, String password) throws Exception {
-        String decryptedPassword = decryptionService.decrypt(password);
+        String decryptedPassword = decryptPassword(password);
         return personRepository.findByEmail(email)
                 .map(person -> passwordEncoder.matches(decryptedPassword, person.getPassword()))
-                .orElse(false);
+                .orElseThrow(() -> new PersonNotFoundException("Pessoa não encontrada com o email: " + email));
     }
 
     @Override

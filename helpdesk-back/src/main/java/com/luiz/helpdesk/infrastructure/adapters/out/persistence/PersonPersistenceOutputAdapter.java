@@ -4,23 +4,33 @@ import com.luiz.helpdesk.application.ports.out.PersonPersistenceOutputPort;
 import com.luiz.helpdesk.domain.exception.person.PersonNotFoundException;
 import com.luiz.helpdesk.domain.model.Pagination;
 import com.luiz.helpdesk.domain.model.Person;
+import com.luiz.helpdesk.domain.validator.PaginationValidator;
 import com.luiz.helpdesk.infrastructure.adapters.out.persistence.entity.PersonEntity;
 import com.luiz.helpdesk.infrastructure.adapters.out.persistence.springdata.JpaPersonRepository;
 import com.luiz.helpdesk.infrastructure.adapters.out.persistence.utils.PaginationUtil;
+import com.luiz.helpdesk.infrastructure.adapters.out.persistence.utils.PersonFilterOperationsUtil;
+import com.luiz.helpdesk.infrastructure.adapters.out.persistence.utils.SpecificationUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.*;
+import java.util.function.BiFunction;
+
+import static org.springframework.data.jpa.repository.query.KeysetScrollSpecification.createSort;
 
 @Component
 public class PersonPersistenceOutputAdapter implements PersonPersistenceOutputPort {
 
     private final JpaPersonRepository jpaPersonRepository;
+    private final PaginationValidator paginationValidator;
 
-    public PersonPersistenceOutputAdapter(JpaPersonRepository jpaPersonRepository) {
+    public PersonPersistenceOutputAdapter(JpaPersonRepository jpaPersonRepository, PaginationValidator paginationValidator) {
         this.jpaPersonRepository = jpaPersonRepository;
+        this.paginationValidator = paginationValidator;
     }
 
     @Override
@@ -82,10 +92,18 @@ public class PersonPersistenceOutputAdapter implements PersonPersistenceOutputPo
         return jpaPersonRepository.existsByEmailAndIdNot(email, id);
     }
 
+
     @Override
     public Pagination<Person> getAllPersons(Pagination<?> pagination) {
-        PageRequest pageRequest = PageRequest.of(pagination.pageNumber(), pagination.pageSize());
-        Page<PersonEntity> page = jpaPersonRepository.findAll(pageRequest);
+        return getAllPersonsWithFilters(pagination, PaginationValidator.getDefaultSort(), "ASC", new HashMap<>());
+    }
+
+    @Override
+    public Pagination<Person> getAllPersonsWithFilters(Pagination<?> pagination, String sortBy, String sortDirection, Map<String, String> filters) {
+        Sort sort = createSort(sortBy, sortDirection);
+        PageRequest pageRequest = PageRequest.of(pagination.pageNumber(), pagination.pageSize(), sort);
+        Specification<PersonEntity> spec = createSpecification(filters);
+        Page<PersonEntity> page = jpaPersonRepository.findAll(spec, pageRequest);
         return PaginationUtil.mapPageToPagination(page, PersonEntity::toDomainModel);
     }
 
@@ -111,4 +129,36 @@ public class PersonPersistenceOutputAdapter implements PersonPersistenceOutputPo
         return updatedEntity.toDomainModel();
     }
 
+    private List<Sort.Order> createSortOrders(String sortBy, String sortDirection) {
+        List<Sort.Order> orders = new ArrayList<>();
+        String[] sortFields = sortBy.split(",");
+        Sort.Direction direction = Sort.Direction.fromString(sortDirection);
+        for (String field : sortFields) {
+            field = paginationValidator.validateSort(field.trim());
+            orders.add(new Sort.Order(direction, field));
+        }
+
+        return orders;
+    }
+
+    private Specification<PersonEntity> createSpecification(Map<String, String> filters) {
+        Map<String, BiFunction<String, Object, SpecificationUtil.FilterOperation>> filterOperations = PersonFilterOperationsUtil.getFilterOperations();
+        Specification<PersonEntity> spec = Specification.where(null);
+
+        for (Map.Entry<String, String> entry : filters.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if (value != null && !value.isEmpty() && filterOperations.containsKey(key)) {
+                SpecificationUtil.FilterOperation operation = filterOperations.get(key).apply(key, value);
+                spec = spec.and((root, query, criteriaBuilder) -> operation.buildPredicate(root, criteriaBuilder, value));
+            }
+        }
+
+        return spec;
+    }
+
+    private Sort createSort(String sortBy, String sortDirection) {
+        Sort.Direction direction = Sort.Direction.fromString(sortDirection);
+        return Sort.by(direction, sortBy.split(","));
+    }
 }

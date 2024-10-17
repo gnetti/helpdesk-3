@@ -3,9 +3,11 @@ package com.luiz.helpdesk.application.ports.out;
 import com.luiz.helpdesk.domain.model.Pagination;
 import com.luiz.helpdesk.domain.model.Person;
 
+import java.util.Map;
 import java.util.Optional;
 
 public interface PersonPersistenceOutputPort {
+
     Person save(Person person);
 
     Person update(Person person);
@@ -26,10 +28,11 @@ public interface PersonPersistenceOutputPort {
 
     Pagination<Person> getAllPersons(Pagination<?> pagination);
 
-    Person getCurrentUser(Integer id);
-
-    Person updateCurrentUser(Integer id, Person updatedPerson, String encryptedCurrentPassword, String newPassword) throws Exception;
+    Pagination<Person> getAllPersonsWithFilters(Pagination<?> pagination, String sortBy, String sortDirection, Map<String, String> filters);
 
     Optional<Person> findByEmailAndIdNot(String email, Integer id);
 
+    Person getCurrentUser(Integer id);
+
+    Person updateCurrentUser(Integer id, Person updatedPerson, String encryptedCurrentPassword, String newPassword) throws Exception;
 }

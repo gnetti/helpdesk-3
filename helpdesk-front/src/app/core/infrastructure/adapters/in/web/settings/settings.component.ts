@@ -1,15 +1,13 @@
 import { Component, Inject, OnDestroy, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup } from "@angular/forms";
 import { ToastrService } from "ngx-toastr";
 import { AuthService } from "@application/services/auth.service";
 import { Profile } from "@enums//profile.enum";
-import { TokenTimeValidator } from "@validators//token-time.validator";
 import { TokenTimeProfile } from "@model//token-time-profile.model";
-import { ProfileUtils } from "@utils//profile.util";
 import { BehaviorSubject, distinctUntilChanged, Subject } from "rxjs";
 import { TOKEN_TIME_USE_CASE_PORT, TokenTimeUseCasePort } from "@domain/ports/in/token-time-use-case.port";
 import { takeUntil } from "rxjs/operators";
-import { bigDecimalValidator } from "@validators//big-decimal.validator";
+import { SettingsUtil } from "@utils//settings.util";
 
 @Component({
   selector: "app-settings",
@@ -32,7 +30,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     @Inject(TOKEN_TIME_USE_CASE_PORT) private tokenTimeUseCase: TokenTimeUseCasePort
   ) {
-    this.tokenTimeForm = this.initForm();
+    this.tokenTimeForm = SettingsUtil.initForm(this.fb);
   }
 
   ngOnInit(): void {
@@ -63,39 +61,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private initForm(): FormGroup {
-    return this.fb.group({
-      profileCode: [Profile.ADMIN, Validators.required],
-      tokenExpirationTimeMinutes: ["", [
-        Validators.required,
-        TokenTimeValidator.validateTokenExpiration,
-        bigDecimalValidator(60, 1440)
-      ]],
-      timeToShowDialogMinutes: ["", [
-        Validators.required,
-        TokenTimeValidator.validateTimeToShowDialog,
-        bigDecimalValidator(15, 30)
-      ]],
-      dialogDisplayTimeForTokenUpdateMinutes: ["", [
-        Validators.required,
-        bigDecimalValidator(2, 15)
-      ]],
-      tokenUpdateIntervalMinutes: ["", [
-        Validators.required,
-        bigDecimalValidator(1, 5)
-      ]]
-    }, {
-      validators: TokenTimeValidator.validateTokenTime()
-    });
-  }
-
   private initProfiles(): void {
-    this.profiles = Object.values(Profile)
-      .filter((value): value is Profile => typeof value === "number" && value !== Profile.ROOT)
-      .map(profile => ({
-        value: profile,
-        label: ProfileUtils.getProfileName(profile)
-      }));
+    this.profiles = SettingsUtil.getProfiles();
   }
 
   private setupProfileChangeListener(): void {
@@ -124,7 +91,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
           this.tokenTimeForm.patchValue(settings, { emitEvent: false });
           this.isDefaultSettings = false;
         } else {
-          const defaultSettings = this.getDefaultSettings();
+          const defaultSettings = SettingsUtil.getDefaultSettings();
           this.tokenTimeForm.patchValue({
             ...defaultSettings,
             profileCode: profile
@@ -137,7 +104,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       },
       error: () => {
         this.toast.warning("Erro ao carregar configurações de token time. Configurações padrão serão usadas.", "Aviso");
-        const defaultSettings = this.getDefaultSettings();
+        const defaultSettings = SettingsUtil.getDefaultSettings();
         this.tokenTimeForm.patchValue({
           ...defaultSettings,
           profileCode: profile
@@ -147,15 +114,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.formModified = false;
       }
     });
-  }
-
-  private getDefaultSettings(): Partial<TokenTimeProfile> {
-    return {
-      tokenExpirationTimeMinutes: 60.0,
-      timeToShowDialogMinutes: 30.0,
-      dialogDisplayTimeForTokenUpdateMinutes: 15.0,
-      tokenUpdateIntervalMinutes: 5.0
-    };
   }
 
   saveTokenTimeSettings(): void {

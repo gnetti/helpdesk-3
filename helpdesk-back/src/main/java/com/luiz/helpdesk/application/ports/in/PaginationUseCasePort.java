@@ -1,5 +1,7 @@
 package com.luiz.helpdesk.application.ports.in;
 
+import java.util.List;
+
 public interface PaginationUseCasePort {
     int getMinPageSize();
 
@@ -9,4 +11,13 @@ public interface PaginationUseCasePort {
 
     int getDefaultSize();
 
+    List<Integer> getAllowedPageSizes();
+
+    String getDefaultSort();
+
+    int getMaxTotalElements();
+
+    String validateSort(String sort);
+
+    boolean isValidPageSize(int pageSize);
 }

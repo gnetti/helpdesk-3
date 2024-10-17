@@ -7,8 +7,7 @@ import java.util.Optional;
 
 public interface JpaTokenTimeRepository extends JpaRepository<TokenTimeProfilesEntity, Integer> {
 
-    Optional<TokenTimeProfilesEntity> findByProfile(int profileOrdinal);
+    Optional<TokenTimeProfilesEntity> findByProfile(Integer profile);
 
-    boolean existsByProfile(int profileOrdinal);
-
+    boolean existsByProfile(Integer profile);
 }

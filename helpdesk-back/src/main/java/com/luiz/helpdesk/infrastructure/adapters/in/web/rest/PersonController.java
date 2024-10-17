@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/persons")
@@ -59,6 +61,25 @@ public class PersonController {
             @RequestParam(required = false) Integer size) {
         PaginationDTO<Void> config = createPaginationConfig(page, size);
         Pagination<Person> personPagination = personUseCase.getAllPersons(config.toDomainPagination());
+        return ResponseEntity.ok(createPaginatedResponse(personPagination, config));
+    }
+
+    @GetMapping("/all")
+    @Operation(summary = "Get all persons with filters", description = "Retrieves a paginated list of persons with optional filtering")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved filtered list of persons")
+    })
+    @PaginationParameters
+    public ResponseEntity<PaginationDTO<PersonDTO>> getAllPersonsWithFilters(
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size,
+            @RequestParam(required = false) Map<String, String> allParams) {
+        PaginationDTO<Void> config = createPaginationConfig(page, size);
+        Map<String, String> filters = new HashMap<>(allParams);
+        filters.remove("page");
+        filters.remove("size");
+
+        Pagination<Person> personPagination = personUseCase.getAllPersonsWithFilters(config.toDomainPagination(), filters);
         return ResponseEntity.ok(createPaginatedResponse(personPagination, config));
     }
 
