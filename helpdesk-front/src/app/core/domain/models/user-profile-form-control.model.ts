@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms';
+import { FormControl } from "@angular/forms";
 import { UserProfileGet } from "./user-profile.model";
 import { Theme } from "@enums//theme.enum";
 
@@ -22,19 +22,8 @@ export interface ThemeOption {
   name: string;
 }
 
-export class ProfileValidator {
-  static validatePasswordFields(currentPassword: string, newPassword: string, confirmNewPassword: string): void {
-    if (!currentPassword || !newPassword || !confirmNewPassword) {
-      throw new Error('Preencha todos os campos de senha para atualizar.');
-    }
-    if (newPassword !== confirmNewPassword) {
-      throw new Error('As senhas não coincidem.');
-    }
-  }
-}
-
 export class ProfileHelper {
-  static readonly PASSWORD_PLACEHOLDER = '**********';
+  static readonly PASSWORD_PLACEHOLDER = "**********";
 
   static initializePasswordStrength(): PasswordStrength {
     return {
@@ -48,8 +37,8 @@ export class ProfileHelper {
   static getPasswordPlaceholders(): { [key: string]: string } {
     return {
       currentPassword: this.PASSWORD_PLACEHOLDER,
-      newPassword: '',
-      confirmNewPassword: ''
+      newPassword: "",
+      confirmNewPassword: ""
     };
   }
 }

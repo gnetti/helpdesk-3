@@ -3,39 +3,18 @@ package com.luiz.helpdesk.infrastructure.adapters.out.persistence.utils;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 
 public class SpecificationUtil {
 
     private SpecificationUtil() {
         throw new IllegalStateException("Classe utilitária");
-    }
-
-    public static <T> Specification<T> createSpecificationFromFilters(Map<String, String> filters, Map<String, FilterOperation> filterOperations) {
-        return (root, query, criteriaBuilder) -> {
-            List<Predicate> predicates = new ArrayList<>();
-
-            filters.forEach((key, value) -> {
-                if (value != null && !value.isEmpty() && filterOperations.containsKey(key)) {
-                    FilterOperation operation = filterOperations.get(key);
-                    try {
-                        predicates.add(operation.buildPredicate(root, criteriaBuilder, value));
-                    } catch (IllegalArgumentException e) {
-                        System.err.println("Erro ao aplicar filtro para " + key + ": " + e.getMessage());
-                    }
-                }
-            });
-
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
-        };
     }
 
     @FunctionalInterface
@@ -52,38 +31,6 @@ public class SpecificationUtil {
         public static FilterOperation like(String fieldName) {
             return (root, criteriaBuilder, value) ->
                     criteriaBuilder.like(root.get(fieldName), "%" + value + "%");
-        }
-
-        public static FilterOperation equalIgnoreCase(String fieldName) {
-            return (root, criteriaBuilder, value) ->
-                    criteriaBuilder.equal(criteriaBuilder.lower(root.get(fieldName)), value.toLowerCase());
-        }
-
-        public static FilterOperation equal(String fieldName) {
-            return (root, criteriaBuilder, value) ->
-                    criteriaBuilder.equal(root.get(fieldName), value);
-        }
-
-        public static FilterOperation greaterThanOrEqualTo(String fieldName) {
-            return (root, criteriaBuilder, value) -> {
-                try {
-                    Number numericValue = NumberFormat.getInstance().parse(value);
-                    return criteriaBuilder.ge(root.get(fieldName), numericValue);
-                } catch (ParseException e) {
-                    throw new IllegalArgumentException("Valor numérico inválido para " + fieldName + ": " + value, e);
-                }
-            };
-        }
-
-        public static FilterOperation lessThanOrEqualTo(String fieldName) {
-            return (root, criteriaBuilder, value) -> {
-                try {
-                    Number numericValue = NumberFormat.getInstance().parse(value);
-                    return criteriaBuilder.le(root.get(fieldName), numericValue);
-                } catch (ParseException e) {
-                    throw new IllegalArgumentException("Valor numérico inválido para " + fieldName + ": " + value, e);
-                }
-            };
         }
 
         public static FilterOperation dateEqual(String fieldName) {
@@ -125,16 +72,23 @@ public class SpecificationUtil {
                 return root.get(fieldName).in((Object[]) values);
             };
         }
+    }
 
-        public static FilterOperation numericEqual(String fieldName) {
-            return (root, criteriaBuilder, value) -> {
-                try {
-                    Number numericValue = NumberFormat.getInstance().parse(value);
-                    return criteriaBuilder.equal(root.get(fieldName), numericValue);
-                } catch (ParseException e) {
-                    throw new IllegalArgumentException("Valor numérico inválido para " + fieldName + ": " + value, e);
-                }
-            };
+    public static <T> Specification<T> createSpecification(Map<String, String> filters, Map<String, BiFunction<String, Object, FilterOperation>> filterOperations) {
+        Specification<T> spec = Specification.where(null);
+        for (Map.Entry<String, String> entry : filters.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            if (value != null && !value.isEmpty() && filterOperations.containsKey(key)) {
+                FilterOperation operation = filterOperations.get(key).apply(key, value);
+                spec = spec.and((root, query, criteriaBuilder) -> operation.buildPredicate(root, criteriaBuilder, value));
+            }
         }
+        return spec;
+    }
+
+    public static Sort createSort(String sortBy, String sortDirection) {
+        Sort.Direction direction = Sort.Direction.fromString(sortDirection);
+        return Sort.by(direction, sortBy.split(","));
     }
 }

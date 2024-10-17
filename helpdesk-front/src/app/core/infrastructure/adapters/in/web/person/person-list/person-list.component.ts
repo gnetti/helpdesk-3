@@ -13,7 +13,9 @@ import {
 } from "@infrastructure/config/dtos/hateoas-response.dto";
 import { catchError, debounceTime, distinctUntilChanged, switchMap, takeUntil, tap } from "rxjs/operators";
 import { BehaviorSubject, merge, of, Subject } from "rxjs";
+import { PersonUtil } from "@utils//person.util";
 import { DialogUtils } from "@utils//dialog.util";
+
 
 type PersonResponse = PaginatedPersonResponse | PersonHateoasResponse;
 
@@ -61,17 +63,16 @@ export class PersonListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private setupSortAndPaginationListeners() {
-    merge(
-      this.sort.sortChange,
-      this.paginator.page
-    ).pipe(
-      tap(() => {
-        this.currentPage = this.paginator.pageIndex;
-        this.pageSize = this.paginator.pageSize;
-        this.loadPersons();
-      }),
-      takeUntil(this.destroy$)
-    ).subscribe();
+    merge(this.sort.sortChange, this.paginator.page)
+      .pipe(
+        tap(() => {
+          this.currentPage = this.paginator.pageIndex;
+          this.pageSize = this.paginator.pageSize;
+          this.loadPersons();
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe();
   }
 
   ngOnDestroy() {
@@ -89,85 +90,74 @@ export class PersonListComponent implements OnInit, AfterViewInit, OnDestroy {
     const params: GetAllPersonsParams = {
       page: this.currentPage,
       size: this.pageSize,
-      sort: this.getSortString()
+      sort: PersonUtil.getSortString(this.currentSort)
     };
 
     if (this.filterSubject.value) {
       params.name = this.filterSubject.value;
     }
-
-    console.log("Params for loading persons:", params);
-
-    this.personService.getAllPersons(params).pipe(
-      catchError((error) => {
-        console.error("Error loading persons:", error);
-        this.toast.error("Erro ao carregar a lista de pessoas");
-        return of(null);
-      }),
-      tap(() => this.isLoading.next(false))
-    ).subscribe(this.handlePersonsResponse.bind(this));
-  }
-
-  private getSortString(): string | undefined {
-    if (this.currentSort.direction === "") {
-      return undefined;
-    }
-    return `${this.currentSort.active},${this.currentSort.direction}`;
+    this.personService
+      .getAllPersons(params)
+      .pipe(
+        catchError((_error) => {
+          this.toast.error("Erro ao carregar a lista de pessoas");
+          return of(null);
+        }),
+        tap(() => this.isLoading.next(false))
+      )
+      .subscribe(this.handlePersonsResponse.bind(this));
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    console.log("Filter value applied:", filterValue);
     this.filterSubject.next(filterValue.trim().toLowerCase());
   }
 
   setupFilterListener() {
-    this.filterSubject.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      tap(value => console.log("Filter value after debounce:", value)),
-      takeUntil(this.destroy$)
-    ).subscribe(() => {
-      this.resetPagination();
-      this.loadPersons();
-    });
-  }
-
-  resetPagination() {
-    this.currentPage = 0;
-    if (this.paginator) {
-      this.paginator.pageIndex = 0;
-    }
+    this.filterSubject
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        tap((value) => value),
+        takeUntil(this.destroy$)
+      )
+      .subscribe(() => {
+        PersonUtil.resetPagination(this.paginator);
+        this.loadPersons();
+      });
   }
 
   async deletePerson(id: number, name: string) {
     const result = await DialogUtils.showDeleteConfirmation(this.coolDialogService, name);
     if (result) {
       this.isLoading.next(true);
-      this.personService.deletePerson(id).pipe(
-        catchError(() => {
-          this.toast.error("Erro ao excluir a pessoa");
-          return of(null);
-        }),
-        switchMap(() => {
-          this.toast.success("Pessoa excluída com sucesso", "Sucesso");
-          return this.personService.getAllPersons({
-            page: this.currentPage,
-            size: this.pageSize,
-            sort: this.getSortString(),
-            name: this.filterSubject.value || undefined
-          });
-        }),
-        catchError(() => {
-          this.toast.warning("Erro ao recarregar a lista de pessoas");
-          return of(null);
-        }),
-        tap(() => this.isLoading.next(false))
-      ).subscribe((response) => {
-        if (response) {
-          this.handlePersonsResponse(response);
-        }
-      });
+      this.personService
+        .deletePerson(id)
+        .pipe(
+          catchError(() => {
+            this.toast.error("Erro ao excluir a pessoa");
+            return of(null);
+          }),
+          switchMap(() => {
+            this.toast.success("Pessoa excluída com sucesso", "Sucesso");
+            return this.personService.getAllPersons({
+              page: this.currentPage,
+              size: this.pageSize,
+              sort: PersonUtil.getSortString(this.currentSort),
+              name: this.filterSubject.value || undefined
+            });
+          }),
+          catchError(() => {
+            this.toast.warning("Erro ao recarregar a lista de pessoas");
+            return of(null);
+          }),
+          tap(() => this.isLoading.next(false))
+        )
+        .subscribe((response) => {
+          if (response) {
+            this.handlePersonsResponse(response);
+          }
+        });
     }
   }
 
@@ -180,36 +170,19 @@ export class PersonListComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private handlePersonsResponse(response: PersonResponse | null) {
-    if (!response) {
-      this.dataSource.data = [];
-      this.totalElements = 0;
-      return;
-    }
+    PersonUtil.handlePersonsResponse(response, this.dataSource, this.paginator);
 
-    this.dataSource.data = response.content;
-
-    if ("page" in response) {
-      this.totalElements = response.page.totalElements;
-      this.pageSize = response.page.size;
-      this.currentPage = response.page.number;
-      this.totalPages = response.page.totalPages;
+    if (response) {
+      this.totalElements = "page" in response ? response.page.totalElements : response.totalElements;
+      this.pageSize = "page" in response ? response.page.size : response.pageSize;
+      this.currentPage = "page" in response ? response.page.number : response.pageNumber;
+      this.totalPages = "page" in response ? response.page.totalPages : response.totalPages;
     } else {
-      this.totalElements = response.totalElements;
-      this.pageSize = response.pageSize;
-      this.currentPage = response.pageNumber;
-      this.totalPages = response.totalPages;
+      this.totalElements = 0;
+      this.totalPages = 1;
     }
 
-    this.generatePagination();
-
-    if (this.paginator) {
-      this.paginator.length = this.totalElements;
-      this.paginator.pageIndex = this.currentPage;
-      this.paginator.pageSize = this.pageSize;
-    }
-
-    console.log("Filtered data received:", this.dataSource.data);
-
+    this.pages = PersonUtil.generatePagination(this.currentPage, this.totalPages);
     this.updateSort();
   }
 
@@ -220,12 +193,6 @@ export class PersonListComponent implements OnInit, AfterViewInit, OnDestroy {
       this.sort.direction = this.currentSort.direction;
       this.sort.sortChange.emit(this.currentSort);
     }
-  }
-
-  generatePagination() {
-    const startPage = Math.max(0, this.currentPage - 2);
-    const endPage = Math.min(this.totalPages - 1, startPage + 4);
-    this.pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
   }
 
   goToPage(page: number) {
@@ -264,7 +231,7 @@ export class PersonListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onPageSizeChange(newSize: number) {
     this.pageSize = newSize;
-    this.resetPagination();
+    PersonUtil.resetPagination(this.paginator);
     this.loadPersons();
   }
 

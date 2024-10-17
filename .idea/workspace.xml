@@ -4,38 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6f985a38-0ffb-4e6c-9b10-02d2a5b1782e" name="Changes" comment="Added token time on the front">
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/utils/PersonFilterOperationsUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/utils/SpecificationUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/app/shared/utils/person.util.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/app/shared/utils/settings.util.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpdesk-front/src/assets/img/form-image.svg" afterDir="false" />
+    <list default="true" id="6f985a38-0ffb-4e6c-9b10-02d2a5b1782e" name="Changes" comment="Optimized pagination and filters">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/in/PaginationUseCasePort.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/in/PaginationUseCasePort.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/in/PersonManageUseCasePort.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/in/PersonManageUseCasePort.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/out/PaginationOutputPort.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/out/PaginationOutputPort.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/out/PersonPersistenceOutputPort.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/ports/out/PersonPersistenceOutputPort.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/services/PaginationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/services/PaginationService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/services/PersonManageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/application/services/PersonManageService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/validator/PaginationValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/domain/validator/PaginationValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/in/web/rest/PersonController.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/in/web/rest/PersonController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/PaginationAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/PaginationAdapter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/PersonPersistenceOutputAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/PersonPersistenceOutputAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/springdata/JpaPersonRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/springdata/JpaPersonRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/springdata/JpaTokenTimeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/springdata/JpaTokenTimeRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/utils/PaginationUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/utils/PaginationUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/application/services/person.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/application/services/person.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/ports/in/person-use-case.port.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/ports/in/person-use-case.port.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/ports/out/person-repository.port.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/ports/out/person-repository.port.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/person/person-list/person-list.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/person/person-list/person-list.component.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/person/person-list/person-list.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/person/person-list/person-list.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/utils/SpecificationUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/utils/SpecificationUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/application/services/theme.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/application/services/theme.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/models/user-profile-form-control.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/models/user-profile-form-control.model.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/person/person-list/person-list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/person/person-list/person-list.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/settings/settings.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/settings/settings.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/out/persistence/person-repository.adapter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/out/persistence/person-repository.adapter.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/config/dtos/hateoas-response.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/config/dtos/hateoas-response.dto.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/modules/person.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/modules/person.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/shared/utils/form.util.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/shared/utils/form.util.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/shared/utils/person.util.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/shared/utils/person.util.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +76,7 @@
       <recent name="com.luiz.helpdesk.infrastructure.adapters.out.config.serialization" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.BACKEND">
+  <component name="RunManager" selected="npm.FRONTEND">
     <configuration name="BACKEND" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="helpdesk-back" />
@@ -146,7 +122,7 @@
       <workItem from="1728503694942" duration="12363000" />
       <workItem from="1728690027701" duration="584000" />
       <workItem from="1728690717005" duration="39762000" />
-      <workItem from="1728863482153" duration="75830000" />
+      <workItem from="1728863482153" duration="79917000" />
     </task>
     <task id="LOCAL-00001" summary="Endpoint improvements me">
       <option name="closed" value="true" />
@@ -268,7 +244,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728945871318</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Optimized pagination and filters">
+      <option name="closed" value="true" />
+      <created>1729129752141</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1729129752141</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -286,6 +270,7 @@
     <MESSAGE value="Adjusted token time to be used no front" />
     <MESSAGE value="Profile adjustments" />
     <MESSAGE value="Added token time on the front" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added token time on the front" />
+    <MESSAGE value="Optimized pagination and filters" />
+    <option name="LAST_COMMIT_MESSAGE" value="Optimized pagination and filters" />
   </component>
 </project>

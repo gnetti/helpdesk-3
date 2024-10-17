@@ -3,7 +3,7 @@ import { ThemeUseCasePort } from "@domain/ports/in/theme-use-case.port";
 import { THEME_SERVICE_PORT, ThemeStoragePort } from "@domain/ports/out/theme-storage.port";
 import { ThemeConfig } from "@infrastructure/config/theme.config";
 import { ThemeUtil } from "@utils//theme.util";
-import {Theme} from "@enums//theme.enum";
+import { Theme } from "@enums//theme.enum";
 
 @Injectable({
   providedIn: "root"
@@ -24,7 +24,7 @@ export class ThemeService implements ThemeUseCasePort {
       this.themeLinkElement.href = `/themes/${themeFileName}`;
       this.themeStorage.setTheme(theme.toString());
     } else {
-      console.warn(`Theme file not found for theme: ${ThemeUtil.getThemeName(theme)}`);
+      throw new Error(`Theme file not found for theme: ${ThemeUtil.getThemeName(theme)}`);
     }
   }
 

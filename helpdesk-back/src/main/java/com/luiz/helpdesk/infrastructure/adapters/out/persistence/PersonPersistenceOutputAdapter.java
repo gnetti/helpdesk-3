@@ -17,20 +17,18 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-import java.util.function.BiFunction;
-
-import static org.springframework.data.jpa.repository.query.KeysetScrollSpecification.createSort;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class PersonPersistenceOutputAdapter implements PersonPersistenceOutputPort {
 
     private final JpaPersonRepository jpaPersonRepository;
-    private final PaginationValidator paginationValidator;
 
-    public PersonPersistenceOutputAdapter(JpaPersonRepository jpaPersonRepository, PaginationValidator paginationValidator) {
+    public PersonPersistenceOutputAdapter(JpaPersonRepository jpaPersonRepository) {
         this.jpaPersonRepository = jpaPersonRepository;
-        this.paginationValidator = paginationValidator;
+
     }
 
     @Override
@@ -98,11 +96,12 @@ public class PersonPersistenceOutputAdapter implements PersonPersistenceOutputPo
         return getAllPersonsWithFilters(pagination, PaginationValidator.getDefaultSort(), "ASC", new HashMap<>());
     }
 
+
     @Override
     public Pagination<Person> getAllPersonsWithFilters(Pagination<?> pagination, String sortBy, String sortDirection, Map<String, String> filters) {
-        Sort sort = createSort(sortBy, sortDirection);
+        Sort sort = SpecificationUtil.createSort(sortBy, sortDirection);
         PageRequest pageRequest = PageRequest.of(pagination.pageNumber(), pagination.pageSize(), sort);
-        Specification<PersonEntity> spec = createSpecification(filters);
+        Specification<PersonEntity> spec = SpecificationUtil.createSpecification(filters, PersonFilterOperationsUtil.getFilterOperations());
         Page<PersonEntity> page = jpaPersonRepository.findAll(spec, pageRequest);
         return PaginationUtil.mapPageToPagination(page, PersonEntity::toDomainModel);
     }
@@ -127,38 +126,5 @@ public class PersonPersistenceOutputAdapter implements PersonPersistenceOutputPo
         existingEntity.updateCurrentUser(updatedPerson.getTheme(), newPassword);
         PersonEntity updatedEntity = jpaPersonRepository.save(existingEntity);
         return updatedEntity.toDomainModel();
-    }
-
-    private List<Sort.Order> createSortOrders(String sortBy, String sortDirection) {
-        List<Sort.Order> orders = new ArrayList<>();
-        String[] sortFields = sortBy.split(",");
-        Sort.Direction direction = Sort.Direction.fromString(sortDirection);
-        for (String field : sortFields) {
-            field = paginationValidator.validateSort(field.trim());
-            orders.add(new Sort.Order(direction, field));
-        }
-
-        return orders;
-    }
-
-    private Specification<PersonEntity> createSpecification(Map<String, String> filters) {
-        Map<String, BiFunction<String, Object, SpecificationUtil.FilterOperation>> filterOperations = PersonFilterOperationsUtil.getFilterOperations();
-        Specification<PersonEntity> spec = Specification.where(null);
-
-        for (Map.Entry<String, String> entry : filters.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            if (value != null && !value.isEmpty() && filterOperations.containsKey(key)) {
-                SpecificationUtil.FilterOperation operation = filterOperations.get(key).apply(key, value);
-                spec = spec.and((root, query, criteriaBuilder) -> operation.buildPredicate(root, criteriaBuilder, value));
-            }
-        }
-
-        return spec;
-    }
-
-    private Sort createSort(String sortBy, String sortDirection) {
-        Sort.Direction direction = Sort.Direction.fromString(sortDirection);
-        return Sort.by(direction, sortBy.split(","));
     }
 }
