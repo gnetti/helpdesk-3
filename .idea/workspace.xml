@@ -6,12 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="6f985a38-0ffb-4e6c-9b10-02d2a5b1782e" name="Changes" comment="Optimized pagination and filters">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/PersonPersistenceOutputAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/PersonPersistenceOutputAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/utils/SpecificationUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-back/src/main/java/com/luiz/helpdesk/infrastructure/adapters/out/persistence/utils/SpecificationUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/application/services/theme.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/application/services/theme.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/models/user-profile-form-control.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/domain/models/user-profile-form-control.model.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/person/person-list/person-list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/person/person-list/person-list.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/shared/utils/person.util.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/shared/utils/person.util.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +71,7 @@
       <recent name="com.luiz.helpdesk.infrastructure.adapters.out.config.serialization" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.FRONTEND">
+  <component name="RunManager" selected="Spring Boot.BACKEND">
     <configuration name="BACKEND" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="helpdesk-back" />
@@ -122,7 +117,7 @@
       <workItem from="1728503694942" duration="12363000" />
       <workItem from="1728690027701" duration="584000" />
       <workItem from="1728690717005" duration="39762000" />
-      <workItem from="1728863482153" duration="79917000" />
+      <workItem from="1728863482153" duration="83697000" />
     </task>
     <task id="LOCAL-00001" summary="Endpoint improvements me">
       <option name="closed" value="true" />
@@ -252,7 +247,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729129752141</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="Optimized pagination and filters">
+      <option name="closed" value="true" />
+      <created>1729133854712</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1729133854712</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

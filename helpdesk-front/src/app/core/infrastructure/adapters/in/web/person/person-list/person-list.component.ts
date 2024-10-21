@@ -16,7 +16,6 @@ import { BehaviorSubject, merge, of, Subject } from "rxjs";
 import { PersonUtil } from "@utils//person.util";
 import { DialogUtils } from "@utils//dialog.util";
 
-
 type PersonResponse = PaginatedPersonResponse | PersonHateoasResponse;
 
 @Component({
@@ -45,12 +44,11 @@ export class PersonListComponent implements OnInit, AfterViewInit, OnDestroy {
     @Inject(PERSON_USE_CASE_PORT) private personService: PersonUseCasePort,
     private toast: ToastrService,
     private coolDialogService: CoolDialogService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.setupFilterListener();
-    this.loadPersons();
+    // Removida a chamada direta para loadPersons() aqui
   }
 
   ngAfterViewInit() {
@@ -60,6 +58,9 @@ export class PersonListComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.sort && this.paginator) {
       this.setupSortAndPaginationListeners();
     }
+
+    // Adicionada chamada inicial para loadPersons() após a inicialização da view
+    setTimeout(() => this.loadPersons(), 0);
   }
 
   private setupSortAndPaginationListeners() {
@@ -118,13 +119,13 @@ export class PersonListComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         debounceTime(300),
         distinctUntilChanged(),
-        tap((value) => value),
+        tap(() => {
+          PersonUtil.resetPagination(this.paginator);
+          this.loadPersons();
+        }),
         takeUntil(this.destroy$)
       )
-      .subscribe(() => {
-        PersonUtil.resetPagination(this.paginator);
-        this.loadPersons();
-      });
+      .subscribe();
   }
 
   async deletePerson(id: number, name: string) {
