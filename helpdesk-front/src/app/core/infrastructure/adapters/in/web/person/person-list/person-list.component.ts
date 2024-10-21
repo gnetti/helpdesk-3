@@ -44,11 +44,11 @@ export class PersonListComponent implements OnInit, AfterViewInit, OnDestroy {
     @Inject(PERSON_USE_CASE_PORT) private personService: PersonUseCasePort,
     private toast: ToastrService,
     private coolDialogService: CoolDialogService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.setupFilterListener();
-    // Removida a chamada direta para loadPersons() aqui
   }
 
   ngAfterViewInit() {
@@ -58,8 +58,6 @@ export class PersonListComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.sort && this.paginator) {
       this.setupSortAndPaginationListeners();
     }
-
-    // Adicionada chamada inicial para loadPersons() após a inicialização da view
     setTimeout(() => this.loadPersons(), 0);
   }
 

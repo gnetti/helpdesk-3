@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6f985a38-0ffb-4e6c-9b10-02d2a5b1782e" name="Changes" comment="Optimized pagination and filters">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/person/person-list/person-list.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpdesk-front/src/app/core/infrastructure/adapters/in/web/person/person-list/person-list.component.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -117,7 +116,7 @@
       <workItem from="1728503694942" duration="12363000" />
       <workItem from="1728690027701" duration="584000" />
       <workItem from="1728690717005" duration="39762000" />
-      <workItem from="1728863482153" duration="83697000" />
+      <workItem from="1728863482153" duration="83809000" />
     </task>
     <task id="LOCAL-00001" summary="Endpoint improvements me">
       <option name="closed" value="true" />
@@ -255,7 +254,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729133854712</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Optimized pagination and filters">
+      <option name="closed" value="true" />
+      <created>1729474829827</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1729474829827</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
