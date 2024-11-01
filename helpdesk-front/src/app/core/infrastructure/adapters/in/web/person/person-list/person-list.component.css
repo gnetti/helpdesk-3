@@ -50,7 +50,7 @@ h1 {
 }
 
 .page-size-selector mat-form-field {
-  width: 80px;
+  width: 100px;
   height: 40px;
 }
 
@@ -65,7 +65,7 @@ h1 {
   align-items: center;
   padding: 0 8px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .page-size-selector .mat-mdc-form-field-infix {
@@ -73,6 +73,7 @@ h1 {
   border-top: none;
   display: flex;
   align-items: center;
+  width: auto;
 }
 
 .page-size-selector .mat-mdc-select-value {
@@ -81,15 +82,20 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 70px;
 }
 
 .page-size-selector .mat-mdc-select-arrow-wrapper {
   display: flex;
   align-items: center;
+  justify-content: center;
   height: 100%;
   position: absolute;
   right: 5px;
   top: 0;
+  width: 30px;
+  background-color: #6193a1;
+  border-radius: 0 20px 20px 0;
 }
 
 .page-size-selector .mat-mdc-form-field-underline {
@@ -111,11 +117,22 @@ h1 {
 }
 
 .page-size-selector .mat-mdc-select-arrow {
-  color: red;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-top: 8px solid;
-  margin: 0 4px;
+  color: white;
+  border: none;
+  margin: 0;
+  width: auto;
+  height: auto;
+  opacity: 0;
+}
+
+.page-size-selector .mat-mdc-select-arrow-wrapper::after {
+  content: attr(data-selected-value);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 14px;
 }
 
 .pagination-info {

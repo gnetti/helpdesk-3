@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Inject, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, Inject, OnDestroy, OnInit, ViewChild, ChangeDetectorRef } from "@angular/core";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort, Sort } from "@angular/material/sort";
 import { MatTableDataSource } from "@angular/material/table";
@@ -29,6 +29,7 @@ export class PersonListComponent implements OnInit, AfterViewInit, OnDestroy {
   isLoading = new BehaviorSubject<boolean>(false);
   totalElements = 0;
   pageSize = 10;
+  selectedPageSize = 10;
   pageSizeOptions: number[] = [5, 10, 25, 100];
   currentSort: Sort = { active: "", direction: "" };
   private destroy$ = new Subject<void>();
@@ -43,12 +44,14 @@ export class PersonListComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     @Inject(PERSON_USE_CASE_PORT) private personService: PersonUseCasePort,
     private toast: ToastrService,
-    private coolDialogService: CoolDialogService
-  ) {
-  }
+    private coolDialogService: CoolDialogService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.setupFilterListener();
+    this.selectedPageSize = this.pageSize;
+    this.updateSelectedValue(this.pageSize);
   }
 
   ngAfterViewInit() {
@@ -58,10 +61,14 @@ export class PersonListComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.sort && this.paginator) {
       this.setupSortAndPaginationListeners();
     }
-    setTimeout(() => this.loadPersons(), 0);
+    setTimeout(() => {
+      this.updateSelectedValue(this.pageSize);
+      this.forceChangeDetection();
+    }, 0);
   }
 
   private setupSortAndPaginationListeners() {
+     this.loadPersons();
     merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         tap(() => {
@@ -176,6 +183,8 @@ export class PersonListComponent implements OnInit, AfterViewInit, OnDestroy {
       this.pageSize = "page" in response ? response.page.size : response.pageSize;
       this.currentPage = "page" in response ? response.page.number : response.pageNumber;
       this.totalPages = "page" in response ? response.page.totalPages : response.totalPages;
+      this.selectedPageSize = this.pageSize;
+      this.updateSelectedValue(this.pageSize);
     } else {
       this.totalElements = 0;
       this.totalPages = 1;
@@ -230,8 +239,29 @@ export class PersonListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onPageSizeChange(newSize: number) {
     this.pageSize = newSize;
+    this.selectedPageSize = newSize;
+    this.updateSelectedValue(newSize);
     PersonUtil.resetPagination(this.paginator);
     this.loadPersons();
+  }
+
+  updateSelectedValue(value: number = 10) {
+    this.selectedPageSize = value;
+    setTimeout(() => {
+      const selectElement = document.querySelector('.mat-mdc-select-value-text') as HTMLElement;
+      if (selectElement) {
+        selectElement.textContent = value.toString();
+      }
+      const arrowElement = document.querySelector('.mat-mdc-select-arrow') as HTMLElement;
+      if (arrowElement) {
+        arrowElement.setAttribute('data-selected-value', value.toString());
+      }
+      this.forceChangeDetection();
+    });
+  }
+
+  private forceChangeDetection() {
+    this.cdr.detectChanges();
   }
 
   protected readonly Math = Math;
